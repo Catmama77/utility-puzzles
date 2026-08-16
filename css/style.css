@@ -650,7 +650,8 @@ p {
   .page-foot,
   .controls,
   .ad-slot,
-  .no-print {
+  .no-print,
+  .card {
     display: none !important;
   }
 
