@@ -22,6 +22,10 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://www.helpuhelpurself.com/bingo/</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://www.helpuhelpurself.com/articles/</loc>
     <priority>0.7</priority>
   </url>

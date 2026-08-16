@@ -9,6 +9,7 @@ visitor's browser and can be printed or saved as PDF, with an answer key.
 - Crossword maker — automatic grids with hand-written clues, across/down lists, answers option.
 - Number Fill-In — number fit puzzles with fresh random numbers, 5 themes × 3 difficulty levels.
 - Sudoku — 4×4 / 6×6 / 9×9 grids × 3 difficulty levels, on-screen solving, answers option.
+- Bingo cards — classic number bingo or themed word bingo, 3×3 / 4×4 / 5×5, up to 6 cards per page, caller's call sheet.
 
 ## Project layout
 
@@ -31,6 +32,9 @@ number-fill/          Number Fill-In tool
 sudoku/               Sudoku tool (standalone generator, no shared deps)
   js/sudoku.js        Sudoku generator (valid grids, unique solutions)
   js/app.js           Page UI (on-screen solving + check)
+bingo/                Bingo card tool
+  js/bingo.js         Bingo generator (numbers + themed words, call sheet)
+  js/app.js           Page UI (card batches, tickable call sheet)
 articles/             SEO content hub + 6 original guides (each links to the tools)
 about.html / contact.html / privacy.html / terms.html   Required AdSense pages
 favicon.svg, robots.txt, sitemap.xml
@@ -38,6 +42,7 @@ test-generator.js     Node sanity test for the fill-in generator
 test-crossword.js     Node sanity test for the crossword generator
 test-numbers.js       Node sanity test for the number generator
 test-sudoku.js        Node sanity test for the sudoku generator
+test-bingo.js         Node sanity test for the bingo generator
 ```
 
 ## Try it locally
@@ -46,9 +51,10 @@ test-sudoku.js        Node sanity test for the sudoku generator
 python3 -m http.server 8000      # then open http://localhost:8000
 ```
 
-All four generators are tested with `node test-generator.js`, `node test-crossword.js`,
-`node test-numbers.js` and `node test-sudoku.js` (verifying slot integrity, numbering,
-clues/themes, layout, and — for sudoku — grid validity and exactly one solution).
+All five generators are tested with `node test-generator.js`, `node test-crossword.js`,
+`node test-numbers.js`, `node test-sudoku.js` and `node test-bingo.js` (verifying slot
+integrity, numbering, clues/themes, layout, sudoku uniqueness, and bingo column ranges
+and card variety).
 
 ## Deploy to GitHub Pages
 
@@ -93,7 +99,7 @@ and GitHub will redirect the apex to `www` automatically):
 
 If you switch primary domains, update the `CNAME` file, `sitemap.xml` and
 `robots.txt` to match.
-6. Submit `https://your-domain/sitemap.xml` in Google Search Console and request indexing of `/`, `/word-fill/`, `/crossword/`, `/number-fill/` and `/sudoku/`.
+6. Submit `https://your-domain/sitemap.xml` in Google Search Console and request indexing of `/`, `/word-fill/`, `/crossword/`, `/number-fill/`, `/sudoku/` and `/bingo/`.
 
 ### Putting each tool on its own subdomain (the 3-subdomain plan)
 

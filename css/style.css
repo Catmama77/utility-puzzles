@@ -437,6 +437,128 @@ p {
   font-weight: 600;
 }
 
+/* ---------- Bingo ---------- */
+
+.bingo-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+.bingo-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  width: 340px;
+}
+
+.bingo-card .card-label {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.bingo-card .bingo-header {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  margin-bottom: 4px;
+}
+
+.bingo-card .bingo-header span {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.bingo-card .bingo-header span.wide {
+  grid-column: 1 / -1;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+}
+
+.bingo-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  gap: 3px;
+}
+
+.bingo-grid .cell {
+  aspect-ratio: 1;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--ink);
+}
+
+.bingo-grid .cell.word {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-align: center;
+  padding: 2px;
+  line-height: 1.1;
+}
+
+.bingo-grid .cell.free {
+  background: #dbeafe;
+  color: var(--accent-dark);
+}
+
+/* ---------- Bingo call sheet ---------- */
+
+.call-sheet {
+  margin-top: 24px;
+}
+
+.call-sheet h2 {
+  margin-top: 0;
+}
+
+.call-columns {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.call-col {
+  min-width: 130px;
+}
+
+.call-col h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+}
+
+.call-item {
+  font-size: 14px;
+  padding: 2px 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  user-select: none;
+}
+
+.call-item:hover {
+  background: #f1f5f9;
+}
+
+.call-item.called {
+  text-decoration: line-through;
+  color: var(--muted);
+  background: #f1f5f9;
+}
+
 /* ---------- Articles ---------- */
 
 .article {
@@ -605,6 +727,70 @@ p {
 
   .puzzle-grid.sudoku .sudoku-input {
     display: none;
+  }
+
+  .bingo-cards {
+    display: grid;
+    gap: 12px;
+    justify-content: stretch;
+  }
+
+  .bingo-cards.cards-1 {
+    grid-template-columns: 1fr;
+  }
+
+  .bingo-cards.cards-1 .bingo-card {
+    width: 60%;
+    margin: 0 auto;
+  }
+
+  .bingo-cards.cards-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .bingo-cards.cards-4 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .bingo-cards.cards-6 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .bingo-card {
+    width: auto;
+    border: 2px solid #000;
+    border-radius: 0;
+    page-break-inside: avoid;
+  }
+
+  .bingo-grid {
+    gap: 2px;
+  }
+
+  .bingo-grid .cell {
+    border: 1px solid #000;
+    border-radius: 0;
+    font-size: 14px;
+  }
+
+  .bingo-grid .cell.word {
+    font-size: 8px;
+  }
+
+  .call-sheet {
+    display: none;
+  }
+
+  body.print-call .bingo-cards {
+    display: none !important;
+  }
+
+  body.print-call .call-sheet {
+    display: block !important;
+  }
+
+  body.print-call .call-item {
+    cursor: default;
   }
 }
 
