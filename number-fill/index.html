@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Number Fill-In Puzzle Maker — Generate &amp; Print Free Number Fit Puzzles</title>
+  <meta name="description" content="Free number fill-in puzzle generator. Create printable number fit puzzles at easy, medium and hard levels with number themes. Print or download as PDF, with an answers option.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- AdSense: see /js/ads.js — set your publisher ID there, then remove this comment -->
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a href="/" class="brand">Utility<span>Puzzles</span></a>
+      <nav class="site-nav">
+        <a href="/word-fill/">Word Fill-In</a>
+        <a href="/crossword/">Crossword</a>
+        <a href="/number-fill/">Number Fill-In</a>
+        <a href="/articles/">Articles</a>
+        <a href="/about.html">About</a>
+        <a href="/privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Number Fill-In Puzzle Maker</h1>
+    <p class="lead">Create a printable number fill-in puzzle in seconds. Pick a theme and difficulty, generate a fresh grid of number slots, and print it — or download it as a PDF from the print dialog. Stuck? Show the answers or print the answer key.</p>
+
+    <div class="controls">
+      <div class="field">
+        <label for="theme">Number theme</label>
+        <select id="theme"></select>
+      </div>
+      <div class="field">
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty"></select>
+      </div>
+      <button type="button" id="new-btn" class="button">New Puzzle</button>
+      <button type="button" id="answers-btn" class="button secondary">Show Answers</button>
+      <button type="button" id="print-puzzle-btn" class="button secondary">Print / PDF</button>
+      <button type="button" id="print-answers-btn" class="button secondary">Print Answers</button>
+    </div>
+
+    <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
+
+    <div class="puzzle-wrap" id="puzzle-wrap">
+      <div class="print-heading">
+        <h1 id="print-title"></h1>
+        <p id="print-meta"></p>
+      </div>
+      <div class="puzzle-grid" id="puzzle-grid"></div>
+      <div class="wordlist" id="numberlist"></div>
+    </div>
+
+    <p id="status" style="color:#6b7280; font-size:14px; margin-top:12px;"></p>
+
+    <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
+
+    <section class="card">
+      <h2>How to use the number fill-in maker</h2>
+      <p>A number fill-in (also called a number fit or figure fit puzzle) works just like a word fill-in, but with numbers: the grid shows slots of different lengths, and your job is to fit the listed numbers into the right slots. The number list groups numbers by how many digits they have, and each number shows the number of its slot. Overlapping digits give you hints as you go.</p>
+      <ul>
+        <li><strong>Themes:</strong> Classic, Even numbers, Odd numbers, Prime numbers and Multiples of 3 — every puzzle is generated with a fresh random set of numbers.</li>
+        <li><strong>Difficulty:</strong> Easy uses 3-digit numbers. Medium mixes 3- and 4-digit numbers. Hard uses longer 4- and 5-digit numbers on a bigger grid.</li>
+        <li><strong>Printing:</strong> Click “Print / PDF” for a clean puzzle page, or “Print Answers” for the completed grid. In the print dialog choose “Save as PDF” to download a file.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="page-foot">
+    <a href="/">Home</a> · <a href="/word-fill/">Word Fill-In</a> · <a href="/crossword/">Crossword</a> · <a href="/number-fill/">Number Fill-In</a> · <a href="/articles/">Articles</a> · <a href="/about.html">About</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a>
+  </footer>
+
+  <script src="/js/ads.js"></script>
+  <script src="/js/puzzle-core.js"></script>
+  <script src="js/numbers.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

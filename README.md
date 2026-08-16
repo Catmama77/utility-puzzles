@@ -1,0 +1,115 @@
+# UtilityPuzzles — printable puzzle generator sites
+
+A static site (no backend, no database) with free printable puzzle generators,
+built to be monetized with Google AdSense. Every puzzle is generated in the
+visitor's browser and can be printed or saved as PDF, with an answer key.
+
+**Current tools:**
+- Word Fill-In (word fit) puzzles — 6 categories × 3 difficulty levels, printable with answers.
+- Crossword maker — automatic grids with hand-written clues, across/down lists, answers option.
+- Number Fill-In — number fit puzzles with fresh random numbers, 5 themes × 3 difficulty levels.
+
+## Project layout
+
+```
+index.html            Hub page linking all tools (also the AdSense landing page)
+js/word-data.js       Shared word + clue database (6 categories)
+js/puzzle-core.js     Shared placement engine (grid layout, numbering)
+js/ads.js             Central AdSense config + injection
+css/style.css         Shared styles (print-friendly)
+word-fill/            Word Fill-In tool
+  js/words.js         Word bank derived from word-data.js
+  js/puzzles.js       Fill-in generator (uses puzzle-core)
+  js/app.js           Page UI
+crossword/            Crossword tool
+  js/crossword.js     Crossword generator (uses puzzle-core + word-data)
+  js/app.js           Page UI
+number-fill/          Number Fill-In tool
+  js/numbers.js       Number generator (themes, uses puzzle-core)
+  js/app.js           Page UI
+articles/             SEO content hub + 6 original guides (each links to the tools)
+about.html / contact.html / privacy.html / terms.html   Required AdSense pages
+favicon.svg, robots.txt, sitemap.xml
+test-generator.js     Node sanity test for the fill-in generator
+test-crossword.js     Node sanity test for the crossword generator
+test-numbers.js       Node sanity test for the number generator
+```
+
+## Try it locally
+
+```bash
+python3 -m http.server 8000      # then open http://localhost:8000
+```
+
+All three generators are tested with `node test-generator.js`, `node test-crossword.js`
+and `node test-numbers.js` (1080/1080/900 puzzles each across all categories and
+difficulties, verifying slot integrity, numbering, clues/themes and layout).
+
+## Deploy to GitHub Pages
+
+1. Create a new **public** repo on GitHub (e.g. `utility-puzzles`).
+2. Push this folder to it:
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit: word fill-in puzzle maker"
+   git branch -M main
+   git remote add origin https://github.com/YOUR-USERNAME/utility-puzzles.git
+   git push -u origin main
+   ```
+3. In the repo: **Settings → Pages → Source: Deploy from a branch → main → / (root) → Save**.
+4. Attach your domain:
+   - In **Settings → Pages → Custom domain**, enter your subdomain, e.g. `puzzles.example.com`.
+   - At your domain registrar / DNS provider, add a `CNAME` record: `puzzles` → `YOUR-USERNAME.github.io`.
+   - Turn on **Enforce HTTPS** once the certificate issues (can take a few minutes).
+5. The domain is already wired in: `sitemap.xml`, `robots.txt`, the contact email
+   and the `CNAME` file all use `helpuhelpurself.com`. If you ever switch domain,
+   update those files and the `CNAME` file.
+6. Submit `https://your-domain/sitemap.xml` in Google Search Console and request indexing of `/`, `/word-fill/`, `/crossword/` and `/number-fill/`.
+
+### Putting each tool on its own subdomain (the 3-subdomain plan)
+
+GitHub Pages allows one custom domain per repo. If you want  `wordfill.example.com` and `crossword.example.com` (and `numbers.example.com`
+  when the third tool ships):
+
+- Keep this repo as the hub (apex or `puzzles.example.com`).
+- For each tool, copy its folder (plus `css/`, `js/ads.js`, the legal pages and
+  `favicon.svg`) into its own repo, then repeat steps 2–4 with that subdomain.
+  (`word-fill/` and `crossword/` also need `js/word-data.js` and
+  `js/puzzle-core.js` copied; `number-fill/` only needs `js/puzzle-core.js`.)
+- Adjust asset paths in the copied pages if you serve from a sub-path.
+
+## Enabling AdSense
+
+1. Put real content on the site first — this is the single biggest factor in
+   approval. The pages, instructions and privacy/terms pages are already here;
+   add more explanatory text over time.
+2. Apply at https://adsense.google.com once the site is live. Approval is not
+   automatic and can take days to weeks.
+3. After approval, copy your publisher ID (`ca-pub-1234567890123456`) and paste
+   it into `ADSENSE_CONFIG.client` in `js/ads.js`. Ads will then render
+   automatically in the existing ad slots on every page.
+4. Optional: replace the `data-ad-slot="0000000000"` placeholders with real ad
+   unit IDs, or delete the manual slots and enable **Auto ads** in AdSense
+   (with the loader script in `js/ads.js`, auto ads are all you need).
+
+### AdSense approval checklist
+
+- [ ] Site live on your own domain with HTTPS
+- [ ] Privacy Policy, About, Contact and Terms pages (done — edit to match your details)
+- [ ] Original content on every page (tools + instructions + 6 articles in `/articles/`)
+- [ ] Working navigation and mobile-friendly layout
+- [ ] Sitemap submitted in Search Console, pages indexed
+
+Tip: keep adding articles over time. More original content per page and a growing
+internal-link network are the strongest signals for both AdSense approval and
+search traffic.
+
+## Notes
+
+- Puzzles are generated entirely client-side; no server, no cookies required
+  for the tools themselves (only advertisers set cookies — see privacy.html).
+- All word data is original/common-word content; nothing is copied from
+  published puzzle books, which keeps the site compliant with AdSense policies.
+- All three generators are pure logic built on the shared `js/puzzle-core.js`
+  placement engine.

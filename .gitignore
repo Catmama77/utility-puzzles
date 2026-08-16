@@ -1,0 +1,15 @@
+# Local Python environment (not part of the site)
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# IDE files
+.idea/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Local config
+*.local
