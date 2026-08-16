@@ -8,6 +8,7 @@ visitor's browser and can be printed or saved as PDF, with an answer key.
 - Word Fill-In (word fit) puzzles — 6 categories × 3 difficulty levels, printable with answers.
 - Crossword maker — automatic grids with hand-written clues, across/down lists, answers option.
 - Number Fill-In — number fit puzzles with fresh random numbers, 5 themes × 3 difficulty levels.
+- Sudoku — 4×4 / 6×6 / 9×9 grids × 3 difficulty levels, on-screen solving, answers option.
 
 ## Project layout
 
@@ -27,12 +28,16 @@ crossword/            Crossword tool
 number-fill/          Number Fill-In tool
   js/numbers.js       Number generator (themes, uses puzzle-core)
   js/app.js           Page UI
+sudoku/               Sudoku tool (standalone generator, no shared deps)
+  js/sudoku.js        Sudoku generator (valid grids, unique solutions)
+  js/app.js           Page UI (on-screen solving + check)
 articles/             SEO content hub + 6 original guides (each links to the tools)
 about.html / contact.html / privacy.html / terms.html   Required AdSense pages
 favicon.svg, robots.txt, sitemap.xml
 test-generator.js     Node sanity test for the fill-in generator
 test-crossword.js     Node sanity test for the crossword generator
 test-numbers.js       Node sanity test for the number generator
+test-sudoku.js        Node sanity test for the sudoku generator
 ```
 
 ## Try it locally
@@ -41,9 +46,9 @@ test-numbers.js       Node sanity test for the number generator
 python3 -m http.server 8000      # then open http://localhost:8000
 ```
 
-All three generators are tested with `node test-generator.js`, `node test-crossword.js`
-and `node test-numbers.js` (1080/1080/900 puzzles each across all categories and
-difficulties, verifying slot integrity, numbering, clues/themes and layout).
+All four generators are tested with `node test-generator.js`, `node test-crossword.js`,
+`node test-numbers.js` and `node test-sudoku.js` (verifying slot integrity, numbering,
+clues/themes, layout, and — for sudoku — grid validity and exactly one solution).
 
 ## Deploy to GitHub Pages
 
@@ -88,12 +93,12 @@ and GitHub will redirect the apex to `www` automatically):
 
 If you switch primary domains, update the `CNAME` file, `sitemap.xml` and
 `robots.txt` to match.
-6. Submit `https://your-domain/sitemap.xml` in Google Search Console and request indexing of `/`, `/word-fill/`, `/crossword/` and `/number-fill/`.
+6. Submit `https://your-domain/sitemap.xml` in Google Search Console and request indexing of `/`, `/word-fill/`, `/crossword/`, `/number-fill/` and `/sudoku/`.
 
 ### Putting each tool on its own subdomain (the 3-subdomain plan)
 
-GitHub Pages allows one custom domain per repo. If you want  `wordfill.example.com` and `crossword.example.com` (and `numbers.example.com`
-  when the third tool ships):
+GitHub Pages allows one custom domain per repo. If you want  `wordfill.example.com`, `crossword.example.com`, `numbers.example.com`
+  or `sudoku.example.com`:
 
 - Keep this repo as the hub (apex or `puzzles.example.com`).
 - For each tool, copy its folder (plus `css/`, `js/ads.js`, the legal pages and
@@ -134,5 +139,6 @@ search traffic.
   for the tools themselves (only advertisers set cookies — see privacy.html).
 - All word data is original/common-word content; nothing is copied from
   published puzzle books, which keeps the site compliant with AdSense policies.
-- All three generators are pure logic built on the shared `js/puzzle-core.js`
-  placement engine.
+- The word fill-in, crossword and number fill-in generators are pure logic built
+  on the shared `js/puzzle-core.js` placement engine; the sudoku generator is
+  standalone (full-grid generation + unique-solution removal).

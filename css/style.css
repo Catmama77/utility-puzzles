@@ -382,6 +382,61 @@ p {
   }
 }
 
+/* ---------- Sudoku ---------- */
+
+.puzzle-grid.sudoku {
+  gap: 0;
+  border: 2px solid #334155;
+  border-radius: 6px;
+}
+
+.puzzle-grid.sudoku .cell {
+  width: 42px;
+  height: 42px;
+  font-size: 22px;
+  border: 1px solid #cbd5e1;
+  border-radius: 0;
+}
+
+.puzzle-grid.sudoku .cell.thick-right {
+  border-right: 2px solid #334155;
+}
+
+.puzzle-grid.sudoku .cell.thick-bottom {
+  border-bottom: 2px solid #334155;
+}
+
+.puzzle-grid.sudoku .cell.given {
+  font-weight: 700;
+}
+
+.sudoku-input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--accent);
+  font-family: inherit;
+  outline: none;
+  padding: 0;
+}
+
+.puzzle-grid.sudoku .cell.wrong {
+  background: #fee2e2;
+}
+
+.puzzle-grid.show-answers .sudoku-input {
+  display: none;
+}
+
+.puzzle-grid.show-answers .cell:not(.given)::after {
+  content: attr(data-answer);
+  font-weight: 600;
+}
+
 /* ---------- Articles ---------- */
 
 .article {
@@ -525,6 +580,31 @@ p {
   a {
     color: #000;
     text-decoration: none;
+  }
+
+  .puzzle-grid.sudoku {
+    gap: 0;
+    border: 2px solid #000;
+  }
+
+  .puzzle-grid.sudoku .cell {
+    width: 26px;
+    height: 26px;
+    font-size: 16px;
+    border: 1px solid #000;
+    border-radius: 0;
+  }
+
+  .puzzle-grid.sudoku .cell.thick-right {
+    border-right: 2px solid #000;
+  }
+
+  .puzzle-grid.sudoku .cell.thick-bottom {
+    border-bottom: 2px solid #000;
+  }
+
+  .puzzle-grid.sudoku .sudoku-input {
+    display: none;
   }
 }
 
