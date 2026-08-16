@@ -65,6 +65,26 @@ difficulties, verifying slot integrity, numbering, clues/themes and layout).
 5. The domain is already wired in: `sitemap.xml`, `robots.txt`, the contact email
    and the `CNAME` file all use `helpuhelpurself.com`. If you ever switch domain,
    update those files and the `CNAME` file.
+
+### DNS records (name.com)
+
+For the bare domain (`helpuhelpurself.com`), add 4 A records with Host `@`:
+
+| Type | Host | Answer |
+|---|---|---|
+| A | @ | 185.199.108.153 |
+| A | @ | 185.199.109.153 |
+| A | @ | 185.199.110.153 |
+| A | @ | 185.199.111.153 |
+
+For the `www` subdomain, add 1 CNAME record:
+
+| Type | Host | Answer |
+|---|---|---|
+| CNAME | www | Catmama77.github.io |
+
+GitHub Pages serves the apex domain and automatically redirects `www` to it,
+so the `CNAME` file stays as-is — no GitHub-side change needed for `www`.
 6. Submit `https://your-domain/sitemap.xml` in Google Search Console and request indexing of `/`, `/word-fill/`, `/crossword/` and `/number-fill/`.
 
 ### Putting each tool on its own subdomain (the 3-subdomain plan)
