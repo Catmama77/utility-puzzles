@@ -68,7 +68,16 @@ difficulties, verifying slot integrity, numbering, clues/themes and layout).
 
 ### DNS records (name.com)
 
-For the bare domain (`helpuhelpurself.com`), add 4 A records with Host `@`:
+The site is served at `https://www.helpuhelpurself.com` (www-primary setup,
+which needs only a CNAME record and gives HTTPS automatically):
+
+| Type | Host | Answer |
+|---|---|---|
+| CNAME | www | Catmama77.github.io |
+
+Optional — make the bare domain `helpuhelpurself.com` forward to `www`
+using name.com's URL forwarding (or add these 4 A records with Host `@`
+and GitHub will redirect the apex to `www` automatically):
 
 | Type | Host | Answer |
 |---|---|---|
@@ -77,14 +86,8 @@ For the bare domain (`helpuhelpurself.com`), add 4 A records with Host `@`:
 | A | @ | 185.199.110.153 |
 | A | @ | 185.199.111.153 |
 
-For the `www` subdomain, add 1 CNAME record:
-
-| Type | Host | Answer |
-|---|---|---|
-| CNAME | www | Catmama77.github.io |
-
-GitHub Pages serves the apex domain and automatically redirects `www` to it,
-so the `CNAME` file stays as-is — no GitHub-side change needed for `www`.
+If you switch primary domains, update the `CNAME` file, `sitemap.xml` and
+`robots.txt` to match.
 6. Submit `https://your-domain/sitemap.xml` in Google Search Console and request indexing of `/`, `/word-fill/`, `/crossword/` and `/number-fill/`.
 
 ### Putting each tool on its own subdomain (the 3-subdomain plan)

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://helpuhelpurself.com/sitemap.xml
+Sitemap: https://www.helpuhelpurself.com/sitemap.xml
