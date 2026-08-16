@@ -25,7 +25,7 @@
     Object.keys(WORD_DATA).forEach(function (cat) {
       var opt = document.createElement("option");
       opt.value = cat;
-      opt.textContent = CrosswordGen.CATEGORY_LABELS[cat] || cat;
+      opt.textContent = CATEGORY_LABELS[cat] || cat;
       catSel.appendChild(opt);
     });
     catSel.value = "animals";
@@ -56,6 +56,18 @@
           letter.className = "letter";
           letter.textContent = cell.letter;
           div.appendChild(letter);
+
+          var input = document.createElement("input");
+          input.type = "text";
+          input.maxLength = 1;
+          input.className = "cell-input";
+          input.dataset.pos = r + "," + c;
+          input.setAttribute("aria-label", "Row " + (r + 1) + ", column " + (c + 1));
+          input.addEventListener("input", function () {
+            this.value = this.value.replace(/[^A-Za-z]/g, "").toUpperCase().slice(0, 1);
+            this.parentNode.classList.remove("wrong");
+          });
+          div.appendChild(input);
         }
         gridEl.appendChild(div);
       }
@@ -113,6 +125,39 @@
     $("answers-btn").textContent = showing ? "Hide Answers" : "Show Answers";
   }
 
+  function checkPuzzle() {
+    if (!currentPuzzle) return;
+    var gridEl = $("puzzle-grid");
+    var inputs = gridEl.querySelectorAll("input.cell-input");
+    var wrong = 0;
+    var filled = 0;
+    for (var i = 0; i < inputs.length; i++) {
+      var inp = inputs[i];
+      var cell = inp.parentNode;
+      cell.classList.remove("wrong");
+      var v = inp.value.trim();
+      if (!v) continue;
+      filled++;
+      var parts = inp.dataset.pos.split(",");
+      var r = +parts[0];
+      var c = +parts[1];
+      if (v !== currentPuzzle.grid[r][c].letter) {
+        cell.classList.add("wrong");
+        wrong++;
+      }
+    }
+    if (wrong > 0) {
+      $("status").textContent = wrong + " wrong " + (wrong === 1 ? "entry" : "entries") +
+        " — fix " + (wrong === 1 ? "it" : "them") + " and check again.";
+    } else if (filled === 0) {
+      $("status").textContent = "Type some letters first, then check again.";
+    } else if (filled === inputs.length) {
+      $("status").textContent = "Solved! Every letter is correct. 🎉";
+    } else {
+      $("status").textContent = "Everything you've entered is correct so far — keep going!";
+    }
+  }
+
   function doPrint(withAnswers) {
     var gridEl = $("puzzle-grid");
     if (withAnswers) {
@@ -133,6 +178,7 @@
     populateSelects();
     $("new-btn").addEventListener("click", newPuzzle);
     $("answers-btn").addEventListener("click", toggleAnswers);
+    $("check-btn").addEventListener("click", checkPuzzle);
     $("print-puzzle-btn").addEventListener("click", function () { doPrint(false); });
     $("print-answers-btn").addEventListener("click", function () { doPrint(true); });
     newPuzzle();
