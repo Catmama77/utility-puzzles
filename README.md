@@ -184,6 +184,11 @@ cage sums + uniqueness, cross math line equations + uniqueness, futoshiki sign c
 skyscrapers clue accuracy, calcudoku cage rules, hidato path adjacency, and slitherlink loop
 validity + uniqueness).
 
+`node test-dom-all.js` runs the DOM-harness UI tests (render, check, answers, print paths) for
+the tool pages, and `node test-live-smoke.js` fetches the **deployed site** and drives every live
+game's real code (New Puzzle → different puzzle, Check, Answers) — it needs network access and
+is meant to be run after a deploy rather than in CI.
+
 ## Deploy to GitHub Pages
 
 1. Create a new **public** repo on GitHub (e.g. `brainy-puzzles`).
