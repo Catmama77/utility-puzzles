@@ -87,26 +87,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.helpuhelpurself.com/articles/how-to-solve-word-searches.html</loc>
-    <lastmod>2026-08-16</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.helpuhelpurself.com/articles/how-to-solve-fill-in-puzzles.html</loc>
-    <lastmod>2026-08-16</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.helpuhelpurself.com/articles/how-to-play-sudoku.html</loc>
-    <lastmod>2026-08-16</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.helpuhelpurself.com/articles/puzzle-difficulty-levels-explained.html</loc>
-    <lastmod>2026-08-16</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://www.helpuhelpurself.com/articles/word-scramble-games-in-the-classroom.html</loc>
     <lastmod>2026-08-16</lastmod>
     <priority>0.6</priority>
@@ -127,7 +107,27 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://www.helpuhelpurself.com/articles/puzzle-difficulty-levels-explained.html</loc>
+    <lastmod>2026-08-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.helpuhelpurself.com/articles/make-your-own-puzzles.html</loc>
+    <lastmod>2026-08-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.helpuhelpurself.com/articles/how-to-solve-word-searches.html</loc>
+    <lastmod>2026-08-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.helpuhelpurself.com/articles/how-to-solve-fill-in-puzzles.html</loc>
+    <lastmod>2026-08-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.helpuhelpurself.com/articles/how-to-play-sudoku.html</loc>
     <lastmod>2026-08-16</lastmod>
     <priority>0.6</priority>
   </url>
