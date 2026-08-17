@@ -88,7 +88,12 @@
   </url>
   <url>
     <loc>https://www.helpuhelpurself.com/articles/how-to-solve-kakuro.html</loc>
-    <lastmod>2026-08-17</lastmod>
+    <lastmod>2026-08-16</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.helpuhelpurself.com/articles/how-to-play-sudoku.html</loc>
+    <lastmod>2026-08-16</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
@@ -128,11 +133,6 @@
   </url>
   <url>
     <loc>https://www.helpuhelpurself.com/articles/how-to-solve-fill-in-puzzles.html</loc>
-    <lastmod>2026-08-16</lastmod>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.helpuhelpurself.com/articles/how-to-play-sudoku.html</loc>
     <lastmod>2026-08-16</lastmod>
     <priority>0.6</priority>
   </url>
