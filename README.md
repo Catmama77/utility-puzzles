@@ -4,7 +4,7 @@ A static site (no backend, no database) with free printable puzzle generators,
 built to be monetized with Google AdSense. Every puzzle is generated in the
 visitor's browser and can be printed or saved as PDF, with an answer key.
 
-**Current tools (16):**
+**Current tools (17):**
 - Word Fill-In (word fit) puzzles — 6 categories × 3 difficulty levels, printable with answers.
 - Crossword maker — automatic grids with hand-written clues, across/down lists, answers option.
 - Number Fill-In — number fit puzzles with fresh random numbers, 5 themes × 3 difficulty levels.
@@ -21,6 +21,7 @@ visitor's browser and can be printed or saved as PDF, with an answer key.
 - Maze — perfect mazes (exactly one solution path) in three sizes, print blank or with solution.
 - Kakuro — cross-sum number logic puzzles in three sizes and three difficulty levels.
 - Cryptogram — decode hidden themed sentences written in a letter-substitution cipher, three difficulty levels.
+- Nonogram — picross picture-logic puzzles with unique solutions, three sizes and difficulty levels.
 
 **Print-friendly bulk mode:** every generator has a "per page" selector. Print
 up to **8 sudoku / wordoku** per sheet, up to **2 of the other puzzle types**
@@ -30,7 +31,7 @@ completed grids in the same layout.
 
 **Uniqueness guarantee:** every puzzle in a batch is guaranteed distinct — no
 matter how many puzzles you put on a page, each one is different (verified by
-the test suites across all fifteen generators).
+the test suites across all sixteen generators).
 
 ## Project layout
 
@@ -85,6 +86,7 @@ number-search/        Number search tool
   js/app.js           Page UI (click-to-find solving)
 kakuro/               Kakuro tool
 cryptogram/           Cryptogram tool
+nonogram/             Nonogram (picross) tool
   js/crypto.js        Letter-substitution generator (themed sentences)
   js/app.js           Page UI (auto-fill decoding + check)
   js/kakuro.js        Cross-sum generator (run sums, unique fill)
@@ -137,7 +139,7 @@ homepage and `/articles/`.
 python3 -m http.server 8000      # then open http://localhost:8000
 ```
 
-All fifteen generators are tested with `node test-generator.js`, `node test-crossword.js`,
+All sixteen generators are tested with `node test-generator.js`, `node test-crossword.js`,
 `node test-numbers.js`, `node test-sudoku.js`, `node test-bingo.js`, `node test-search.js`,
 `node test-scramble.js`, `node test-wordoku.js`, `node test-maze.js`, `node test-matching.js`,
 `node test-ladders.js`, `node test-cipher.js`, `node test-wheel.js`, `node test-nsearch.js`

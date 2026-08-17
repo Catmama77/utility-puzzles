@@ -32,7 +32,7 @@ const TOOL_ORDER = [
   "word-fill", "crossword", "number-fill", "sudoku", "bingo",
   "word-search", "word-scramble", "wordoku", "number-search",
   "word-wheel", "word-ladders", "code-breaker", "matching", "maze", "kakuro",
-  "cryptogram",
+  "cryptogram", "nonogram",
 ];
 const LEGAL_PAGES = ["about.html", "contact.html", "privacy.html", "terms.html"];
 

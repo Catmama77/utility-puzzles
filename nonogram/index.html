@@ -3,26 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kakuro Maker — Free Printable Kakuro Puzzles</title>
-  <meta name="description" content="Free kakuro puzzle generator. Create printable cross-sum puzzles in 8×8, 10×10 and 12×12 grids at three difficulty levels. Fill each white run of cells with digits 1–9 so it adds up to the clue — no repeats within a run. Print or download as PDF, with answers.">
+  <title>Nonogram Maker — Free Printable Picross &amp; Griddler Puzzles</title>
+  <meta name="description" content="Free nonogram (picross / griddler) puzzle generator. Create printable picture-logic puzzles at three difficulty levels with unique solutions. Solve on screen or print or download as PDF, with answers.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/style.css">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9864335019534391" crossorigin="anonymous"></script>
-  <link rel="canonical" href="https://www.helpuhelpurself.com/kakuro/">
+  <link rel="canonical" href="https://www.helpuhelpurself.com/nonogram/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="UtilityPuzzles">
-  <meta property="og:title" content="Kakuro Maker — Free Printable Kakuro Puzzles">
-  <meta property="og:description" content="Free kakuro puzzle generator. Create printable cross-sum puzzles in 8×8, 10×10 and 12×12 grids at three difficulty levels. Print or download as PDF, with answers.">
-  <meta property="og:url" content="https://www.helpuhelpurself.com/kakuro/">
+  <meta property="og:title" content="Nonogram Maker — Free Printable Picross &amp; Griddler Puzzles">
+  <meta property="og:description" content="Free nonogram puzzle generator. Create printable picture-logic puzzles with unique solutions. Print or download as PDF, with answers.">
+  <meta property="og:url" content="https://www.helpuhelpurself.com/nonogram/">
   <meta name="twitter:card" content="summary">
-  <!-- AdSense: see /js/ads.js — set your publisher ID there, then remove this comment -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Kakuro Maker",
-    "url": "https://www.helpuhelpurself.com/kakuro/",
-    "description": "Free printable kakuro (cross-sum) puzzle generator in three grid sizes and three difficulty levels, with an on-screen solver and answers.",
+    "name": "Nonogram Maker",
+    "url": "https://www.helpuhelpurself.com/nonogram/",
+    "description": "Free printable nonogram (picross) puzzles — reveal the hidden picture by filling squares according to the number clues.",
     "applicationCategory": "GameApplication",
     "operatingSystem": "Web",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
@@ -36,15 +35,15 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "How do you play kakuro?",
+        "name": "How do you solve a nonogram?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Fill every white cell with a digit from 1 to 9. Each run of white cells — horizontal or vertical — must add up to the number in the black cell at the start of the run, and no digit can repeat within a run."
+          "text": "The numbers at the start of each row and column tell you how many runs of filled squares that line contains, in order. A clue of '2 1' means a block of 2 filled squares, then a gap, then 1 filled square. Compare the row and column clues to work out which squares must be filled and which must stay empty."
         }
       },
       {
         "@type": "Question",
-        "name": "Is the kakuro maker free?",
+        "name": "Is the nonogram maker free?",
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "Yes. Every generator on this site is completely free and unlimited. There is no account, no sign-up and no watermark, and you can generate as many puzzles as you like."
@@ -52,15 +51,15 @@
       },
       {
         "@type": "Question",
-        "name": "What do the clue numbers mean?",
+        "name": "What do the difficulty levels change?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "In each black cell, the small number in the top-right corner is the sum for the run of white cells to its right; the number in the bottom-left corner is the sum for the run of white cells below it."
+          "text": "Easy nonograms are 8x8 grids, Medium are 10x10, and Hard are 12x12. Bigger grids have longer clue lists and more combinations, so they take more logic to solve. Every puzzle has exactly one solution."
         }
       },
       {
         "@type": "Question",
-        "name": "How do I print a kakuro puzzle?",
+        "name": "How do I print a nonogram?",
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "Click Print / PDF to print the blank puzzle, or Print Answers for the completed grid. In the print dialog choose Save as PDF to download a file. You can print up to 2 puzzles per sheet."
@@ -106,33 +105,42 @@
   </header>
 
   <main>
-    <h1>Kakuro Maker</h1>
-    <p class="lead">Kakuro is the number-logic cousin of sudoku — sometimes called cross-sums. Fill each run of white cells with digits from 1 to 9 so the run adds up to the clue in its black cell, with no digit repeated inside a run. Choose 8 × 8, 10 × 10 or 12 × 12 grids at three difficulty levels, solve on screen, and print or download as PDF with an answers option.</p>
+    <h1>Nonogram Maker</h1>
+    <p class="lead">Reveal the hidden picture! Every nonogram (also called picross or griddler) is a logic puzzle: the numbers at the start of each row and column tell you how many runs of filled squares belong there. Compare the clues, fill in the squares, and the picture appears. Every puzzle has exactly one solution — and every sheet is unique. Choose a size and difficulty, solve on screen or print.</p>
 
     <div class="controls">
       <div class="field">
-        <label for="size">Grid size</label>
-        <select id="size"></select>
-      </div>
-      <div class="field">
         <label for="difficulty">Difficulty</label>
-        <select id="difficulty"></select>
+        <select id="difficulty">
+          <option value="easy">Easy (8×8)</option>
+          <option value="medium" selected>Medium (10×10)</option>
+          <option value="hard">Hard (12×12)</option>
+        </select>
       </div>
       <div class="field">
-        <label for="count">Puzzles per page</label>
-        <select id="count"></select>
+        <label for="count">Sheets per page</label>
+        <select id="count">
+          <option value="1" selected>1</option>
+          <option value="2">2</option>
+        </select>
       </div>
-      <button type="button" id="new-btn" class="button">New Puzzle</button>
+      <button type="button" id="new-btn" class="button">New Nonogram</button>
       <button type="button" id="check-btn" class="button secondary">Check</button>
       <button type="button" id="answers-btn" class="button secondary">Show Answers</button>
       <button type="button" id="print-puzzle-btn" class="button secondary">Print / PDF</button>
       <button type="button" id="print-answers-btn" class="button secondary">Print Answers</button>
     </div>
 
+    <div class="controls">
+      <span class="field-label">Draw with:</span>
+      <button type="button" id="mode-fill" class="button small active">Fill ■</button>
+      <button type="button" id="mode-cross" class="button small">Mark ×</button>
+    </div>
+
     <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
 
     <div class="puzzle-wrap" id="puzzle-wrap">
-      <div class="sheets kakuro-sheets" id="sheets"></div>
+      <div class="sheets nono-sheets" id="sheets"></div>
     </div>
 
     <p id="status" style="color:#6b7280; font-size:14px; margin-top:12px;"></p>
@@ -140,42 +148,42 @@
     <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
 
     <section class="card">
-      <h2>How to use the kakuro maker</h2>
-      <p>Choose a grid size and difficulty, and a fresh puzzle appears instantly — every puzzle is different, and no two puzzles on a page share the same layout.</p>
+      <h2>How to use the nonogram maker</h2>
+      <p>Pick a difficulty and a fresh nonogram appears instantly — every sheet is different, and no two sheets on a page repeat the same puzzle.</p>
       <ul>
-        <li><strong>Reading the clues:</strong> in each black cell the top-right number is the sum of the white cells to its right; the bottom-left number is the sum of the white cells below it.</li>
-        <li><strong>Solving:</strong> start with the shortest runs — a run of two cells with a clue of 3 must be 1 and 2, so any cell they share with a crossing run is instantly narrowed down.</li>
-        <li><strong>Solve on screen:</strong> click a white cell and type a digit, or use the arrow keys to move between cells. Check highlights anything wrong.</li>
-        <li><strong>Printing:</strong> “Print / PDF” prints the blank puzzle — up to 2 per sheet. “Print Answers” prints the completed grid.</li>
+        <li><strong>How it works:</strong> the numbers at the start of each row and column list the runs of filled squares in that line, in order. A clue of “2 1” means a block of 2 filled squares, then at least one empty square, then a block of 1.</li>
+        <li><strong>Solve on screen:</strong> click a square to fill it black, right-click or Shift+click to mark a square × (definitely empty). Use the Fill / Mark × buttons for touch screens, and the arrow keys to move around.</li>
+        <li><strong>Strategy:</strong> start with rows or columns whose clue numbers add up to nearly the full length — those force most of their squares. A clue of “8” on a 10-wide row fills 6 of its 10 squares in every solution.</li>
+        <li><strong>Printing:</strong> “Print / PDF” prints the blank puzzle — up to 2 per page. “Print Answers” prints the completed grid.</li>
       </ul>
     </section>
 
     <section class="card">
-      <h2>The rules of kakuro</h2>
+      <h2>The rules of nonograms</h2>
       <ol>
-        <li>Fill every white cell with a digit from 1 to 9.</li>
-        <li>Each horizontal run must add up to the clue in the black cell at its left.</li>
-        <li>Each vertical run must add up to the clue in the black cell above it.</li>
-        <li>No digit may repeat within a single run — but digits may repeat across different runs.</li>
-        <li>There is exactly one solution, reachable by logic and simple arithmetic.</li>
+        <li>Each row and column has a list of clue numbers, read from the edge toward the grid.</li>
+        <li>Each clue number is the length of one block of filled squares in that line.</li>
+        <li>Blocks are separated by at least one empty square, and the clues appear in order.</li>
+        <li>Every puzzle has exactly one solution, reachable by logic alone.</li>
       </ol>
     </section>
 
     <section class="card">
       <h2>Frequently asked questions</h2>
-      <h3>How do you play kakuro?</h3>
-      <p>Fill every white cell with a digit from 1 to 9. Each run of white cells — horizontal or vertical — must add up to the number in the black cell at the start of the run, and no digit can repeat within a run.</p>
-      <h3>Is the kakuro maker free?</h3>
+      <h3>How do you solve a nonogram?</h3>
+      <p>The numbers at the start of each row and column tell you how many runs of filled squares that line contains, in order. A clue of “2 1” means a block of 2 filled squares, then a gap, then 1 filled square. Compare the row and column clues to work out which squares must be filled and which must stay empty.</p>
+      <h3>Is the nonogram maker free?</h3>
       <p>Yes. Every generator on this site is completely free and unlimited. There is no account, no sign-up and no watermark, and you can generate as many puzzles as you like.</p>
-      <h3>What do the clue numbers mean?</h3>
-      <p>In each black cell, the small number in the top-right corner is the sum for the run of white cells to its right; the number in the bottom-left corner is the sum for the run of white cells below it.</p>
-      <h3>How do I print a kakuro puzzle?</h3>
-      <p>Click “Print / PDF” to print the blank puzzle, or “Print Answers” for the completed grid. In the print dialog choose “Save as PDF” to download a file. You can print up to 2 puzzles per sheet.</p>
+      <h3>What do the difficulty levels change?</h3>
+      <p>Easy nonograms are 8×8 grids, Medium are 10×10, and Hard are 12×12. Bigger grids have longer clue lists and more combinations, so they take more logic to solve. Every puzzle has exactly one solution.</p>
+      <h3>How do I print a nonogram?</h3>
+      <p>Click “Print / PDF” to print the blank puzzle, or “Print Answers” for the completed grid. In the print dialog choose “Save as PDF” to download a file.</p>
+    </section>
+
     <section class="card related">
       <h2>Related guides</h2>
-      <p><a href="/articles/how-to-solve-kakuro.html">How to Solve Kakuro: Rules, Tips and Strategies for Beginners</a></p>
       <p><a href="/articles/puzzle-difficulty-levels-explained.html">Puzzle Difficulty Levels Explained: What Easy, Medium and Hard Really Mean</a></p>
-      <p><a href="/articles/how-to-play-sudoku.html">How to Play Sudoku: Rules, Tips and Strategies for Beginners</a></p>
+      <p><a href="/articles/how-to-solve-kakuro.html">How to Solve Kakuro: Rules, Tips and Strategies for Beginners</a></p>
       <p><a href="/articles/benefits-of-puzzles.html">Are Puzzles Good for Your Brain? The Science of Solving</a></p>
     </section>
   </main>
@@ -186,7 +194,7 @@
 
   <script src="/js/ads.js"></script>
   <script src="/js/site.js"></script>
-  <script src="js/kakuro.js"></script>
+  <script src="js/nono.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

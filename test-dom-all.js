@@ -42,7 +42,10 @@ function makeEl(tag) {
     tagName: tag.toUpperCase(),
     children: [],
     parentNode: null,
-    style: { setProperty: function (k, v) { this[k] = v; } },
+    style: {
+      setProperty: function (k, v) { this[k] = v; },
+      getPropertyValue: function (k) { return this[k] !== undefined ? String(this[k]) : ""; }
+    },
     // real browsers coerce dataset values to strings — so does the shim
     dataset: new Proxy({}, { set: (t, k, v) => { t[k] = String(v); return true; } }),
     _listeners: {},
@@ -90,6 +93,11 @@ function makeEl(tag) {
     },
     querySelector(sel) {
       return allEls.filter(x => isDescendant(x, el) && matchesSel(x, sel))[0] || null;
+    },
+    closest(sel) {
+      let n = el;
+      while (n) { if (matchesSel(n, sel)) return n; n = n.parentNode; }
+      return null;
     }
   };
   allEls.push(el);
@@ -168,6 +176,7 @@ function makeContext(doc) {
   const sandbox = {
     console: { log: console.log, error: console.error, warn: console.warn },
     setTimeout: (fn) => { fn(); return 0; }, // synchronous for the harness
+    addEventListener: () => {}, // browser windows have one (used for afterprint etc.)
     Math, Date, JSON, String, Number, parseInt, parseFloat, Array, Object, Set, RegExp, isNaN
   };
   sandbox.window = sandbox; // generators assign globals to window === globalThis
@@ -202,6 +211,15 @@ function fireKeydown(ctx, elExpr, key) {
 
 function fireCellClick(ctx, cellExpr) {
   vm.runInContext("(function () { var el = " + cellExpr + "; var ls = el._listeners['click'] || []; if (ls.length) ls[ls.length - 1].call(el); })()", ctx);
+}
+
+// nonogram-style delegated events: the listener lives on #sheets and reads e.target
+function fireSheetsClick(ctx, cellExpr, shiftKey) {
+  vm.runInContext("(function () { var cell = " + cellExpr + "; var sheets = document.getElementById('sheets'); var ls = sheets._listeners['click'] || []; if (ls.length) ls[ls.length - 1]({ target: cell, shiftKey: " + (shiftKey ? "true" : "false") + " }); })()", ctx);
+}
+
+function fireSheetsContext(ctx, cellExpr) {
+  vm.runInContext("(function () { var cell = " + cellExpr + "; var sheets = document.getElementById('sheets'); var ls = sheets._listeners['contextmenu'] || []; if (ls.length) ls[ls.length - 1]({ target: cell, preventDefault: function () {} }); })()", ctx);
 }
 
 function q(ctx, sel) {
@@ -923,6 +941,66 @@ function testCryptogram() {
   ok(true, "print paths fire");
 }
 
+function testNonogram() {
+  resetDom();
+  console.log("Nonogram:");
+  const { ctx } = setup(
+    ["difficulty", "count", "sheets", "new-btn", "check-btn", "answers-btn", "print-puzzle-btn", "print-answers-btn", "mode-fill", "mode-cross", "status"],
+    ["nonogram/js/nono.js", "nonogram/js/app.js"]
+  );
+
+  ok(gridCount(ctx) === 1, "renders 1 nonogram by default");
+  const size = vm.runInContext("(function(){ var g=document.querySelector('#sheets .puzzle-grid'); return parseInt(g.style.getPropertyValue('--n'),10)||0; })()", ctx);
+  ok(size === 10, "medium default is 10x10 (n=" + size + ")");
+  ok(q(ctx, "#sheets .cell").length === size * size, "renders " + size + "x" + size + " cells (" + q(ctx, "#sheets .cell").length + ")");
+  ok(q(ctx, "#sheets .nono-clue").length === (size + 1) * 2 - 1, "clue gutters render (" + q(ctx, "#sheets .nono-clue").length + ")");
+
+  // click fills a square black; shift+click marks ×; right-click toggles × off
+  const firstCell = "Array.from(document.querySelectorAll('#sheets .cell'))[0]";
+  fireSheetsClick(ctx, firstCell, false);
+  ok(elClass(ctx, firstCell).indexOf("black") !== -1, "click fills a square black");
+  fireSheetsClick(ctx, firstCell, true);
+  ok(elClass(ctx, firstCell).indexOf("cross") !== -1 && elClass(ctx, firstCell).indexOf("black") === -1, "shift+click marks × and clears black");
+  fireSheetsContext(ctx, firstCell);
+  ok(elClass(ctx, firstCell).indexOf("cross") === -1, "right-click toggles × off");
+
+  // Mark × mode makes a plain click mark a cross
+  fireClick(ctx, "mode-cross");
+  fireSheetsClick(ctx, firstCell, false);
+  ok(elClass(ctx, firstCell).indexOf("cross") !== -1, "Mark × mode + click marks ×");
+
+  // overfill everything black, then check flags wrong squares
+  vm.runInContext("(function(){ var els=Array.from(document.querySelectorAll('#sheets .cell')); for (var i=0;i<els.length;i++){ els[i].classList.add('black'); els[i].classList.remove('cross'); } })()", ctx);
+  fireClick(ctx, "check-btn");
+  ok(/don't match/.test(elText(ctx, "document.getElementById('status')")), "check flags wrong squares when overfilled");
+
+  // answers fills the correct solution, then check passes
+  fireClick(ctx, "answers-btn");
+  fireClick(ctx, "check-btn");
+  ok(/correct so far/.test(elText(ctx, "document.getElementById('status')")), "check passes after showing answers");
+
+  // difficulty sizes
+  vm.runInContext("document.getElementById('difficulty').value = 'easy'", ctx);
+  fireClick(ctx, "new-btn");
+  const easySize = vm.runInContext("(function(){ var g=document.querySelector('#sheets .puzzle-grid'); return parseInt(g.style.getPropertyValue('--n'),10)||0; })()", ctx);
+  ok(easySize === 8, "easy is 8x8 (n=" + easySize + ")");
+  vm.runInContext("document.getElementById('difficulty').value = 'hard'", ctx);
+  fireClick(ctx, "new-btn");
+  const hardSize = vm.runInContext("(function(){ var g=document.querySelector('#sheets .puzzle-grid'); return parseInt(g.style.getPropertyValue('--n'),10)||0; })()", ctx);
+  ok(hardSize === 12, "hard is 12x12 (n=" + hardSize + ")");
+
+  // 2 per page
+  vm.runInContext("document.getElementById('count').value = '2'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(gridCount(ctx) === 2, "renders 2 nonograms with count=2");
+  ok(sheetsClass(ctx).indexOf("sheets-2") !== -1, "sheets-2 class applied");
+
+  // print paths
+  fireClick(ctx, "print-puzzle-btn");
+  fireClick(ctx, "print-answers-btn");
+  ok(true, "print paths fire");
+}
+
 /* ---------- run ---------- */
 
 // fresh DOM between tools: each test builds its own document tree
@@ -943,7 +1021,7 @@ testSudoku();
 testWordSearch();
 testWordScramble();
 testBingo();
-testCryptogram();
+testNonogram();
 
 console.log("\n" + passed + " passed, " + failed + " failed");
 if (failed > 0) {

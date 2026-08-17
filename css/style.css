@@ -701,6 +701,106 @@ p {
   font-size: 13px;
 }
 
+/* ---------- Nonogram ---------- */
+
+.puzzle-grid.nonogram {
+  --cell: 30px;
+  display: grid;
+  grid-template-columns: 54px repeat(var(--n), var(--cell));
+  grid-template-rows: 56px repeat(var(--n), var(--cell));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  width: max-content;
+  margin: 0 auto;
+}
+
+.puzzle-grid.nonogram .cell {
+  width: auto;
+  height: auto;
+  border: none;
+  border-radius: 0;
+  background: #fff;
+  cursor: pointer;
+}
+
+.puzzle-grid.nonogram .cell.black {
+  background: var(--black);
+}
+
+.puzzle-grid.nonogram .cell.cross::after {
+  content: "×";
+  color: #9ca3af;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.puzzle-grid.nonogram .cell.wrong {
+  outline: 2px solid #dc2626;
+  outline-offset: -2px;
+}
+
+.puzzle-grid.nonogram .cell:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+.puzzle-grid.nonogram .nono-clue {
+  background: #f3f4f6;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+  text-align: center;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.puzzle-grid.nonogram .nono-clue.row {
+  justify-content: flex-end;
+  padding-right: 6px;
+}
+
+.puzzle-grid.nonogram .nono-clue.col {
+  align-items: flex-end;
+  padding-bottom: 3px;
+  gap: 1px;
+}
+
+.puzzle-grid.nonogram .nono-clue.corner {
+  background: #e5e7eb;
+}
+
+.nono-legend {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.controls .field-label {
+  font-size: 13px;
+  color: var(--muted);
+  margin-right: 6px;
+  align-self: center;
+}
+
+.button.small {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.button.small.active {
+  background: var(--accent);
+  color: #fff;
+}
+
 /* ---------- Word Search ---------- */
 
 .puzzle-grid.search {
@@ -1305,6 +1405,30 @@ p {
 
   .puzzle-grid .cell.black {
     background: #000;
+  }
+
+  /* Nonogram */
+  .puzzle-grid.nonogram {
+    --cell: 26px;
+    grid-template-columns: 46px repeat(var(--n), var(--cell));
+    grid-template-rows: 46px repeat(var(--n), var(--cell));
+  }
+
+  .sheets.nono-sheets.sheets-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .sheets.nono-sheets.sheets-2 .puzzle-grid.nonogram {
+    --cell: 21px;
+    grid-template-columns: 38px repeat(var(--n), var(--cell));
+    grid-template-rows: 38px repeat(var(--n), var(--cell));
+  }
+
+  .sheets.nono-sheets.sheets-2 .nono-legend {
+    font-size: 10px;
   }
 
   .word-chip {
