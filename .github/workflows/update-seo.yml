@@ -8,6 +8,7 @@ name: Update sitemap and feed
 on:
   push:
     branches: [main]
+  workflow_dispatch: # also lets you run it manually from the Actions tab
 
 permissions:
   contents: write
