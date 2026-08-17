@@ -87,7 +87,9 @@ kakuro/               Kakuro tool
   js/app.js           Page UI (digit entry + check, arrow nav)
 articles/             SEO content hub + 11 original guides (each links to the tools)
 about.html / contact.html / privacy.html / terms.html   Required AdSense pages
-favicon.svg, robots.txt, sitemap.xml
+favicon.svg, robots.txt, sitemap.xml, feed.xml
+build-seo.js      Auto-generates sitemap.xml + feed.xml from the file tree (run `node build-seo.js`)
+.github/workflows/update-seo.yml   Regenerates sitemap/feed on every push and commits changes
 test-generator.js     Node sanity test for the fill-in generator
 test-crossword.js     Node sanity test for the crossword generator
 test-numbers.js       Node sanity test for the number generator
@@ -104,6 +106,25 @@ test-wheel.js         Node sanity test for the word wheel generator
 test-nsearch.js       Node sanity test for the number search generator
 test-kakuro.js        Node sanity test for the kakuro generator
 ```
+
+## Keeping sitemap.xml and the RSS feed up to date
+
+`sitemap.xml` and `feed.xml` are **auto-generated — don't edit them by hand**.
+`build-seo.js` walks the repo, finds every page, and writes both files, using
+each file's last git commit date for `<lastmod>`/`<pubDate>` (newest articles
+first in the feed).
+
+- **Locally:** after adding a page, run `node build-seo.js` and commit the
+  regenerated files.
+- **Automatically:** the GitHub Action in `.github/workflows/update-seo.yml`
+  runs `node build-seo.js` on every push to `main` and commits any changes
+  itself (its commits carry `[skip ci]` so it never loops). After adding a
+  tool or article you don't need to do anything — the sitemap and feed update
+  themselves and Google re-reads `sitemap.xml` (already referenced from
+  `robots.txt`) on its next crawl.
+
+The feed is linked from every page's footer and from the `<head>` of the
+homepage and `/articles/`.
 
 ## Try it locally
 

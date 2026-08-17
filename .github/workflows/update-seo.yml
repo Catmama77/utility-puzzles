@@ -1,0 +1,41 @@
+name: Update sitemap and feed
+
+# Runs after every push to main, regenerates sitemap.xml + feed.xml from the
+# site itself (build-seo.js) and commits any changes. Loop-safe: commits made
+# by this workflow carry "[skip ci]", which stops the workflow from re-triggering
+# on its own commits (and the `if` guard below is a second layer of protection).
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  update-seo:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Regenerate sitemap and feed
+        run: node build-seo.js
+
+      - name: Commit changes if any
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sitemap.xml feed.xml
+          if git diff --cached --quiet; then
+            echo "sitemap.xml and feed.xml are up to date — nothing to commit"
+          else
+            git commit -m "Auto-update sitemap.xml and feed.xml [skip ci]"
+            git push
+          fi
