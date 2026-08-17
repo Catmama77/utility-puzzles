@@ -100,6 +100,10 @@
         <label for="difficulty">Difficulty</label>
         <select id="difficulty"></select>
       </div>
+      <div class="field">
+        <label for="count">Puzzles per page</label>
+        <select id="count"></select>
+      </div>
       <button type="button" id="new-btn" class="button">New Puzzle</button>
       <button type="button" id="answers-btn" class="button secondary">Show Answers</button>
       <button type="button" id="check-btn" class="button secondary">Check</button>
@@ -110,11 +114,7 @@
     <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
 
     <div class="puzzle-wrap" id="puzzle-wrap">
-      <div class="print-heading">
-        <h1 id="print-title"></h1>
-        <p id="print-meta"></p>
-      </div>
-      <div class="puzzle-grid" id="puzzle-grid"></div>
+      <div class="sheets sudoku-sheets" id="sheets"></div>
     </div>
 
     <p id="status" style="color:#6b7280; font-size:14px; margin-top:12px;"></p>
@@ -128,7 +128,7 @@
         <li><strong>Grid sizes:</strong> 4 × 4 Mini for young kids, 6 × 6 Junior as a first step up, and the classic 9 × 9 for everyone else.</li>
         <li><strong>Difficulty:</strong> Easy leaves more clues, Hard leaves fewer. Each puzzle is generated with exactly one solution — no guessing required, ever.</li>
         <li><strong>Solving:</strong> Click any empty square and type a number. Use “Check” to highlight wrong entries in red, or “Show Answers” to see the whole grid.</li>
-        <li><strong>Printing:</strong> Click “Print / PDF” for a clean blank puzzle, or “Print Answers” for the completed grid. In the print dialog choose “Save as PDF” to download a file.</li>
+        <li><strong>Printing:</strong> Pick 1, 2, 4, 6 or 8 puzzles per page — great for a whole class or a week of practice — then click “Print / PDF” for the blank puzzles or “Print Answers” for the completed grids. In the print dialog choose “Save as PDF” to download a file.</li>
       </ul>
     </section>
 

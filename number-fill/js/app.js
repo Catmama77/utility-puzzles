@@ -1,11 +1,12 @@
 /* ============================================================
    Number Fill-In tool page UI.
+   Renders up to 2 puzzles per page (print-friendly utility).
    ============================================================ */
 
 (function () {
   "use strict";
 
-  var currentPuzzle = null;
+  var currentPuzzles = []; // array of puzzles, one per sheet
 
   function $(id) { return document.getElementById(id); }
 
@@ -29,6 +30,15 @@
       diffSel.appendChild(opt);
     });
     diffSel.value = "medium";
+
+    var countSel = $("count");
+    [1, 2].forEach(function (n) {
+      var opt = document.createElement("option");
+      opt.value = n;
+      opt.textContent = n + " per page";
+      countSel.appendChild(opt);
+    });
+    countSel.value = "1";
   }
 
   /* ---------- rendering ---------- */
@@ -73,8 +83,7 @@
     });
   }
 
-  function renderGrid(puzzle) {
-    var gridEl = $("puzzle-grid");
+  function renderGrid(puzzle, gridEl) {
     gridEl.innerHTML = "";
     gridEl.style.gridTemplateColumns = "repeat(" + puzzle.cols + ", max-content)";
 
@@ -119,8 +128,7 @@
     addArrowNav(gridEl, inputs, puzzle.rows, puzzle.cols);
   }
 
-  function renderNumberList(puzzle) {
-    var listEl = $("numberlist");
+  function renderNumberList(puzzle, listEl) {
     listEl.innerHTML = "";
 
     var groups = {};
@@ -155,22 +163,53 @@
     });
   }
 
-  function renderMeta(puzzle) {
-    $("print-title").textContent = puzzle.title;
-    $("print-meta").textContent =
+  function renderMeta(puzzle, titleEl, metaEl) {
+    titleEl.textContent = puzzle.title;
+    metaEl.textContent =
       puzzle.rows + " × " + puzzle.cols + " grid · " + puzzle.numbers.length + " numbers · " +
       (NumberGen.DIFFICULTY[puzzle.difficulty] || {}).label + " level";
-    $("status").textContent = puzzle.numbers.length + " numbers · " +
-      puzzle.rows + " × " + puzzle.cols + " grid";
   }
 
-  function render(puzzle) {
-    currentPuzzle = puzzle;
-    renderGrid(puzzle);
-    renderNumberList(puzzle);
-    renderMeta(puzzle);
-    $("puzzle-grid").classList.remove("show-answers");
+  function render(puzzles) {
+    currentPuzzles = puzzles;
+    var sheetsEl = $("sheets");
+    sheetsEl.innerHTML = "";
+
+    var n = puzzles.length;
+    sheetsEl.className = "sheets fillin-sheets sheets-" + n;
+
+    puzzles.forEach(function (puzzle, i) {
+      var sheet = document.createElement("div");
+      sheet.className = "puzzle-sheet";
+
+      var head = document.createElement("div");
+      head.className = "print-heading";
+      var title = document.createElement("h1");
+      title.className = "print-title";
+      var meta = document.createElement("p");
+      meta.className = "print-meta";
+      head.appendChild(title);
+      head.appendChild(meta);
+
+      var grid = document.createElement("div");
+      grid.className = "puzzle-grid";
+      grid.id = "puzzle-grid-" + i;
+
+      var list = document.createElement("div");
+      list.className = "wordlist";
+
+      sheet.appendChild(head);
+      sheet.appendChild(grid);
+      sheet.appendChild(list);
+      sheetsEl.appendChild(sheet);
+
+      renderGrid(puzzle, grid);
+      renderNumberList(puzzle, list);
+      renderMeta(puzzle, title, meta);
+    });
+
     $("answers-btn").textContent = "Show Answers";
+    $("status").textContent = n + (n === 1 ? " puzzle" : " puzzles") + " generated — ready to print.";
   }
 
   /* ---------- actions ---------- */
@@ -178,42 +217,61 @@
   function newPuzzle() {
     var theme = $("theme").value;
     var diff = $("difficulty").value;
-    render(NumberGen.makePuzzle(theme, diff));
+    var count = parseInt($("count").value, 10) || 1;
+    var puzzles = [];
+    for (var i = 0; i < count; i++) {
+      puzzles.push(NumberGen.makePuzzle(theme, diff));
+    }
+    render(puzzles);
   }
 
   function toggleAnswers() {
-    var gridEl = $("puzzle-grid");
-    var showing = gridEl.classList.toggle("show-answers");
+    var grids = document.querySelectorAll("#sheets .puzzle-grid");
+    var anyShowing = false;
+    for (var i = 0; i < grids.length; i++) {
+      if (grids[i].classList.contains("show-answers")) anyShowing = true;
+    }
+    var showing = !anyShowing;
+    for (var j = 0; j < grids.length; j++) {
+      if (showing) grids[j].classList.add("show-answers");
+      else grids[j].classList.remove("show-answers");
+    }
     $("answers-btn").textContent = showing ? "Hide Answers" : "Show Answers";
   }
 
   function checkPuzzle() {
-    if (!currentPuzzle) return;
-    var gridEl = $("puzzle-grid");
-    var inputs = gridEl.querySelectorAll("input.cell-input");
+    if (!currentPuzzles.length) return;
+    var grids = document.querySelectorAll("#sheets .puzzle-grid");
     var wrong = 0;
     var filled = 0;
-    for (var i = 0; i < inputs.length; i++) {
-      var inp = inputs[i];
-      var cell = inp.parentNode;
-      cell.classList.remove("wrong");
-      var v = inp.value.trim();
-      if (!v) continue;
-      filled++;
-      var parts = inp.dataset.pos.split(",");
-      var r = +parts[0];
-      var c = +parts[1];
-      if (v !== currentPuzzle.grid[r][c].letter) {
-        cell.classList.add("wrong");
-        wrong++;
+    var totalCells = 0;
+    for (var g = 0; g < grids.length; g++) {
+      var puzzle = currentPuzzles[g];
+      var inputs = grids[g].querySelectorAll("input.cell-input");
+      totalCells += inputs.length;
+      for (var i = 0; i < inputs.length; i++) {
+        var inp = inputs[i];
+        var cell = inp.parentNode;
+        cell.classList.remove("wrong");
+        var v = inp.value.trim();
+        if (!v) continue;
+        filled++;
+        var parts = inp.dataset.pos.split(",");
+        var r = +parts[0];
+        var c = +parts[1];
+        if (v !== puzzle.grid[r][c].letter) {
+          cell.classList.add("wrong");
+          wrong++;
+        }
       }
     }
     if (wrong > 0) {
       $("status").textContent = wrong + " wrong " + (wrong === 1 ? "entry" : "entries") +
+        " across " + grids.length + (grids.length === 1 ? " puzzle" : " puzzles") +
         " — fix " + (wrong === 1 ? "it" : "them") + " and check again.";
     } else if (filled === 0) {
       $("status").textContent = "Type some numbers first, then check again.";
-    } else if (filled === inputs.length) {
+    } else if (filled === totalCells) {
       $("status").textContent = "Solved! Every digit is correct. 🎉";
     } else {
       $("status").textContent = "Everything you've entered is correct so far — keep going!";
@@ -221,14 +279,14 @@
   }
 
   function doPrint(withAnswers) {
-    var gridEl = $("puzzle-grid");
-    if (withAnswers) {
-      gridEl.classList.add("show-answers");
-      $("print-title").textContent = (currentPuzzle ? currentPuzzle.title : "Answer key") + " — Answers";
-    } else {
-      gridEl.classList.remove("show-answers");
-      $("print-title").textContent = currentPuzzle ? currentPuzzle.title : "Puzzle";
+    var grids = document.querySelectorAll("#sheets .puzzle-grid");
+    for (var i = 0; i < grids.length; i++) {
+      if (withAnswers) grids[i].classList.add("show-answers");
+      else grids[i].classList.remove("show-answers");
     }
+    var sheetsEl = $("sheets");
+    if (withAnswers) sheetsEl.classList.add("print-answers");
+    else sheetsEl.classList.remove("print-answers");
     setTimeout(function () {
       window.print();
     }, 30);

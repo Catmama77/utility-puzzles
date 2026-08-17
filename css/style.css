@@ -824,3 +824,195 @@ p {
   font-size: 13px;
   color: var(--muted);
 }
+
+/* ---------- Puzzle sheets (multi-puzzle pages) ---------- */
+
+.sheets {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.puzzle-sheet {
+  page-break-inside: avoid;
+  break-inside: avoid;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 24px;
+}
+
+.puzzle-sheet:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.puzzle-sheet .print-heading h1 {
+  font-size: 18px;
+}
+
+/* Multi-puzzle: fit 2 fill-ins / crosswords side by side when printing */
+@media print {
+  .sheets.fillin-sheets.sheets-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .sheets.fillin-sheets.sheets-2 .puzzle-sheet {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .sheets.fillin-sheets.sheets-2 .print-heading h1 {
+    font-size: 14px;
+  }
+
+  .sheets.fillin-sheets.sheets-2 .print-heading p {
+    font-size: 11px;
+  }
+
+  .sheets.fillin-sheets.sheets-2 .puzzle-grid .cell {
+    width: 17px;
+    height: 17px;
+    font-size: 11px;
+    gap: 1px;
+  }
+
+  .sheets.fillin-sheets.sheets-2 .puzzle-grid .cell .slot-num {
+    font-size: 6px;
+  }
+
+  .sheets.fillin-sheets.sheets-2 .wordlist {
+    margin-top: 10px;
+  }
+
+  .sheets.fillin-sheets.sheets-2 .len-label {
+    font-size: 11px;
+    margin-bottom: 3px;
+  }
+
+  .sheets.fillin-sheets.sheets-2 .word-chip {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+
+  .sheets.fillin-sheets.sheets-2 .clues {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .sheets.fillin-sheets.sheets-2 .clues h2 {
+    font-size: 12px;
+  }
+
+  .sheets.fillin-sheets.sheets-2 .clue-item {
+    font-size: 9px;
+    padding: 1px 0;
+  }
+
+  .sheets.fillin-sheets.sheets-2 .clue-num {
+    min-width: 16px;
+  }
+
+  /* Sudoku: up to 8 compact puzzles per page */
+  .sheets.sudoku-sheets.sheets-4,
+  .sheets.sudoku-sheets.sheets-6,
+  .sheets.sudoku-sheets.sheets-8 {
+    display: grid;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .sheets.sudoku-sheets.sheets-4 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .sheets.sudoku-sheets.sheets-6 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .sheets.sudoku-sheets.sheets-8 {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
+  .sheets.sudoku-sheets.sheets-4 .puzzle-sheet,
+  .sheets.sudoku-sheets.sheets-6 .puzzle-sheet,
+  .sheets.sudoku-sheets.sheets-8 .puzzle-sheet {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .sheets.sudoku-sheets.sheets-4 .print-heading h1,
+  .sheets.sudoku-sheets.sheets-6 .print-heading h1,
+  .sheets.sudoku-sheets.sheets-8 .print-heading h1 {
+    font-size: 11px;
+  }
+
+  .sheets.sudoku-sheets.sheets-4 .print-heading p,
+  .sheets.sudoku-sheets.sheets-6 .print-heading p,
+  .sheets.sudoku-sheets.sheets-8 .print-heading p {
+    font-size: 8px;
+  }
+
+  .sheets.sudoku-sheets.sheets-4 .print-heading,
+  .sheets.sudoku-sheets.sheets-6 .print-heading,
+  .sheets.sudoku-sheets.sheets-8 .print-heading {
+    margin-bottom: 6px;
+  }
+
+  .sheets.sudoku-sheets.sheets-4 .puzzle-grid.sudoku .cell {
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+  }
+
+  .sheets.sudoku-sheets.sheets-6 .puzzle-grid.sudoku .cell {
+    width: 14px;
+    height: 14px;
+    font-size: 9px;
+  }
+
+  .sheets.sudoku-sheets.sheets-8 .puzzle-grid.sudoku .cell {
+    width: 11px;
+    height: 11px;
+    font-size: 7px;
+  }
+
+  .sheets.sudoku-sheets.sheets-4 .puzzle-grid.sudoku {
+    border-width: 1px;
+  }
+
+  .sheets.sudoku-sheets.sheets-6 .puzzle-grid.sudoku,
+  .sheets.sudoku-sheets.sheets-8 .puzzle-grid.sudoku {
+    border-width: 1px;
+  }
+
+  .sheets.sudoku-sheets.sheets-4 .puzzle-grid.sudoku .cell.thick-right {
+    border-right-width: 1.5px;
+  }
+
+  .sheets.sudoku-sheets.sheets-4 .puzzle-grid.sudoku .cell.thick-bottom {
+    border-bottom-width: 1.5px;
+  }
+
+  .sheets.sudoku-sheets.sheets-6 .puzzle-grid.sudoku .cell.thick-right,
+  .sheets.sudoku-sheets.sheets-8 .puzzle-grid.sudoku .cell.thick-right {
+    border-right-width: 1.5px;
+  }
+
+  .sheets.sudoku-sheets.sheets-6 .puzzle-grid.sudoku .cell.thick-bottom,
+  .sheets.sudoku-sheets.sheets-8 .puzzle-grid.sudoku .cell.thick-bottom {
+    border-bottom-width: 1.5px;
+  }
+
+  .sheets.sudoku-sheets.sheets-8 .puzzle-grid.sudoku .cell {
+    border-width: 0.5px;
+  }
+
+  /* Answer keys print with all grids filled */
+  .sheets.print-answers .puzzle-grid.show-answers .cell:not(.given)::after {
+    content: attr(data-answer);
+    font-weight: 600;
+  }
+}

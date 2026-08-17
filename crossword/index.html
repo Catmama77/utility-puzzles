@@ -60,6 +60,10 @@
         <label for="difficulty">Difficulty</label>
         <select id="difficulty"></select>
       </div>
+      <div class="field">
+        <label for="count">Puzzles per page</label>
+        <select id="count"></select>
+      </div>
       <button type="button" id="new-btn" class="button">New Puzzle</button>
       <button type="button" id="answers-btn" class="button secondary">Show Answers</button>
       <button type="button" id="check-btn" class="button secondary">Check</button>
@@ -70,25 +74,10 @@
     <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
 
     <div class="puzzle-wrap" id="puzzle-wrap">
-      <div class="print-heading">
-        <h1 id="print-title"></h1>
-        <p id="print-meta"></p>
-      </div>
-      <div class="puzzle-grid" id="puzzle-grid"></div>
+      <div class="sheets fillin-sheets" id="sheets"></div>
     </div>
 
     <p id="status" style="color:#6b7280; font-size:14px; margin-top:12px;"></p>
-
-    <div class="clues">
-      <div class="clues-col">
-        <h2>Across</h2>
-        <div id="across-list"></div>
-      </div>
-      <div class="clues-col">
-        <h2>Down</h2>
-        <div id="down-list"></div>
-      </div>
-    </div>
 
     <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
 
@@ -99,7 +88,7 @@
         <li><strong>Difficulty:</strong> Easy uses short words on a smaller grid. Medium mixes mid-length words. Hard uses longer words for a tougher, denser grid.</li>
         <li><strong>Categories:</strong> Animals, Food &amp; Drink, Sports, Countries, Jobs and Nature. Every puzzle is generated fresh, so you can make unlimited crosswords.</li>
         <li><strong>Solving:</strong> Type letters straight into the grid and use “Check” to highlight wrong entries in red — or print a blank puzzle to solve on paper.</li>
-        <li><strong>Printing:</strong> Click “Print / PDF” for a clean puzzle page with the grid and clues, or “Print Answers” for the completed grid. In the print dialog choose “Save as PDF” to download a file.</li>
+        <li><strong>Printing:</strong> Choose 1 or 2 puzzles per page — each with its own grid and clues — then click “Print / PDF” or “Print Answers”. In the print dialog choose “Save as PDF” to download a file.</li>
       </ul>
     </section>
 
