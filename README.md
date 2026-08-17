@@ -85,7 +85,7 @@ number-search/        Number search tool
 kakuro/               Kakuro tool
   js/kakuro.js        Cross-sum generator (run sums, unique fill)
   js/app.js           Page UI (digit entry + check, arrow nav)
-articles/             SEO content hub + 10 original guides (each links to the tools)
+articles/             SEO content hub + 11 original guides (each links to the tools)
 about.html / contact.html / privacy.html / terms.html   Required AdSense pages
 favicon.svg, robots.txt, sitemap.xml
 test-generator.js     Node sanity test for the fill-in generator
@@ -196,7 +196,7 @@ GitHub Pages allows one custom domain per repo. If you want  `wordfill.example.c
 
 - [ ] Site live on your own domain with HTTPS
 - [ ] Privacy Policy, About, Contact and Terms pages (done — edit to match your details)
-- [ ] Original content on every page (tools + instructions + 10 articles in `/articles/`)
+- [ ] Original content on every page (tools + instructions + 11 articles in `/articles/`)
 - [ ] Working navigation and mobile-friendly layout
 - [ ] Sitemap submitted in Search Console, pages indexed
 

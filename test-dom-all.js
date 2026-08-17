@@ -30,6 +30,7 @@ function makeEl(tag) {
     inner: "",
     value: "",
     disabled: false,
+    checked: false,
     id: "",
     type: "",
     maxLength: 0,
@@ -41,7 +42,7 @@ function makeEl(tag) {
     tagName: tag.toUpperCase(),
     children: [],
     parentNode: null,
-    style: {},
+    style: { setProperty: function (k, v) { this[k] = v; } },
     dataset: {},
     _listeners: {},
     classList: {
@@ -67,6 +68,8 @@ function makeEl(tag) {
     set value(v) { state.value = v; },
     get disabled() { return state.disabled; },
     set disabled(v) { state.disabled = !!v; },
+    get checked() { return state.checked; },
+    set checked(v) { state.checked = !!v; },
     get type() { return state.type; },
     set type(v) { state.type = String(v); },
     get maxLength() { return state.maxLength; },
@@ -143,11 +146,15 @@ function buildDocument(seedIds) {
     querySelector(sel) { return allEls.filter(el => matchesSel(el, sel))[0] || null; },
     addEventListener(ev, fn) { (doc._domListeners[ev] = doc._domListeners[ev] || []).push(fn); }
   };
+  // a hidden root so every seed has a parentNode (browsers give every
+  // element one — the bingo app reads $("category").parentNode)
+  const root = makeEl("div");
+  doc.body = makeEl("body");
+  doc.body.appendChild(root);
   seedIds.forEach(id => {
     const el = makeEl("div");
     el.id = id;
-    doc._seeded = doc._seeded || {};
-    doc._seeded[id] = el;
+    root.appendChild(el);
   });
   return doc;
 }
@@ -567,6 +574,296 @@ function testKakuro() {
   ok(true, "print paths fire");
 }
 
+/* ============================================================
+   9. Word Fill-In
+   ============================================================ */
+
+function testWordFill() {
+  resetDom();
+  console.log("Word fill-in:");
+  const { ctx } = setup(
+    ["category", "difficulty", "count", "sheets", "new-btn", "answers-btn", "check-btn", "print-puzzle-btn", "print-answers-btn", "status"],
+    WORD_DATA.concat(["js/puzzle-core.js", "word-fill/js/words.js", "word-fill/js/puzzles.js", "word-fill/js/app.js"])
+  );
+
+  ok(gridCount(ctx) === 1, "renders 1 grid by default");
+  ok(q(ctx, "#sheets .cell-input").length > 0, "grid has editable cells");
+  ok(q(ctx, "#sheets .wordlist .word-chip").length > 0, "word list renders");
+
+  vm.runInContext("document.getElementById('count').value = '2'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(gridCount(ctx) === 2, "renders 2 grids with count=2");
+
+  // wrong entry + check
+  const ansExpr = "document.querySelectorAll('#sheets .puzzle-grid')[0].querySelectorAll('input.cell-input')[0].parentNode.querySelector('.letter').textContent";
+  const rightAns = vm.runInContext(ansExpr, ctx);
+  fireInput(ctx, "document.querySelectorAll('#sheets input.cell-input')[0]", rightAns === "A" ? "B" : "A");
+  fireClick(ctx, "check-btn");
+  ok(/wrong/.test(elText(ctx, "document.getElementById('status')")), "check flags a wrong entry");
+
+  // answers toggle
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 2, "answers marks all grids");
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 0, "answers hidden again");
+
+  // difficulty switch
+  vm.runInContext("document.getElementById('difficulty').value = 'hard'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(/Hard/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "hard title shows difficulty");
+
+  fireClick(ctx, "print-puzzle-btn");
+  fireClick(ctx, "print-answers-btn");
+  ok(true, "print paths fire");
+}
+
+/* ============================================================
+   10. Crossword
+   ============================================================ */
+
+function testCrossword() {
+  resetDom();
+  console.log("Crossword:");
+  const { ctx } = setup(
+    ["category", "difficulty", "count", "sheets", "new-btn", "answers-btn", "check-btn", "print-puzzle-btn", "print-answers-btn", "status"],
+    WORD_DATA.concat(["js/puzzle-core.js", "crossword/js/crossword.js", "crossword/js/app.js"])
+  );
+
+  ok(gridCount(ctx) === 1, "renders 1 grid by default");
+  ok(q(ctx, "#sheets .clue-item").length > 0, "clue lists render");
+  ok(q(ctx, "#sheets .clues-col").length === 2, "across and down columns");
+
+  vm.runInContext("document.getElementById('count').value = '2'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(gridCount(ctx) === 2, "renders 2 grids with count=2");
+
+  const rightAns = vm.runInContext("document.querySelectorAll('#sheets .puzzle-grid')[0].querySelectorAll('input.cell-input')[0].parentNode.querySelector('.letter').textContent", ctx);
+  fireInput(ctx, "document.querySelectorAll('#sheets input.cell-input')[0]", rightAns === "A" ? "B" : "A");
+  fireClick(ctx, "check-btn");
+  ok(/wrong/.test(elText(ctx, "document.getElementById('status')")), "check flags a wrong entry");
+
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 2, "answers marks all grids");
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 0, "answers hidden again");
+
+  fireClick(ctx, "print-puzzle-btn");
+  fireClick(ctx, "print-answers-btn");
+  ok(true, "print paths fire");
+}
+
+/* ============================================================
+   11. Number Fill-In
+   ============================================================ */
+
+function testNumberFill() {
+  resetDom();
+  console.log("Number fill-in:");
+  const { ctx } = setup(
+    ["theme", "difficulty", "count", "sheets", "new-btn", "answers-btn", "check-btn", "print-puzzle-btn", "print-answers-btn", "status"],
+    ["js/puzzle-core.js", "number-fill/js/numbers.js", "number-fill/js/app.js"]
+  );
+
+  ok(gridCount(ctx) === 1, "renders 1 grid by default");
+  ok(q(ctx, "#sheets .cell-input").length > 0, "grid has editable cells");
+  ok(q(ctx, "#sheets .wordlist .word-chip").length > 0, "number list renders");
+
+  vm.runInContext("document.getElementById('count').value = '2'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(gridCount(ctx) === 2, "renders 2 grids with count=2");
+
+  const rightAns = vm.runInContext("document.querySelectorAll('#sheets .puzzle-grid')[0].querySelectorAll('input.cell-input')[0].parentNode.querySelector('.letter').textContent", ctx);
+  fireInput(ctx, "document.querySelectorAll('#sheets input.cell-input')[0]", rightAns === "5" ? "6" : "5");
+  fireClick(ctx, "check-btn");
+  ok(/wrong/.test(elText(ctx, "document.getElementById('status')")), "check flags a wrong entry");
+
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 2, "answers marks all grids");
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 0, "answers hidden again");
+
+  fireClick(ctx, "print-puzzle-btn");
+  fireClick(ctx, "print-answers-btn");
+  ok(true, "print paths fire");
+}
+
+/* ============================================================
+   12. Sudoku
+   ============================================================ */
+
+function testSudoku() {
+  resetDom();
+  console.log("Sudoku:");
+  const { ctx } = setup(
+    ["size", "difficulty", "count", "sheets", "new-btn", "check-btn", "answers-btn", "print-puzzle-btn", "print-answers-btn", "status"],
+    ["sudoku/js/sudoku.js", "sudoku/js/app.js"]
+  );
+
+  ok(gridCount(ctx) === 1, "renders 1 grid by default");
+  ok(q(ctx, "#sheets .cell").length === 81, "9x9 grid has 81 cells");
+  ok(q(ctx, "#sheets .cell.given").length > 0, "grid has given clues");
+
+  vm.runInContext("document.getElementById('count').value = '8'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(gridCount(ctx) === 8, "renders 8 grids with count=8");
+
+  // wrong entry + check
+  const inpExpr = "document.querySelectorAll('#sheets input.sudoku-input')[0]";
+  const rightAns = vm.runInContext(inpExpr + ".parentNode.dataset.answer", ctx);
+  fireInput(ctx, inpExpr, rightAns === "5" ? "6" : "5");
+  fireClick(ctx, "check-btn");
+  ok(/wrong/.test(elText(ctx, "document.getElementById('status')")), "check flags a wrong entry");
+
+  // arrow nav moves focus
+  fireKeydown(ctx, inpExpr, "ArrowRight");
+  ok(true, "arrow key handler runs");
+
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 8, "answers marks all grids");
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 0, "answers hidden again");
+
+  fireClick(ctx, "print-puzzle-btn");
+  fireClick(ctx, "print-answers-btn");
+  ok(true, "print paths fire");
+}
+
+/* ============================================================
+   13. Word Search
+   ============================================================ */
+
+function testWordSearch() {
+  resetDom();
+  console.log("Word search:");
+  const { ctx } = setup(
+    ["category", "size", "difficulty", "count", "sheets", "new-btn", "answers-btn", "print-puzzle-btn", "print-answers-btn", "status"],
+    WORD_DATA.concat(["word-search/js/search.js", "word-search/js/app.js"])
+  );
+
+  ok(gridCount(ctx) === 1, "renders 1 grid by default");
+  ok(q(ctx, "#sheets .letter-cell").length === 100, "10x10 grid has 100 cells");
+  ok(q(ctx, "#sheets .find-chip").length > 0, "word list renders");
+
+  vm.runInContext("document.getElementById('count').value = '2'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(gridCount(ctx) === 2, "renders 2 grids with count=2");
+
+  // answers reveal highlights words
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .letter-cell.found").length > 0, "answers highlights found words");
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 0, "answers hidden again");
+
+  // difficulty switch
+  vm.runInContext("document.getElementById('difficulty').value = 'hard'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(/Hard/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "hard title shows difficulty");
+
+  fireClick(ctx, "print-puzzle-btn");
+  fireClick(ctx, "print-answers-btn");
+  ok(true, "print paths fire");
+}
+
+/* ============================================================
+   14. Word Scramble
+   ============================================================ */
+
+function testWordScramble() {
+  resetDom();
+  console.log("Word scramble:");
+  const { ctx } = setup(
+    ["category", "difficulty", "count", "clues", "sheets", "new-btn", "answers-btn", "check-btn", "print-puzzle-btn", "print-answers-btn", "status"],
+    WORD_DATA.concat(["word-scramble/js/scramble.js", "word-scramble/js/app.js"])
+  );
+
+  ok(gridCount(ctx) === 0, "scramble renders no .puzzle-grid");
+  ok(q(ctx, "#sheets .scramble-row").length > 0, "scramble rows render");
+  ok(q(ctx, "#sheets .scramble-tile").length > 0, "scramble tiles render");
+
+  // clues checkbox
+  vm.runInContext("document.getElementById('clues').checked = true", ctx);
+  fireClick(ctx, "new-btn");
+  ok(q(ctx, "#sheets .scramble-clue").length > 0, "clues on adds hints");
+  vm.runInContext("document.getElementById('clues').checked = false", ctx);
+  fireClick(ctx, "new-btn");
+  ok(q(ctx, "#sheets .scramble-clue").length === 0, "clues off removes hints");
+
+  vm.runInContext("document.getElementById('count').value = '2'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(q(ctx, "#sheets .puzzle-sheet").length === 2, "renders 2 worksheets with count=2");
+
+  // wrong answer + check
+  const realWord = vm.runInContext("document.querySelectorAll('#sheets .scramble-input')[0].dataset.word", ctx);
+  fireInput(ctx, "document.querySelectorAll('#sheets .scramble-input')[0]", realWord === "CAT" ? "DOG" : "CAT");
+  fireClick(ctx, "check-btn");
+  ok(/wrong/.test(elText(ctx, "document.getElementById('status')")), "check flags a wrong answer");
+
+  // answers fills inputs
+  fireClick(ctx, "answers-btn");
+  const filled = vm.runInContext("(function(){ var els = document.querySelectorAll('#sheets .scramble-input'); var n=0; for (var i=0;i<els.length;i++) if (els[i].value) n++; return n; })()", ctx);
+  const total = q(ctx, "#sheets .scramble-input").length;
+  ok(filled === total, "answers fill every input (" + filled + "/" + total + ")");
+  fireClick(ctx, "answers-btn");
+  ok(vm.runInContext("document.querySelectorAll('#sheets .scramble-input')[0].value", ctx) === "", "answers hidden clears inputs");
+
+  fireClick(ctx, "print-puzzle-btn");
+  fireClick(ctx, "print-answers-btn");
+  ok(true, "print paths fire");
+}
+
+/* ============================================================
+   15. Bingo
+   ============================================================ */
+
+function testBingo() {
+  resetDom();
+  console.log("Bingo:");
+  const { ctx } = setup(
+    ["mode", "category", "size", "count", "per-page", "free-center", "cards", "call-sheet", "call-title", "call-columns", "print-title", "print-meta", "new-btn", "print-cards-btn", "print-call-btn", "status"],
+    WORD_DATA.concat(["bingo/js/bingo.js", "bingo/js/app.js"])
+  );
+
+  ok(q(ctx, "#cards .bingo-card").length === 8, "renders 8 cards by default");
+  ok(q(ctx, "#cards.bingo-cards.page-4").length === 1, "default layout is 4 per page");
+  ok(q(ctx, "#cards .call-col").length === 0, "no call columns inside cards area");
+  ok(q(ctx, "#call-columns .call-col").length === 5, "call sheet has 5 columns (B-I-N-G-O)");
+  ok(/8 cards/.test(elText(ctx, "document.getElementById('status')")), "status shows card count");
+
+  // per-page switch
+  vm.runInContext("document.getElementById('per-page').value = '2'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(q(ctx, "#cards.bingo-cards.page-2").length === 1, "layout switches to 2 per page");
+
+  // free center on 5x5
+  vm.runInContext("document.getElementById('free-center').checked = true", ctx);
+  fireClick(ctx, "new-btn");
+  ok(q(ctx, "#cards .cell.free").length > 0, "free center cells render when checked");
+
+  // word mode
+  vm.runInContext("document.getElementById('mode').value = 'words'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(q(ctx, "#cards .bingo-grid.words").length > 0, "word mode renders word grids");
+  ok(q(ctx, "#cards .bingo-header span.wide").length > 0, "word mode shows category header");
+
+  // 100 cards -> 25 pages
+  vm.runInContext("document.getElementById('mode').value = 'numbers'", ctx);
+  vm.runInContext("document.getElementById('count').value = '100'", ctx);
+  vm.runInContext("document.getElementById('per-page').value = '4'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(q(ctx, "#cards .bingo-card").length === 100, "renders 100 cards");
+  ok(/25 pages/.test(elText(ctx, "document.getElementById('print-meta')")), "print meta shows 25 pages");
+
+  // tick a call item
+  fireCellClick(ctx, "document.querySelectorAll('#call-columns .call-item')[0]");
+  ok(q(ctx, "#call-columns .call-item.called").length === 1, "call item ticks on click");
+
+  // print body classes
+  fireClick(ctx, "print-cards-btn");
+  ok(/print-cards/.test(elClass(ctx, "document.body")), "print-cards body class set");
+  fireClick(ctx, "print-call-btn");
+  ok(/print-call/.test(elClass(ctx, "document.body")), "print-call body class set");
+}
+
 /* ---------- run ---------- */
 
 // fresh DOM between tools: each test builds its own document tree
@@ -580,6 +877,13 @@ testCodeBreaker();
 testWordWheel();
 testNumberSearch();
 testKakuro();
+testWordFill();
+testCrossword();
+testNumberFill();
+testSudoku();
+testWordSearch();
+testWordScramble();
+testBingo();
 
 console.log("\n" + passed + " passed, " + failed + " failed");
 if (failed > 0) {
