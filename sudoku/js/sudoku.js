@@ -112,6 +112,31 @@
     return count;
   }
 
+  /* Generate `count` distinct puzzles for one sheet/batch. Two sudoku
+     with the same clue layout are the same puzzle, so the clue array
+     is the identity. Retries with fresh puzzles until each one differs
+     from every other in the batch (bounded attempts). */
+  function makeBatch(count, sizeKey, diffKey) {
+    var out = [];
+    var seen = {};
+    var maxAttempts = 20;
+    for (var i = 0; i < count; i++) {
+      var p = null;
+      for (var a = 0; a < maxAttempts; a++) {
+        var cand = makePuzzle(sizeKey, diffKey);
+        var sig = cand.puzzle.join(",");
+        if (!seen[sig]) {
+          p = cand;
+          seen[sig] = true;
+          break;
+        }
+      }
+      if (!p) p = makePuzzle(sizeKey, diffKey); // pool exhausted — accept one
+      out.push(p);
+    }
+    return out;
+  }
+
   function makePuzzle(sizeKey, diffKey) {
     var S = SIZES[sizeKey] || SIZES["9x9"];
     var D = DIFFICULTY[diffKey] || DIFFICULTY.easy;
@@ -165,6 +190,7 @@
   global.SudokuGen = {
     SIZES: SIZES,
     DIFFICULTY: DIFFICULTY,
-    makePuzzle: makePuzzle
+    makePuzzle: makePuzzle,
+    makeBatch: makeBatch
   };
 })(typeof window !== "undefined" ? window : globalThis);

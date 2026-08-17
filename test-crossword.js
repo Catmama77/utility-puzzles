@@ -175,6 +175,22 @@ for (const cat of Object.keys(WORD_DATA)) {
 
 console.log("Generated " + generated + " crosswords");
 
+// Batch uniqueness: puzzles printed on one page must all differ.
+let batchChecks = 0;
+const sig = (p) => JSON.stringify(p.grid);
+for (const cat of Object.keys(WORD_DATA)) {
+  for (const diff of Object.keys(CrosswordGen.DIFFICULTY)) {
+    for (let i = 0; i < 25; i++) {
+      const batch = CrosswordGen.makeBatch(2, cat, diff);
+      batchChecks += 2;
+      if (sig(batch[0]) === sig(batch[1])) {
+        fail(cat + "/" + diff + " batch #" + i + " returned identical puzzles");
+      }
+    }
+  }
+}
+console.log("Checked " + batchChecks + " crosswords across 2-per-page batches (all distinct)");
+
 if (failures) {
   console.error("\n" + failures + " failure(s)");
   process.exit(1);

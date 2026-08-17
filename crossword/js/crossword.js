@@ -26,6 +26,44 @@
 
   function byNumber(a, b) { return a.number - b.number; }
 
+  /* Compact identity of a puzzle: grid layout plus solution letters
+     and slot numbers. Two puzzles with the same signature are the
+     same puzzle. */
+  function signature(p) {
+    var parts = [];
+    for (var r = 0; r < p.rows; r++) {
+      for (var c = 0; c < p.cols; c++) {
+        var cell = p.grid[r][c];
+        parts.push(cell.black ? "#" : (cell.letter || "") + ":" + (cell.number || 0));
+      }
+    }
+    return parts.join("|");
+  }
+
+  /* Generate `count` distinct puzzles for one sheet/batch. Retries with
+     fresh puzzles until each one differs from every other in the batch
+     (bounded attempts so a small word pool can never hang the page). */
+  function makeBatch(count, category, difficulty) {
+    var out = [];
+    var seen = {};
+    var maxAttempts = 60;
+    for (var i = 0; i < count; i++) {
+      var p = null;
+      for (var a = 0; a < maxAttempts; a++) {
+        var cand = makeCrossword(category, difficulty);
+        var sig = signature(cand);
+        if (!seen[sig]) {
+          p = cand;
+          seen[sig] = true;
+          break;
+        }
+      }
+      if (!p) p = makeCrossword(category, difficulty); // pool exhausted — accept one
+      out.push(p);
+    }
+    return out;
+  }
+
   function makeCrossword(category, difficulty) {
     var opts = DIFFICULTY[difficulty] || DIFFICULTY.easy;
     var data = (global.WORD_DATA && global.WORD_DATA[category]) || {};
@@ -76,6 +114,7 @@
 
   global.CrosswordGen = {
     DIFFICULTY: DIFFICULTY,
-    makeCrossword: makeCrossword
+    makeCrossword: makeCrossword,
+    makeBatch: makeBatch
   };
 })(typeof window !== "undefined" ? window : globalThis);

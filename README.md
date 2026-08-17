@@ -14,8 +14,12 @@ visitor's browser and can be printed or saved as PDF, with an answer key.
 **Print-friendly bulk mode:** every generator has a "per page" selector. Print
 up to **8 sudoku** (1/2/4/6/8 per sheet), up to **2 word fill-ins / crosswords /
 number fill-ins** side by side, or **1–4 bingo cards** per 8½ × 11 page (up to
-100 cards per batch, every card unique) — perfect for handing out to a whole
-class. "Print Answers" prints the completed grids in the same layout.
+100 cards per batch) — perfect for handing out to a whole class. "Print
+Answers" prints the completed grids in the same layout.
+
+**Uniqueness guarantee:** every puzzle in a batch is guaranteed distinct — no
+matter how many puzzles you put on a page, each one is different (verified by
+the test suites across all five generators).
 
 ## Project layout
 

@@ -23,6 +23,44 @@
     hard:   { label: "Hard",   minLen: 4, maxLen: 10, target: 20, pad: 2, maxDim: 36 }
   };
 
+  /* Compact identity of a puzzle: its grid layout plus the solution
+     letters and slot numbers. Two puzzles with the same signature are
+     the same puzzle. */
+  function signature(p) {
+    var parts = [];
+    for (var r = 0; r < p.rows; r++) {
+      for (var c = 0; c < p.cols; c++) {
+        var cell = p.grid[r][c];
+        parts.push(cell.black ? "#" : (cell.letter || "") + ":" + (cell.number || 0));
+      }
+    }
+    return parts.join("|");
+  }
+
+  /* Generate `count` distinct puzzles for one sheet/batch. Retries with
+     fresh puzzles until each one differs from every other in the batch
+     (bounded attempts so a small word pool can never hang the page). */
+  function makeBatch(count, category, difficulty) {
+    var out = [];
+    var seen = {};
+    var maxAttempts = 60;
+    for (var i = 0; i < count; i++) {
+      var p = null;
+      for (var a = 0; a < maxAttempts; a++) {
+        var cand = makePuzzle(category, difficulty);
+        var sig = signature(cand);
+        if (!seen[sig]) {
+          p = cand;
+          seen[sig] = true;
+          break;
+        }
+      }
+      if (!p) p = makePuzzle(category, difficulty); // pool exhausted — accept one
+      out.push(p);
+    }
+    return out;
+  }
+
   function makePuzzle(category, difficulty) {
     var opts = DIFFICULTY[difficulty] || DIFFICULTY.easy;
     var bank = (global.WORD_BANK && global.WORD_BANK[category]) || [];
@@ -77,6 +115,7 @@
 
   global.PuzzleGen = {
     DIFFICULTY: DIFFICULTY,
-    makePuzzle: makePuzzle
+    makePuzzle: makePuzzle,
+    makeBatch: makeBatch
   };
 })(typeof window !== "undefined" ? window : globalThis);

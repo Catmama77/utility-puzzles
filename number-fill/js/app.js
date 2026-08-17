@@ -218,11 +218,7 @@
     var theme = $("theme").value;
     var diff = $("difficulty").value;
     var count = parseInt($("count").value, 10) || 1;
-    var puzzles = [];
-    for (var i = 0; i < count; i++) {
-      puzzles.push(NumberGen.makePuzzle(theme, diff));
-    }
-    render(puzzles);
+    render(NumberGen.makeBatch(count, theme, diff));
   }
 
   function toggleAnswers() {

@@ -146,6 +146,22 @@ for (const theme of Object.keys(NumberGen.THEMES)) {
 
 console.log("Generated " + generated + " number fill-ins");
 
+// Batch uniqueness: puzzles printed on one page must all differ.
+let batchChecks = 0;
+const sig = (p) => JSON.stringify(p.grid);
+for (const theme of Object.keys(NumberGen.THEMES)) {
+  for (const diff of Object.keys(NumberGen.DIFFICULTY)) {
+    for (let i = 0; i < 25; i++) {
+      const batch = NumberGen.makeBatch(2, theme, diff);
+      batchChecks += 2;
+      if (sig(batch[0]) === sig(batch[1])) {
+        fail(theme + "/" + diff + " batch #" + i + " returned identical puzzles");
+      }
+    }
+  }
+}
+console.log("Checked " + batchChecks + " fill-ins across 2-per-page batches (all distinct)");
+
 if (failures) {
   console.error("\n" + failures + " failure(s)");
   process.exit(1);

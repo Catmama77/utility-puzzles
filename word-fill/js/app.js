@@ -217,11 +217,7 @@
     var cat = $("category").value;
     var diff = $("difficulty").value;
     var count = parseInt($("count").value, 10) || 1;
-    var puzzles = [];
-    for (var i = 0; i < count; i++) {
-      puzzles.push(PuzzleGen.makePuzzle(cat, diff));
-    }
-    render(puzzles);
+    render(PuzzleGen.makeBatch(count, cat, diff));
   }
 
   function toggleAnswers() {

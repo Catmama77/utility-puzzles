@@ -134,6 +134,22 @@ for (const sz of Object.keys(SudokuGen.SIZES)) {
 
 console.log("Generated " + generated + " sudoku puzzles");
 
+// Batch uniqueness: all 8 puzzles on one page must differ.
+let batchChecks = 0;
+for (const sz of Object.keys(SudokuGen.SIZES)) {
+  for (const diff of Object.keys(SudokuGen.DIFFICULTY)) {
+    for (let i = 0; i < 6; i++) {
+      const batch = SudokuGen.makeBatch(8, sz, diff);
+      batchChecks += 8;
+      const seen = new Set(batch.map((p) => p.puzzle.join(",")));
+      if (seen.size !== 8) {
+        fail(sz + "/" + diff + " batch #" + i + " returned " + (8 - seen.size) + " duplicate(s)");
+      }
+    }
+  }
+}
+console.log("Checked " + batchChecks + " sudoku across 8-per-page batches (all distinct)");
+
 if (failures) {
   console.error("\n" + failures + " failure(s)");
   process.exit(1);

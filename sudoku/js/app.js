@@ -183,11 +183,7 @@
     var size = $("size").value;
     var diff = $("difficulty").value;
     var count = parseInt($("count").value, 10) || 1;
-    var puzzles = [];
-    for (var i = 0; i < count; i++) {
-      puzzles.push(SudokuGen.makePuzzle(size, diff));
-    }
-    render(puzzles);
+    render(SudokuGen.makeBatch(count, size, diff));
   }
 
   function toggleAnswers() {

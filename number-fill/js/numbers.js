@@ -42,6 +42,44 @@
     threes:  { label: "Multiples of 3", ok: function (n) { return n % 3 === 0; } }
   };
 
+  /* Compact identity of a puzzle: grid layout plus solution digits
+     and slot numbers. Two puzzles with the same signature are the
+     same puzzle. */
+  function signature(p) {
+    var parts = [];
+    for (var r = 0; r < p.rows; r++) {
+      for (var c = 0; c < p.cols; c++) {
+        var cell = p.grid[r][c];
+        parts.push(cell.black ? "#" : (cell.letter || "") + ":" + (cell.number || 0));
+      }
+    }
+    return parts.join("|");
+  }
+
+  /* Generate `count` distinct puzzles for one sheet/batch. Retries with
+     fresh puzzles until each one differs from every other in the batch
+     (bounded attempts so a small pool can never hang the page). */
+  function makeBatch(count, themeName, difficulty) {
+    var out = [];
+    var seen = {};
+    var maxAttempts = 60;
+    for (var i = 0; i < count; i++) {
+      var p = null;
+      for (var a = 0; a < maxAttempts; a++) {
+        var cand = makePuzzle(themeName, difficulty);
+        var sig = signature(cand);
+        if (!seen[sig]) {
+          p = cand;
+          seen[sig] = true;
+          break;
+        }
+      }
+      if (!p) p = makePuzzle(themeName, difficulty); // pool exhausted — accept one
+      out.push(p);
+    }
+    return out;
+  }
+
   function randomWithLength(len, theme) {
     // first digit 1-9, no leading zero
     for (var attempt = 0; attempt < 200; attempt++) {
@@ -107,6 +145,7 @@
   global.NumberGen = {
     DIFFICULTY: DIFFICULTY,
     THEMES: THEMES,
-    makePuzzle: makePuzzle
+    makePuzzle: makePuzzle,
+    makeBatch: makeBatch
   };
 })(typeof window !== "undefined" ? window : globalThis);
