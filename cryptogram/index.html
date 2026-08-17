@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wordoku Generator — Free Printable Letter Sudoku Puzzles</title>
-  <meta name="description" content="Free wordoku generator. Create printable letter sudoku puzzles with themed letters (animals, food, sports and more) in 4×4, 6×6 and 9×9 grids at three difficulty levels. Solve on screen, print or download as PDF with an answers option.">
+  <title>Cryptogram Maker — Free Printable Letter Substitution Puzzles</title>
+  <meta name="description" content="Free cryptogram puzzle generator. Create printable letter-substitution puzzles with hidden themed sentences at three difficulty levels. Decode on screen or print or download as PDF, with answers.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="canonical" href="https://www.helpuhelpurself.com/wordoku/">
+  <link rel="canonical" href="https://www.helpuhelpurself.com/cryptogram/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="UtilityPuzzles">
-  <meta property="og:title" content="Wordoku Generator — Free Printable Letter Sudoku Puzzles">
-  <meta property="og:description" content="Free wordoku generator. Create printable letter sudoku puzzles with themed letters in 4×4, 6×6 and 9×9 grids at three difficulty levels. Print or download as PDF, with answers.">
-  <meta property="og:url" content="https://www.helpuhelpurself.com/wordoku/">
+  <meta property="og:title" content="Cryptogram Maker — Free Printable Letter Substitution Puzzles">
+  <meta property="og:description" content="Free cryptogram puzzle generator. Create printable letter-substitution puzzles with hidden themed sentences. Print or download as PDF, with answers.">
+  <meta property="og:url" content="https://www.helpuhelpurself.com/cryptogram/">
   <meta name="twitter:card" content="summary">
   <!-- AdSense: see /js/ads.js — set your publisher ID there, then remove this comment -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Wordoku Generator",
-    "url": "https://www.helpuhelpurself.com/wordoku/",
-    "description": "Free wordoku (letter sudoku) generator with themed letters in three grid sizes and three difficulty levels, printable with an answers option.",
+    "name": "Cryptogram Maker",
+    "url": "https://www.helpuhelpurself.com/cryptogram/",
+    "description": "Free printable cryptogram puzzles — decode hidden themed sentences written in a letter-substitution cipher.",
     "applicationCategory": "GameApplication",
     "operatingSystem": "Web",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
@@ -35,15 +35,15 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "What is wordoku?",
+        "name": "How do you solve a cryptogram?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Wordoku is a sudoku variant played with letters instead of numbers. Fill every row, column and box so each contains every letter exactly once — the letters are usually the letters of a theme word, like the animals category here."
+          "text": "Every letter in the coded sentence stands for a different letter of the alphabet. Look for short words, common letter patterns and repeated letters to guess letters, then fill every occurrence of that code letter at once. Use the letter strip at the bottom to track what you've solved."
         }
       },
       {
         "@type": "Question",
-        "name": "Is the wordoku generator free?",
+        "name": "Is the cryptogram maker free?",
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "Yes. Every generator on this site is completely free and unlimited. There is no account, no sign-up and no watermark, and you can generate as many puzzles as you like."
@@ -51,18 +51,18 @@
       },
       {
         "@type": "Question",
-        "name": "How do I print wordoku puzzles?",
+        "name": "What do the difficulty levels change?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Click Print / PDF to print the blank puzzle, or Print Answers for the completed grid. In the print dialog choose Save as PDF to download a file. You can also print up to 8 puzzles on one 8½ × 11 sheet."
+          "text": "Easy cryptograms use shorter sentences and reveal five letters up front, Medium reveals three, and Hard uses longer sentences with just one letter revealed. Every level uses a full letter-substitution cipher with no letter mapped to itself."
         }
       },
       {
         "@type": "Question",
-        "name": "Can children solve wordoku?",
+        "name": "How do I print a cryptogram?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. The 4×4 and 6×6 grids are ideal for beginners and young solvers — there are fewer letters to track, so the logic is easier to follow while still teaching the same row, column and box rules as sudoku."
+          "text": "Click Print / PDF to print the puzzle with blank answer lines, or Print Answers for the completed sheet. In the print dialog choose Save as PDF to download a file. You can print up to 2 cryptograms per sheet."
         }
       }
     ]
@@ -104,27 +104,23 @@
   </header>
 
   <main>
-    <h1>Wordoku Generator</h1>
-    <p class="lead">Wordoku is sudoku with letters — fill every row, column and box so each contains every letter exactly once. Pick a theme and the letters come from that theme's words, making it a fun twist for solvers who find numbers dull. Choose 4 × 4, 6 × 6 or 9 × 9 grids at three difficulty levels, solve on screen, and print or download up to 8 puzzles per sheet with an answers option.</p>
+    <h1>Cryptogram Maker</h1>
+    <p class="lead">Crack the code! Every puzzle hides a themed sentence written in a letter-substitution cipher — each code letter stands for a different letter of the alphabet. Solve one letter and it fills in everywhere. Choose a theme and difficulty, decode on screen or print. Perfect for code-breaker fans and classroom word work.</p>
 
     <div class="controls">
       <div class="field">
-        <label for="category">Letter theme</label>
+        <label for="category">Sentence theme</label>
         <select id="category"></select>
-      </div>
-      <div class="field">
-        <label for="size">Grid size</label>
-        <select id="size"></select>
       </div>
       <div class="field">
         <label for="difficulty">Difficulty</label>
         <select id="difficulty"></select>
       </div>
       <div class="field">
-        <label for="count">Puzzles per page</label>
+        <label for="count">Sheets per page</label>
         <select id="count"></select>
       </div>
-      <button type="button" id="new-btn" class="button">New Puzzle</button>
+      <button type="button" id="new-btn" class="button">New Cryptogram</button>
       <button type="button" id="check-btn" class="button secondary">Check</button>
       <button type="button" id="answers-btn" class="button secondary">Show Answers</button>
       <button type="button" id="print-puzzle-btn" class="button secondary">Print / PDF</button>
@@ -134,7 +130,7 @@
     <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
 
     <div class="puzzle-wrap" id="puzzle-wrap">
-      <div class="sheets sudoku-sheets" id="sheets"></div>
+      <div class="sheets crypto-sheets" id="sheets"></div>
     </div>
 
     <p id="status" style="color:#6b7280; font-size:14px; margin-top:12px;"></p>
@@ -142,42 +138,43 @@
     <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
 
     <section class="card">
-      <h2>How to use the wordoku maker</h2>
-      <p>Choose a theme, grid size and difficulty, and a fresh wordoku appears instantly — every puzzle is different, and no two puzzles on a page are ever the same.</p>
+      <h2>How to use the cryptogram maker</h2>
+      <p>Choose a theme and difficulty, and a fresh cryptogram appears instantly — every sheet is different, and no two sheets on a page repeat the same sentence.</p>
       <ul>
-        <li><strong>Letters:</strong> each puzzle uses the first letters of the theme's words, so an Animals wordoku might use A, C, D, E, G, L, M, O, T. The letters in play are shown above every grid.</li>
-        <li><strong>Difficulties:</strong> Easy and Medium give more starting letters; Hard leaves fewer clues. Start with 4 × 4 or 6 × 6 if you're new to the rules.</li>
-        <li><strong>Solve on screen:</strong> click a cell and type a letter, or use the arrow keys to hop between empty cells. Check highlights anything wrong; the status line tells you when every entry is correct.</li>
-        <li><strong>Printing:</strong> “Print / PDF” gives blank grids — up to 8 on one 8½ × 11 sheet. “Print Answers” prints the same batch filled in.</li>
+        <li><strong>How it works:</strong> the sentence is hidden with a letter-substitution cipher. Each code letter always stands for the same plaintext letter, and no letter stands for itself.</li>
+        <li><strong>Solve on screen:</strong> type a letter under any code letter and it fills every occurrence automatically. The letter strip at the bottom tracks your whole alphabet.</li>
+        <li><strong>Strategy:</strong> start with one-letter words (usually A or I), then short words, and look for repeated letter patterns like double letters.</li>
+        <li><strong>Printing:</strong> “Print / PDF” prints the puzzle with blank answer lines — up to 2 per page. “Print Answers” prints the decoded sentence.</li>
       </ul>
     </section>
 
     <section class="card">
-      <h2>The rules of wordoku</h2>
+      <h2>The rules of cryptograms</h2>
       <ol>
-        <li>Every row must contain each of the puzzle's letters exactly once.</li>
-        <li>Every column must contain each of the puzzle's letters exactly once.</li>
-        <li>Every thick-bordered box must contain each of the puzzle's letters exactly once.</li>
-        <li>Some letters are already placed as clues — use them to work out where the rest belong.</li>
-        <li>There is exactly one solution, and it can be found by logic alone — no guessing needed.</li>
+        <li>The hidden message is a real sentence from the chosen theme.</li>
+        <li>Every code letter stands for exactly one plaintext letter — the substitution never changes within a puzzle.</li>
+        <li>No letter is ever coded as itself, so the substitution is always a genuine code.</li>
+        <li>Letters revealed at the start (on easier levels) are already filled in for you.</li>
       </ol>
     </section>
 
     <section class="card">
       <h2>Frequently asked questions</h2>
-      <h3>What is wordoku?</h3>
-      <p>Wordoku is a sudoku variant played with letters instead of numbers. Fill every row, column and box so each contains every letter exactly once — the letters are usually the letters of a theme word, like the animals category here.</p>
-      <h3>Is the wordoku generator free?</h3>
+      <h3>How do you solve a cryptogram?</h3>
+      <p>Every letter in the coded sentence stands for a different letter of the alphabet. Look for short words, common letter patterns and repeated letters to guess letters, then fill every occurrence of that code letter at once. Use the letter strip at the bottom to track what you've solved.</p>
+      <h3>Is the cryptogram maker free?</h3>
       <p>Yes. Every generator on this site is completely free and unlimited. There is no account, no sign-up and no watermark, and you can generate as many puzzles as you like.</p>
-      <h3>How do I print wordoku puzzles?</h3>
-      <p>Click “Print / PDF” to print the blank puzzle, or “Print Answers” for the completed grid. In the print dialog choose “Save as PDF” to download a file. You can also print up to 8 puzzles on one 8½ × 11 sheet.</p>
-      <h3>Can children solve wordoku?</h3>
-      <p>Yes. The 4×4 and 6×6 grids are ideal for beginners and young solvers — there are fewer letters to track, so the logic is easier to follow while still teaching the same row, column and box rules as sudoku.</p>
+      <h3>What do the difficulty levels change?</h3>
+      <p>Easy cryptograms use shorter sentences and reveal five letters up front, Medium reveals three, and Hard uses longer sentences with just one letter revealed. Every level uses a full letter-substitution cipher with no letter mapped to itself.</p>
+      <h3>How do I print a cryptogram?</h3>
+      <p>Click “Print / PDF” to print the puzzle with blank answer lines, or “Print Answers” for the completed sheet. In the print dialog choose “Save as PDF” to download a file.</p>
+    </section>
+
     <section class="card related">
       <h2>Related guides</h2>
+      <p><a href="/articles/how-to-solve-word-wheels.html">How to Solve Word Wheels: 8 Strategies for Finding Every Word</a></p>
       <p><a href="/articles/puzzle-difficulty-levels-explained.html">Puzzle Difficulty Levels Explained: What Easy, Medium and Hard Really Mean</a></p>
-      <p><a href="/articles/how-to-play-sudoku.html">How to Play Sudoku: Rules, Tips and Strategies for Beginners</a></p>
-      <p><a href="/articles/benefits-of-puzzles.html">Are Puzzles Good for Your Brain? The Science of Solving</a></p>
+      <p><a href="/articles/puzzles-in-the-classroom.html">Printable Puzzles in the Classroom: Ideas for Teachers</a></p>
     </section>
   </main>
 
@@ -188,8 +185,7 @@
   <script src="/js/ads.js"></script>
   <script src="/js/site.js"></script>
   <script src="/js/word-data.js"></script>
-  <script src="/sudoku/js/sudoku.js"></script>
-  <script src="js/wordoku.js"></script>
+  <script src="js/crypto.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

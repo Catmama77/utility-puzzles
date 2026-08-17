@@ -1040,6 +1040,91 @@ p {
   font-style: italic;
 }
 
+/* ---------- Cryptogram ---------- */
+
+.crypto-grid {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.crypto-line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2px 6px;
+  line-height: 1;
+}
+
+.crypto-cell {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.crypto-cipher {
+  font-family: "Courier New", monospace;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.crypto-cell .crypto-input,
+.crypto-map-cell .map-input {
+  width: 26px;
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: #fff;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  outline: none;
+}
+
+.crypto-cell .crypto-input:focus,
+.crypto-map-cell .map-input:focus {
+  outline: 2px solid var(--accent);
+}
+
+.crypto-cell.wrong .crypto-input,
+.crypto-map-cell.wrong .map-input {
+  border-color: #f87171;
+  background: #fee2e2;
+}
+
+.crypto-punc {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 18px; /* align with the answer inputs below the code letters */
+  color: var(--ink);
+}
+
+.crypto-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border);
+}
+
+.crypto-map-cell {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.crypto-map-cell .map-input {
+  width: 22px;
+  height: 24px;
+  font-size: 14px;
+}
+
 /* ---------- Word Wheel ---------- */
 
 .puzzle-grid.wheel {
@@ -1895,6 +1980,41 @@ p {
 
   .sheets.code-sheets.sheets-2 .code-clue {
     display: none;
+  }
+
+  /* Cryptogram */
+  .crypto-cell .crypto-input,
+  .crypto-map-cell .map-input {
+    border: none;
+    border-bottom: 2px solid #000;
+    border-radius: 0;
+    background: #fff;
+    color: #000;
+  }
+
+  .crypto-cell.wrong .crypto-input,
+  .crypto-map-cell.wrong .map-input {
+    background: #fff;
+  }
+
+  .sheets.crypto-sheets.sheets-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .sheets.crypto-sheets.sheets-2 .puzzle-sheet {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .sheets.crypto-sheets.sheets-2 .print-heading h1 {
+    font-size: 14px;
+  }
+
+  .sheets.crypto-sheets.sheets-2 .print-heading p {
+    font-size: 11px;
   }
 
   .sheets.code-sheets.sheets-2 .code-encoded {

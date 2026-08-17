@@ -117,6 +117,10 @@ function matchesSimple(el, part) {
 }
 
 function matchesSel(el, sel) {
+  // comma-separated selector list: matches if ANY part matches (like browsers)
+  if (sel.includes(",")) {
+    return sel.split(",").some(part => matchesSel(el, part.trim()));
+  }
   const parts = sel.trim().split(/\s+/);
   let i = parts.length - 1;
   // the element itself must match the last (closest) part
@@ -865,6 +869,60 @@ function testBingo() {
   ok(/print-call/.test(elClass(ctx, "document.body")), "print-call body class set");
 }
 
+function testCryptogram() {
+  resetDom();
+  console.log("Cryptogram:");
+  const { ctx } = setup(
+    ["category", "difficulty", "count", "sheets", "new-btn", "check-btn", "answers-btn", "print-puzzle-btn", "print-answers-btn", "status"],
+    WORD_DATA.concat(["cryptogram/js/crypto.js", "cryptogram/js/app.js"])
+  );
+
+  ok(gridCount(ctx) === 1, "renders 1 cryptogram by default");
+  ok(q(ctx, "#sheets .crypto-cell").length >= 15, "cipher cells render");
+  ok(q(ctx, "#sheets .crypto-map-cell").length === 26, "letter strip has 26 cells");
+
+  // medium difficulty reveals 3 distinct letters, pre-filled everywhere
+  const revealInputs = vm.runInContext("(function(){ var n=0; var els=document.querySelectorAll('#sheets .cipher-input, #sheets .map-input'); for (var i=0;i<els.length;i++) if (els[i].value) n++; return n; })()", ctx);
+  const filledCiphers = vm.runInContext("(function(){ var seen={}; var els=document.querySelectorAll('#sheets .cipher-input'); for (var i=0;i<els.length;i++) if (els[i].value) seen[els[i].dataset.cipher]=1; return Object.keys(seen).length; })()", ctx);
+  ok(filledCiphers === 3 && revealInputs >= 3, "medium reveals 3 letters pre-filled (" + filledCiphers + " distinct, " + revealInputs + " boxes)");
+
+  // typing a letter auto-fills every occurrence of that code letter
+  const target = vm.runInContext("(function(){ var els=Array.from(document.querySelectorAll('#sheets .cipher-input')); var el=els.find(function(e){return !e.value;}); return el ? el.dataset.cipher : null; })()", ctx);
+  const targetExpr = "Array.from(document.querySelectorAll('#sheets .cipher-input')).find(function(e){return e.dataset.cipher === '" + target + "';})";
+  const before = vm.runInContext("(function(){ var t='" + target + "'; return Array.from(document.querySelectorAll('#sheets .cipher-input')).filter(function(e){return e.dataset.cipher===t;}).length; })()", ctx);
+  fireInput(ctx, targetExpr, "Q");
+  const after = vm.runInContext("(function(){ var t='" + target + "'; return Array.from(document.querySelectorAll('#sheets .cipher-input')).filter(function(e){return e.dataset.cipher===t && e.value==='Q';}).length; })()", ctx);
+  ok(before >= 1 && after === before, "solving a letter fills every occurrence (" + after + "/" + before + ")");
+
+  // a wrong letter is flagged
+  fireInput(ctx, targetExpr, "Z");
+  fireClick(ctx, "check-btn");
+  ok(/wrong/.test(elText(ctx, "document.getElementById('status')")), "check flags a wrong letter");
+
+  // answers fills everything, then hide clears non-revealed
+  const total = q(ctx, "#sheets .cipher-input, #sheets .map-input").length;
+  fireClick(ctx, "answers-btn");
+  const filledAll = vm.runInContext("(function(){ var els=document.querySelectorAll('#sheets .cipher-input, #sheets .map-input'); var n=0; for (var i=0;i<els.length;i++) if (els[i].value) n++; return n; })()", ctx);
+  ok(filledAll === total, "answers fill every letter box (" + filledAll + "/" + total + ")");
+  fireClick(ctx, "answers-btn");
+  const filledAfterHide = vm.runInContext("(function(){ var els=document.querySelectorAll('#sheets .cipher-input, #sheets .map-input'); var n=0; for (var i=0;i<els.length;i++) if (els[i].value) n++; return n; })()", ctx);
+  ok(filledAfterHide === revealInputs, "hide restores only revealed letters (" + filledAfterHide + " left, " + revealInputs + " revealed)");
+
+  // difficulty switch: easy reveals 5
+  vm.runInContext("document.getElementById('difficulty').value = 'easy'", ctx);
+  fireClick(ctx, "new-btn");
+  const easyFilled = vm.runInContext("(function(){ var seen={}; var els=document.querySelectorAll('#sheets .cipher-input'); for (var i=0;i<els.length;i++) if (els[i].value) seen[els[i].dataset.cipher]=1; return Object.keys(seen).length; })()", ctx);
+  ok(easyFilled === 5, "easy reveals 5 letters (" + easyFilled + ")");
+
+  // 2 per page + print paths
+  vm.runInContext("document.getElementById('count').value = '2'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(gridCount(ctx) === 2, "renders 2 cryptograms with count=2");
+  fireClick(ctx, "print-puzzle-btn");
+  fireClick(ctx, "print-answers-btn");
+  ok(true, "print paths fire");
+}
+
 /* ---------- run ---------- */
 
 // fresh DOM between tools: each test builds its own document tree
@@ -885,6 +943,7 @@ testSudoku();
 testWordSearch();
 testWordScramble();
 testBingo();
+testCryptogram();
 
 console.log("\n" + passed + " passed, " + failed + " failed");
 if (failed > 0) {

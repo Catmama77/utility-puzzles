@@ -4,7 +4,7 @@ A static site (no backend, no database) with free printable puzzle generators,
 built to be monetized with Google AdSense. Every puzzle is generated in the
 visitor's browser and can be printed or saved as PDF, with an answer key.
 
-**Current tools (15):**
+**Current tools (16):**
 - Word Fill-In (word fit) puzzles — 6 categories × 3 difficulty levels, printable with answers.
 - Crossword maker — automatic grids with hand-written clues, across/down lists, answers option.
 - Number Fill-In — number fit puzzles with fresh random numbers, 5 themes × 3 difficulty levels.
@@ -20,6 +20,7 @@ visitor's browser and can be printed or saved as PDF, with an answer key.
 - Matching & flashcards — word-to-clue matching worksheets or cut-out vocabulary flashcards.
 - Maze — perfect mazes (exactly one solution path) in three sizes, print blank or with solution.
 - Kakuro — cross-sum number logic puzzles in three sizes and three difficulty levels.
+- Cryptogram — decode hidden themed sentences written in a letter-substitution cipher, three difficulty levels.
 
 **Print-friendly bulk mode:** every generator has a "per page" selector. Print
 up to **8 sudoku / wordoku** per sheet, up to **2 of the other puzzle types**
@@ -83,6 +84,9 @@ number-search/        Number search tool
   js/nsearch.js       Number-find generator (digit grids)
   js/app.js           Page UI (click-to-find solving)
 kakuro/               Kakuro tool
+cryptogram/           Cryptogram tool
+  js/crypto.js        Letter-substitution generator (themed sentences)
+  js/app.js           Page UI (auto-fill decoding + check)
   js/kakuro.js        Cross-sum generator (run sums, unique fill)
   js/app.js           Page UI (digit entry + check, arrow nav)
 articles/             SEO content hub + 13 original guides (each links to the tools)
@@ -105,6 +109,7 @@ test-cipher.js        Node sanity test for the code breaker generator
 test-wheel.js         Node sanity test for the word wheel generator
 test-nsearch.js       Node sanity test for the number search generator
 test-kakuro.js        Node sanity test for the kakuro generator
+test-cryptogram.js    Node sanity test for the cryptogram generator
 ```
 
 ## Keeping sitemap.xml and the RSS feed up to date
