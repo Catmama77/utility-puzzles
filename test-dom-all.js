@@ -43,7 +43,8 @@ function makeEl(tag) {
     children: [],
     parentNode: null,
     style: { setProperty: function (k, v) { this[k] = v; } },
-    dataset: {},
+    // real browsers coerce dataset values to strings — so does the shim
+    dataset: new Proxy({}, { set: (t, k, v) => { t[k] = String(v); return true; } }),
     _listeners: {},
     classList: {
       add: (...cs) => { cs.forEach(c => state.classes.add(c)); el.className = [...state.classes].join(" "); },
