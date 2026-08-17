@@ -1,10 +1,10 @@
-# UtilityPuzzles — printable puzzle generator sites
+# Brainy Puzzles — free printable puzzle games for all ages and stages
 
 A static site (no backend, no database) with free printable puzzle generators,
 built to be monetized with Google AdSense. Every puzzle is generated in the
 visitor's browser and can be printed or saved as PDF, with an answer key.
 
-**Current tools (17):**
+**Current tools (24):**
 - Word Fill-In (word fit) puzzles — 6 categories × 3 difficulty levels, printable with answers.
 - Crossword maker — automatic grids with hand-written clues, across/down lists, answers option.
 - Number Fill-In — number fit puzzles with fresh random numbers, 5 themes × 3 difficulty levels.
@@ -20,8 +20,15 @@ visitor's browser and can be printed or saved as PDF, with an answer key.
 - Matching & flashcards — word-to-clue matching worksheets or cut-out vocabulary flashcards.
 - Maze — perfect mazes (exactly one solution path) in three sizes, print blank or with solution.
 - Kakuro — cross-sum number logic puzzles in three sizes and three difficulty levels.
+- Killer Sudoku — sudoku with irregular cages: each dashed cage adds up to its corner sum, three difficulty levels.
+- Cross Math — crossword-style math grids: fill the blanks so every row and column is an equation using +, −, × and ÷, three difficulty levels.
 - Cryptogram — decode hidden themed sentences written in a letter-substitution cipher, three difficulty levels.
 - Nonogram — picross picture-logic puzzles with unique solutions, three sizes and difficulty levels.
+- Futoshiki — inequality logic puzzles: every row and column holds 1–N once and every < > sign points toward the smaller number, three sizes and levels.
+- Skyscrapers — skyline puzzles: place heights 1–N so the edge clues match the visible buildings, three sizes and levels.
+- Calcudoku — KenKen-style arithmetic cages with +, −, × and ÷, three sizes and levels.
+- Hidato — number-path puzzles: consecutive numbers, each next to the last including diagonally, three sizes and levels.
+- Slitherlink — loop puzzles: draw one closed loop so each numbered cell has exactly that many sides used, three sizes and levels.
 
 **Print-friendly bulk mode:** every generator has a "per page" selector. Print
 up to **8 sudoku / wordoku** per sheet, up to **2 of the other puzzle types**
@@ -29,9 +36,8 @@ side by side, or **1–4 bingo cards** per 8½ × 11 page (up to 100 cards per
 batch) — perfect for handing out to a whole class. "Print Answers" prints the
 completed grids in the same layout.
 
-**Uniqueness guarantee:** every puzzle in a batch is guaranteed distinct — no
-matter how many puzzles you put on a page, each one is different (verified by
-the test suites across all sixteen generators).
+**Uniqueness guarantee:** every puzzle in a batch is guaranteed distinct —no matter how many puzzles you put on a page, each one is different (verified by
+the test suites across all twenty-four generators).
 
 ## Project layout
 
@@ -85,13 +91,35 @@ number-search/        Number search tool
   js/nsearch.js       Number-find generator (digit grids)
   js/app.js           Page UI (click-to-find solving)
 kakuro/               Kakuro tool
+killer-sudoku/        Killer Sudoku tool
+  js/killer.js        Killer sudoku generator (cage partition + uniqueness solver)
+  js/app.js           Page UI
+cross-math/           Cross Math tool
+  js/cross-math.js    Cross math generator (equation-grid layout, unique-solution blanking)
+  js/app.js           Page UI (digit entry + check, arrow nav)
 cryptogram/           Cryptogram tool
-nonogram/             Nonogram (picross) tool
   js/crypto.js        Letter-substitution generator (themed sentences)
   js/app.js           Page UI (auto-fill decoding + check)
-  js/kakuro.js        Cross-sum generator (run sums, unique fill)
+nonogram/             Nonogram (picross) tool
+  js/nono.js          Picross generator (line-clue solver, unique solutions)
+  js/app.js           Page UI (click-to-fill solving + check)
+futoshiki/            Futoshiki tool
+  js/futoshiki.js     Inequality generator (latin square + sign trimming, unique solutions)
   js/app.js           Page UI (digit entry + check, arrow nav)
-articles/             SEO content hub + 15 original guides (each links to the tools)
+skyscrapers/          Skyscrapers tool
+  js/skyscrapers.js   Skyline generator (latin square + edge clues, unique solutions)
+  js/app.js           Page UI (digit entry + check, arrow nav)
+calcudoku/            Calcudoku tool
+  js/calcudoku.js     Arithmetic-cage generator (latin square + cage rules, unique solutions)
+  js/app.js           Page UI (digit entry + check, arrow nav)
+hidato/               Hidato tool
+  js/hidato.js        Number-path generator (Warnsdorff path + uniqueness solver)
+  js/app.js           Page UI (digit entry + check, arrow nav)
+slitherlink/          Slitherlink tool
+  js/slitherlink.js   Loop generator (region boundary + edge solver, unique solutions)
+  js/app.js           Page UI (click-to-draw loop solving + check)
+articles/             SEO content hub + 22 original guides (each links to the tools)
+                      + a rules.html page inside each of the 5 newest tool folders
 about.html / contact.html / privacy.html / terms.html   Required AdSense pages
 favicon.svg, robots.txt, sitemap.xml, feed.xml
 build-seo.js      Auto-generates sitemap.xml + feed.xml from the file tree (run `node build-seo.js`)
@@ -111,7 +139,10 @@ test-cipher.js        Node sanity test for the code breaker generator
 test-wheel.js         Node sanity test for the word wheel generator
 test-nsearch.js       Node sanity test for the number search generator
 test-kakuro.js        Node sanity test for the kakuro generator
-test-cryptogram.js    Node sanity test for the cryptogram generator
+test-killer.js        Node sanity test for the killer sudoku generator
+test-cross-math.js    Node sanity test for the cross math generator
+test-nonogram.js      Node sanity test for the nonogram generator
+test-dom-all.js       DOM-harness UI tests for the newest tool pages
 ```
 
 ## Keeping sitemap.xml and the RSS feed up to date
@@ -139,26 +170,30 @@ homepage and `/articles/`.
 python3 -m http.server 8000      # then open http://localhost:8000
 ```
 
-All sixteen generators are tested with `node test-generator.js`, `node test-crossword.js`,
+All twenty-four generators are tested with `node test-generator.js`, `node test-crossword.js`,
 `node test-numbers.js`, `node test-sudoku.js`, `node test-bingo.js`, `node test-search.js`,
 `node test-scramble.js`, `node test-wordoku.js`, `node test-maze.js`, `node test-matching.js`,
-`node test-ladders.js`, `node test-cipher.js`, `node test-wheel.js`, `node test-nsearch.js`
-and `node test-kakuro.js` (verifying slot integrity, numbering, clues/themes, layout,
-sudoku uniqueness, bingo column ranges and card variety, word-search placement, scramble
-anagram integrity, wordoku letter grids, maze solvability, matching pair integrity, ladder
-connectivity, cipher round-trips, wheel word counts, number-search placement, and kakuro
-run sums).
+`node test-ladders.js`, `node test-cipher.js`, `node test-wheel.js`, `node test-nsearch.js`,
+`node test-kakuro.js`, `node test-killer.js`, `node test-cross-math.js`, `node test-futoshiki.js`,
+`node test-skyscrapers.js`, `node test-calcudoku.js`, `node test-hidato.js`, `node test-slitherlink.js`
+and `node test-nonogram.js` (verifying slot integrity, numbering, clues/themes, layout, sudoku
+uniqueness, bingo column ranges and card variety, word-search placement, scramble anagram
+integrity, wordoku letter grids, maze solvability, matching pair integrity, ladder connectivity,
+cipher round-trips, wheel word counts, number-search placement, kakuro run sums, killer sudoku
+cage sums + uniqueness, cross math line equations + uniqueness, futoshiki sign consistency,
+skyscrapers clue accuracy, calcudoku cage rules, hidato path adjacency, and slitherlink loop
+validity + uniqueness).
 
 ## Deploy to GitHub Pages
 
-1. Create a new **public** repo on GitHub (e.g. `utility-puzzles`).
+1. Create a new **public** repo on GitHub (e.g. `brainy-puzzles`).
 2. Push this folder to it:
    ```bash
    git init
    git add .
    git commit -m "Initial commit: word fill-in puzzle maker"
    git branch -M main
-   git remote add origin https://github.com/YOUR-USERNAME/utility-puzzles.git
+   git remote add origin https://github.com/YOUR-USERNAME/brainy-puzzles.git
    git push -u origin main
    ```
 3. In the repo: **Settings → Pages → Source: Deploy from a branch → main → / (root) → Save**.
@@ -192,7 +227,7 @@ and GitHub will redirect the apex to `www` automatically):
 
 If you switch primary domains, update the `CNAME` file, `sitemap.xml` and
 `robots.txt` to match.
-6. Submit `https://your-domain/sitemap.xml` in Google Search Console and request indexing of `/` and all 15 tool pages (`/word-fill/`, `/crossword/`, `/number-fill/`, `/sudoku/`, `/wordoku/`, `/bingo/`, `/word-search/`, `/word-scramble/`, `/number-search/`, `/word-wheel/`, `/word-ladders/`, `/code-breaker/`, `/matching/`, `/maze/`, `/kakuro/`).
+6. Submit `https://your-domain/sitemap.xml` in Google Search Console and request indexing of `/` and all 24 tool pages (`/word-fill/`, `/crossword/`, `/number-fill/`, `/sudoku/`, `/wordoku/`, `/bingo/`, `/word-search/`, `/word-scramble/`, `/number-search/`, `/word-wheel/`, `/word-ladders/`, `/code-breaker/`, `/matching/`, `/maze/`, `/kakuro/`, `/killer-sudoku/`, `/cross-math/`, `/cryptogram/`, `/nonogram/`, `/futoshiki/`, `/skyscrapers/`, `/calcudoku/`, `/hidato/`, `/slitherlink/`).
 
 ### Putting each tool on its own subdomain (the 3-subdomain plan)
 
@@ -213,18 +248,24 @@ GitHub Pages allows one custom domain per repo. If you want  `wordfill.example.c
    add more explanatory text over time.
 2. Apply at https://adsense.google.com once the site is live. Approval is not
    automatic and can take days to weeks.
-3. After approval, copy your publisher ID (`ca-pub-1234567890123456`) and paste
-   it into `ADSENSE_CONFIG.client` in `js/ads.js`. Ads will then render
-   automatically in the existing ad slots on every page.
-4. Optional: replace the `data-ad-slot="0000000000"` placeholders with real ad
-   unit IDs, or delete the manual slots and enable **Auto ads** in AdSense
-   (with the loader script in `js/ads.js`, auto ads are all you need).
+3. After approval, enable **Auto ads** in AdSense (Ads → Auto ads) — the
+   recommended, simplest option. The AdSense loader is already included in
+   every page's `<head>` with this site's publisher ID, so ads render without
+   further code changes.
+4. Optional: create responsive ad units and paste their real slot IDs over the
+   `data-ad-slot="0000000000"` placeholders, then set `manualSlots: true` in
+   `js/ads.js` (see the header there for full instructions).
+
+If you ever change publisher IDs, update it in both places: the loader
+`<script>` in every page's `<head>` and `ADSENSE_CONFIG.client` in `js/ads.js`.
+The `injectLoader()` in `js/ads.js` only adds the script as a fallback and
+won't override a page that already has it.
 
 ### AdSense approval checklist
 
 - [ ] Site live on your own domain with HTTPS
 - [ ] Privacy Policy, About, Contact and Terms pages (done — edit to match your details)
-- [ ] Original content on every page (tools + instructions + 15 articles in `/articles/`)
+- [ ] Original content on every page (tools + instructions + 22 articles in `/articles/`)
 - [ ] Working navigation and mobile-friendly layout
 - [ ] Sitemap submitted in Search Console, pages indexed
 

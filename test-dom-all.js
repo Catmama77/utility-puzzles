@@ -752,7 +752,66 @@ function testSudoku() {
 }
 
 /* ============================================================
-   13. Word Search
+   13. Killer Sudoku
+   ============================================================ */
+
+function testKiller() {
+  resetDom();
+  console.log("Killer sudoku:");
+  const { ctx } = setup(
+    ["difficulty", "count", "sheets", "new-btn", "check-btn", "answers-btn", "print-puzzle-btn", "print-answers-btn", "status"],
+    ["killer-sudoku/js/killer.js", "killer-sudoku/js/app.js"]
+  );
+
+  ok(gridCount(ctx) === 1, "renders 1 grid by default");
+  ok(q(ctx, "#sheets .cell").length === 81, "9x9 grid has 81 cells");
+  ok(q(ctx, "#sheets .killer-clue").length > 0, "cage sum clues render");
+  ok(q(ctx, "#sheets .cell.thick-t, #sheets .cell.thick-r, #sheets .cell.thick-b, #sheets .cell.thick-l").length > 0, "cage border edges render");
+  const inputs = q(ctx, "#sheets input.killer-input");
+  ok(inputs.length === 81, "all 81 cells are editable inputs");
+
+  // wrong entry + check
+  const inpExpr = "document.querySelectorAll('#sheets input.killer-input')[0]";
+  const rightAns = vm.runInContext(inpExpr + ".parentNode.dataset.answer", ctx);
+  fireInput(ctx, inpExpr, rightAns === "5" ? "6" : "5");
+  fireClick(ctx, "check-btn");
+  ok(/wrong/.test(elText(ctx, "document.getElementById('status')")), "check flags a wrong entry");
+
+  // fix it and check again
+  fireInput(ctx, inpExpr, rightAns);
+  fireClick(ctx, "check-btn");
+  ok(/correct|keep going|Solved/i.test(elText(ctx, "document.getElementById('status')")), "check passes after fixing");
+
+  // answers toggle marks grids
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 1, "answers marks grid");
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 0, "answers hidden again");
+
+  // difficulty switch
+  vm.runInContext("document.getElementById('difficulty').value = 'easy'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(/Easy/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "easy title shows difficulty");
+  vm.runInContext("document.getElementById('difficulty').value = 'hard'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(/Hard/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "hard title shows difficulty");
+
+  // 2 per page
+  vm.runInContext("document.getElementById('count').value = '2'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(gridCount(ctx) === 2, "renders 2 grids with count=2");
+
+  // arrow nav runs
+  fireKeydown(ctx, "document.querySelectorAll('#sheets input.killer-input')[0]", "ArrowRight");
+  ok(true, "arrow key handler runs");
+
+  fireClick(ctx, "print-puzzle-btn");
+  fireClick(ctx, "print-answers-btn");
+  ok(true, "print paths fire");
+}
+
+/* ============================================================
+   14. Word Search
    ============================================================ */
 
 function testWordSearch() {
@@ -1001,6 +1060,413 @@ function testNonogram() {
   ok(true, "print paths fire");
 }
 
+function testCrossMath() {
+  resetDom();
+  console.log("Cross math:");
+  const { ctx } = setup(
+    ["difficulty", "count", "sheets", "new-btn", "check-btn", "answers-btn", "print-puzzle-btn", "print-answers-btn", "status"],
+    ["cross-math/js/cross-math.js", "cross-math/js/app.js"]
+  );
+
+  ok(gridCount(ctx) === 1, "renders 1 grid by default");
+  ok(q(ctx, "#sheets .cell").length === 25, "5x5 grid has 25 cells");
+  ok(q(ctx, "#sheets .cm-num").length === 9, "9 digit cells render");
+  ok(q(ctx, "#sheets .cm-rop, #sheets .cm-cop").length === 6, "6 operator cells render");
+  ok(q(ctx, "#sheets .cm-eq").length === 6, "6 equals cells render");
+  const givens = q(ctx, "#sheets .cm-num.given").length;
+  ok(givens > 0, "grid has given digits (" + givens + ")");
+  const inputs = q(ctx, "#sheets input.cm-input");
+  ok(inputs.length === 6, "medium has 6 blank cells (" + inputs.length + ")");
+
+  // wrong entry + check
+  const inpExpr = "document.querySelectorAll('#sheets input.cm-input')[0]";
+  const rightAns = vm.runInContext(inpExpr + ".parentNode.dataset.answer", ctx);
+  fireInput(ctx, inpExpr, rightAns === "5" ? "6" : "5");
+  fireClick(ctx, "check-btn");
+  ok(/wrong/.test(elText(ctx, "document.getElementById('status')")), "check flags a wrong entry");
+
+  // fix it and check again
+  fireInput(ctx, inpExpr, rightAns);
+  fireClick(ctx, "check-btn");
+  ok(/correct|keep going|Solved/i.test(elText(ctx, "document.getElementById('status')")), "check passes after fixing");
+
+  // answers toggle marks grids
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 1, "answers marks grid");
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 0, "answers hidden again");
+
+  // difficulty switch: easy has 5 blanks, hard has 7 (5-6 when uniqueness won't allow more)
+  vm.runInContext("document.getElementById('difficulty').value = 'easy'", ctx);
+  fireClick(ctx, "new-btn");
+  const easyBlanks = q(ctx, "#sheets input.cm-input").length;
+  ok(easyBlanks === 5, "easy has 5 blanks (" + easyBlanks + ")");
+  ok(/Easy/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "easy title shows difficulty");
+  vm.runInContext("document.getElementById('difficulty').value = 'hard'", ctx);
+  fireClick(ctx, "new-btn");
+  const hardBlanks = q(ctx, "#sheets input.cm-input").length;
+  ok(hardBlanks >= 5, "hard has 5+ blanks (" + hardBlanks + ")");
+  ok(/Hard/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "hard title shows difficulty");
+
+  // 2 per page
+  vm.runInContext("document.getElementById('count').value = '2'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(gridCount(ctx) === 2, "renders 2 grids with count=2");
+  ok(sheetsClass(ctx).indexOf("sheets-2") !== -1, "sheets-2 class applied");
+
+  // arrow nav runs
+  fireKeydown(ctx, "document.querySelectorAll('#sheets input.cm-input')[0]", "ArrowRight");
+  ok(true, "arrow key handler runs");
+
+  fireClick(ctx, "print-puzzle-btn");
+  fireClick(ctx, "print-answers-btn");
+  ok(true, "print paths fire");
+}
+
+function testCalcudoku() {
+  resetDom();
+  console.log("Calcudoku:");
+  const { ctx } = setup(
+    ["difficulty", "count", "sheets", "new-btn", "check-btn", "answers-btn", "print-puzzle-btn", "print-answers-btn", "status"],
+    ["calcudoku/js/calcudoku.js", "calcudoku/js/app.js"]
+  );
+
+  ok(gridCount(ctx) === 1, "renders 1 grid by default");
+  // medium is 5x5
+  ok(q(ctx, "#sheets .cell").length === 25, "5x5 calcudoku renders 25 cells (" + q(ctx, "#sheets .cell").length + ")");
+  const inputs = q(ctx, "#sheets input.cd-input");
+  ok(inputs.length === 14, "medium has 14 blanks (" + inputs.length + ")");
+  ok(q(ctx, "#sheets .cd-cell.given").length === 11, "medium has 11 givens (" + q(ctx, "#sheets .cd-cell.given").length + ")");
+  const clues = q(ctx, "#sheets .cd-clue");
+  ok(clues.length >= 3, "cage clues render (" + clues.length + ")");
+  ok(clues.every(c => c.textContent.length >= 1), "every clue has text");
+  const thick = q(ctx, "#sheets .cd-cell.thick-t, #sheets .cd-cell.thick-b, #sheets .cd-cell.thick-l, #sheets .cd-cell.thick-r").length;
+  ok(thick > 0, "cage borders render (" + thick + " thick edges)");
+
+  // wrong entry + check
+  const inpExpr = "document.querySelectorAll('#sheets input.cd-input')[0]";
+  const rightAns = vm.runInContext(inpExpr + ".parentNode.dataset.answer", ctx);
+  fireInput(ctx, inpExpr, rightAns === "1" ? "2" : "1");
+  fireClick(ctx, "check-btn");
+  ok(/wrong/.test(elText(ctx, "document.getElementById('status')")), "check flags a wrong entry");
+
+  // fix it and check again
+  fireInput(ctx, inpExpr, rightAns);
+  fireClick(ctx, "check-btn");
+  ok(/correct|keep going|Solved/i.test(elText(ctx, "document.getElementById('status')")), "check passes after fixing");
+
+  // answers toggle marks grids
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 1, "answers marks grid");
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 0, "answers hidden again");
+
+  // difficulty switch: easy 4x4 (6 blanks), hard 6x6 (24 blanks)
+  vm.runInContext("document.getElementById('difficulty').value = 'easy'", ctx);
+  fireClick(ctx, "new-btn");
+  const easyBlanks = q(ctx, "#sheets input.cd-input").length;
+  ok(easyBlanks >= 5, "easy has 5+ blanks (" + easyBlanks + ")");
+  ok(q(ctx, "#sheets .cell").length === 16, "easy renders 16 cells");
+  ok(/Easy/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "easy title shows difficulty");
+  vm.runInContext("document.getElementById('difficulty').value = 'hard'", ctx);
+  fireClick(ctx, "new-btn");
+  const hardBlanks = q(ctx, "#sheets input.cd-input").length;
+  ok(hardBlanks >= 22, "hard has 22+ blanks (" + hardBlanks + ")");
+  ok(q(ctx, "#sheets .cell").length === 36, "hard renders 36 cells");
+  ok(/Hard/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "hard title shows difficulty");
+
+  // 2 per page
+  vm.runInContext("document.getElementById('count').value = '2'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(gridCount(ctx) === 2, "renders 2 grids with count=2");
+  ok(sheetsClass(ctx).indexOf("sheets-2") !== -1, "sheets-2 class applied");
+
+  // arrow nav runs
+  fireKeydown(ctx, "document.querySelectorAll('#sheets input.cd-input')[0]", "ArrowRight");
+  ok(true, "arrow key handler runs");
+
+  fireClick(ctx, "print-puzzle-btn");
+  fireClick(ctx, "print-answers-btn");
+  ok(true, "print paths fire");
+}
+
+function testSlitherlink() {
+  resetDom();
+  console.log("Slitherlink:");
+  const { ctx } = setup(
+    ["difficulty", "count", "sheets", "new-btn", "check-btn", "answers-btn", "print-puzzle-btn", "print-answers-btn", "status"],
+    ["slitherlink/js/slitherlink.js", "slitherlink/js/app.js"]
+  );
+
+  ok(gridCount(ctx) === 1, "renders 1 grid by default");
+  // medium is 5x5 cells -> 11x11 rendered grid: 36 dots, 60 edges, 25 clues
+  ok(q(ctx, "#sheets .cell").length === 121, "5x5 slitherlink renders 121 cells (" + q(ctx, "#sheets .cell").length + ")");
+  ok(q(ctx, "#sheets .sl-dot").length === 36, "36 dots render");
+  ok(q(ctx, "#sheets .sl-edge").length === 60, "60 edge segments render (" + q(ctx, "#sheets .sl-edge").length + ")");
+  ok(q(ctx, "#sheets .sl-hedge").length === 30 && q(ctx, "#sheets .sl-vedge").length === 30, "30 horizontal + 30 vertical edges");
+  ok(q(ctx, "#sheets .sl-clue").length === 25, "25 clue cells render");
+  const numbered = q(ctx, "#sheets .sl-clue").filter(c => c.textContent !== "").length;
+  ok(numbered === 21, "medium shows 21 clues (" + numbered + ")");
+
+  // click cycle: line -> cross -> clear
+  const edgeExpr = "document.querySelectorAll('#sheets .sl-edge')[0]";
+  fireCellClick(ctx, edgeExpr);
+  ok(elClass(ctx, edgeExpr).indexOf("on") !== -1, "click draws a line");
+  fireCellClick(ctx, edgeExpr);
+  ok(elClass(ctx, edgeExpr).indexOf("cross") !== -1 && elClass(ctx, edgeExpr).indexOf("on") === -1, "second click crosses it out");
+  ok(elText(ctx, edgeExpr) === "✕", "cross shows the X mark");
+  fireCellClick(ctx, edgeExpr);
+  ok(elClass(ctx, edgeExpr).indexOf("on") === -1 && elClass(ctx, edgeExpr).indexOf("cross") === -1, "third click clears it");
+
+  // right-click crosses out directly
+  vm.runInContext("(function () { var el = " + edgeExpr + "; var ls = el._listeners['contextmenu'] || []; if (ls.length) ls[ls.length - 1].call(el, { preventDefault: function () {} }); })()", ctx);
+  ok(elClass(ctx, edgeExpr).indexOf("cross") !== -1, "right-click crosses out directly");
+  vm.runInContext("(function () { var el = " + edgeExpr + "; var ls = el._listeners['contextmenu'] || []; if (ls.length) ls[ls.length - 1].call(el, { preventDefault: function () {} }); })()", ctx);
+  ok(elClass(ctx, edgeExpr).indexOf("cross") === -1, "right-click again clears the cross");
+
+  // check with nothing drawn
+  fireClick(ctx, "check-btn");
+  ok(/click grid lines/i.test(elText(ctx, "document.getElementById('status')")), "check with nothing drawn prompts to draw");
+
+  // draw every edge (definitely wrong), check flags it
+  vm.runInContext("Array.from(document.querySelectorAll('#sheets .sl-edge')).forEach(function (el) { var ls = el._listeners['click'] || []; if (ls.length) ls[ls.length - 1].call(el); })", ctx);
+  fireClick(ctx, "check-btn");
+  ok(/wrong/.test(elText(ctx, "document.getElementById('status')")), "check flags an overfull loop");
+
+  // answers draws the solution loop
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 1, "answers marks grid");
+  const ansLines = q(ctx, "#sheets .sl-edge.answer-line").length;
+  ok(ansLines >= 4, "answers draws loop lines (" + ansLines + ")");
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .sl-edge.answer-line").length === 0, "answers hidden again");
+
+  // difficulty switch: easy 4x4 (9x9 grid, 2 hidden), hard 6x6 (13x13 grid)
+  vm.runInContext("document.getElementById('difficulty').value = 'easy'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(q(ctx, "#sheets .cell").length === 81, "easy renders 81 cells");
+  ok(q(ctx, "#sheets .sl-clue").length === 16, "easy renders 16 clue cells");
+  const easyNum = q(ctx, "#sheets .sl-clue").filter(c => c.textContent !== "").length;
+  ok(easyNum === 14, "easy shows 14 clues (" + easyNum + ")");
+  ok(/Easy/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "easy title shows difficulty");
+  vm.runInContext("document.getElementById('difficulty').value = 'hard'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(q(ctx, "#sheets .cell").length === 169, "hard renders 169 cells");
+  ok(q(ctx, "#sheets .sl-edge").length === 84, "hard renders 84 edge segments");
+  ok(/Hard/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "hard title shows difficulty");
+
+  // 2 per page
+  vm.runInContext("document.getElementById('count').value = '2'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(gridCount(ctx) === 2, "renders 2 grids with count=2");
+  ok(sheetsClass(ctx).indexOf("sheets-2") !== -1, "sheets-2 class applied");
+
+  fireClick(ctx, "print-puzzle-btn");
+  fireClick(ctx, "print-answers-btn");
+  ok(true, "print paths fire");
+}
+
+function testSkyscrapers() {
+  resetDom();
+  console.log("Skyscrapers:");
+  const { ctx } = setup(
+    ["difficulty", "count", "sheets", "new-btn", "check-btn", "answers-btn", "print-puzzle-btn", "print-answers-btn", "status"],
+    ["skyscrapers/js/skyscrapers.js", "skyscrapers/js/app.js"]
+  );
+
+  ok(gridCount(ctx) === 1, "renders 1 grid by default");
+  // medium is 5x5 -> a 7x7 rendered grid (clue border + corners)
+  ok(q(ctx, "#sheets .cell").length === 49, "5x5 skyscrapers renders 49 cells (" + q(ctx, "#sheets .cell").length + ")");
+  ok(q(ctx, "#sheets .sky-num").length === 25, "25 number cells render");
+  ok(q(ctx, "#sheets .sky-clue").length === 20, "20 clue cells render (" + q(ctx, "#sheets .sky-clue").length + ")");
+  ok(q(ctx, "#sheets .sky-fill").length === 4, "4 corner fillers render");
+  const inputs = q(ctx, "#sheets input.sky-input");
+  ok(inputs.length >= 10, "medium has 10+ blanks (" + inputs.length + ")");
+  // every clue is 1..5 and present on the right sides
+  const clues = q(ctx, "#sheets .sky-clue").map(c => +c.textContent);
+  ok(clues.every(v => v >= 1 && v <= 5), "all clues are heights 1..5");
+
+  // wrong entry + check
+  const inpExpr = "document.querySelectorAll('#sheets input.sky-input')[0]";
+  const rightAns = vm.runInContext(inpExpr + ".parentNode.dataset.answer", ctx);
+  fireInput(ctx, inpExpr, rightAns === "1" ? "2" : "1");
+  fireClick(ctx, "check-btn");
+  ok(/wrong/.test(elText(ctx, "document.getElementById('status')")), "check flags a wrong entry");
+
+  // fix it and check again
+  fireInput(ctx, inpExpr, rightAns);
+  fireClick(ctx, "check-btn");
+  ok(/correct|keep going|Solved/i.test(elText(ctx, "document.getElementById('status')")), "check passes after fixing");
+
+  // answers toggle marks grids
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 1, "answers marks grid");
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 0, "answers hidden again");
+
+  // difficulty switch: easy 4x4 (16 number cells), hard 6x6 (36 number cells)
+  vm.runInContext("document.getElementById('difficulty').value = 'easy'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(q(ctx, "#sheets .sky-num").length === 16, "easy renders 16 number cells");
+  ok(/Easy/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "easy title shows difficulty");
+  vm.runInContext("document.getElementById('difficulty').value = 'hard'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(q(ctx, "#sheets .sky-num").length === 36, "hard renders 36 number cells");
+  ok(q(ctx, "#sheets .sky-clue").length === 24, "hard renders 24 clue cells");
+  ok(/Hard/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "hard title shows difficulty");
+
+  // 2 per page
+  vm.runInContext("document.getElementById('count').value = '2'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(gridCount(ctx) === 2, "renders 2 grids with count=2");
+  ok(sheetsClass(ctx).indexOf("sheets-2") !== -1, "sheets-2 class applied");
+
+  // arrow nav runs
+  fireKeydown(ctx, "document.querySelectorAll('#sheets input.sky-input')[0]", "ArrowRight");
+  ok(true, "arrow key handler runs");
+
+  fireClick(ctx, "print-puzzle-btn");
+  fireClick(ctx, "print-answers-btn");
+  ok(true, "print paths fire");
+}
+
+function testHidato() {
+  resetDom();
+  console.log("Hidato:");
+  const { ctx } = setup(
+    ["difficulty", "count", "sheets", "new-btn", "check-btn", "answers-btn", "print-puzzle-btn", "print-answers-btn", "status"],
+    ["hidato/js/hidato.js", "hidato/js/app.js"]
+  );
+
+  ok(gridCount(ctx) === 1, "renders 1 grid by default");
+  // medium is 9x9 = 81 cells
+  ok(q(ctx, "#sheets .cell").length === 81, "9x9 hidato renders 81 cells (" + q(ctx, "#sheets .cell").length + ")");
+  ok(q(ctx, "#sheets .hd-cell").length === 81, "81 hidato cells render");
+  const inputs = q(ctx, "#sheets input.hd-input");
+  ok(inputs.length === 51, "medium has 51 blanks (" + inputs.length + ")");
+  ok(q(ctx, "#sheets .cell.given").length === 30, "medium has 30 givens (" + q(ctx, "#sheets .cell.given").length + ")");
+  // start (1) and end (81) are always shown
+  const firstCellAns = q(ctx, "#sheets .cell")[0].dataset.answer;
+  ok(+firstCellAns >= 1 && +firstCellAns <= 81, "cells carry their answer number");
+  const givenTexts = q(ctx, "#sheets .cell.given").map(c => c.textContent);
+  ok(givenTexts.indexOf("1") !== -1, "start (1) is given");
+  ok(givenTexts.indexOf("81") !== -1, "end (81) is given");
+
+  // wrong entry + check
+  const inpExpr = "document.querySelectorAll('#sheets input.hd-input')[0]";
+  const rightAns = vm.runInContext(inpExpr + ".parentNode.dataset.answer", ctx);
+  const wrongAns = rightAns === "1" ? "2" : String(+rightAns + 1);
+  fireInput(ctx, inpExpr, wrongAns);
+  fireClick(ctx, "check-btn");
+  ok(/wrong/.test(elText(ctx, "document.getElementById('status')")), "check flags a wrong entry");
+
+  // fix it and check again
+  fireInput(ctx, inpExpr, rightAns);
+  fireClick(ctx, "check-btn");
+  ok(/correct|keep going|Solved/i.test(elText(ctx, "document.getElementById('status')")), "check passes after fixing");
+
+  // answers toggle marks grids
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 1, "answers marks grid");
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 0, "answers hidden again");
+
+  // difficulty switch: easy 7x7 (25 blanks), hard 11x11 (80+ blanks)
+  vm.runInContext("document.getElementById('difficulty').value = 'easy'", ctx);
+  fireClick(ctx, "new-btn");
+  const easyBlanks = q(ctx, "#sheets input.hd-input").length;
+  ok(easyBlanks === 25, "easy 7x7 has 25 blanks (" + easyBlanks + ")");
+  ok(q(ctx, "#sheets .hd-cell").length === 49, "easy renders 49 cells");
+  ok(/Easy/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "easy title shows difficulty");
+  vm.runInContext("document.getElementById('difficulty').value = 'hard'", ctx);
+  fireClick(ctx, "new-btn");
+  const hardBlanks = q(ctx, "#sheets input.hd-input").length;
+  ok(hardBlanks >= 75, "hard 11x11 has 75+ blanks (" + hardBlanks + ")");
+  ok(q(ctx, "#sheets .hd-cell").length === 121, "hard renders 121 cells");
+  ok(/Hard/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "hard title shows difficulty");
+
+  // 2 per page
+  vm.runInContext("document.getElementById('count').value = '2'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(gridCount(ctx) === 2, "renders 2 grids with count=2");
+  ok(sheetsClass(ctx).indexOf("sheets-2") !== -1, "sheets-2 class applied");
+
+  // arrow nav runs
+  fireKeydown(ctx, "document.querySelectorAll('#sheets input.hd-input')[0]", "ArrowDown");
+  ok(true, "arrow key handler runs");
+
+  fireClick(ctx, "print-puzzle-btn");
+  fireClick(ctx, "print-answers-btn");
+  ok(true, "print paths fire");
+}
+
+function testFutoshiki() {
+  resetDom();
+  console.log("Futoshiki:");
+  const { ctx } = setup(
+    ["difficulty", "count", "sheets", "new-btn", "check-btn", "answers-btn", "print-puzzle-btn", "print-answers-btn", "status"],
+    ["futoshiki/js/futoshiki.js", "futoshiki/js/app.js"]
+  );
+
+  ok(gridCount(ctx) === 1, "renders 1 grid by default");
+  // medium is 5x5 -> a 9x9 cell grid: 25 number cells, 20+20 sign cells, 16 fillers
+  ok(q(ctx, "#sheets .cell").length === 81, "5x5 futoshiki renders 81 grid cells (" + q(ctx, "#sheets .cell").length + ")");
+  ok(q(ctx, "#sheets .ft-num").length === 25, "25 number cells render");
+  ok(q(ctx, "#sheets .ft-hsign").length === 20 && q(ctx, "#sheets .ft-vsign").length === 20, "40 sign cells render (20 h + 20 v)");
+  ok(q(ctx, "#sheets .ft-fill").length === 16, "16 filler cells render");
+  const inputs = q(ctx, "#sheets input.ft-input");
+  ok(inputs.length === 17, "medium has 17 blanks (" + inputs.length + ")");
+  const signText = vm.runInContext("Array.from(document.querySelectorAll('#sheets .ft-hsign, #sheets .ft-vsign')).filter(function (e) { return e.textContent !== ''; }).length", ctx);
+  ok(signText >= 10, "inequality signs render (" + signText + ")");
+  ok(q(ctx, "#sheets .ft-num.given").length > 0, "grid has given digits (" + q(ctx, "#sheets .ft-num.given").length + ")");
+
+  // wrong entry + check
+  const inpExpr = "document.querySelectorAll('#sheets input.ft-input')[0]";
+  const rightAns = vm.runInContext(inpExpr + ".parentNode.dataset.answer", ctx);
+  fireInput(ctx, inpExpr, rightAns === "1" ? "2" : "1");
+  fireClick(ctx, "check-btn");
+  ok(/wrong/.test(elText(ctx, "document.getElementById('status')")), "check flags a wrong entry");
+
+  // fix it and check again
+  fireInput(ctx, inpExpr, rightAns);
+  fireClick(ctx, "check-btn");
+  ok(/correct|keep going|Solved/i.test(elText(ctx, "document.getElementById('status')")), "check passes after fixing");
+
+  // answers toggle marks grids
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 1, "answers marks grid");
+  fireClick(ctx, "answers-btn");
+  ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 0, "answers hidden again");
+
+  // difficulty switch: easy 4x4 (9 blanks), hard 6x6 (26 blanks)
+  vm.runInContext("document.getElementById('difficulty').value = 'easy'", ctx);
+  fireClick(ctx, "new-btn");
+  const easyBlanks = q(ctx, "#sheets input.ft-input").length;
+  ok(easyBlanks === 9, "easy 4x4 has 9 blanks (" + easyBlanks + ")");
+  ok(q(ctx, "#sheets .ft-num").length === 16, "easy renders 16 number cells");
+  ok(/Easy/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "easy title shows difficulty");
+  vm.runInContext("document.getElementById('difficulty').value = 'hard'", ctx);
+  fireClick(ctx, "new-btn");
+  const hardBlanks = q(ctx, "#sheets input.ft-input").length;
+  ok(hardBlanks === 26, "hard 6x6 has 26 blanks (" + hardBlanks + ")");
+  ok(q(ctx, "#sheets .ft-num").length === 36, "hard renders 36 number cells");
+  ok(/Hard/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "hard title shows difficulty");
+
+  // 2 per page
+  vm.runInContext("document.getElementById('count').value = '2'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(gridCount(ctx) === 2, "renders 2 grids with count=2");
+  ok(sheetsClass(ctx).indexOf("sheets-2") !== -1, "sheets-2 class applied");
+
+  // arrow nav runs
+  fireKeydown(ctx, "document.querySelectorAll('#sheets input.ft-input')[0]", "ArrowRight");
+  ok(true, "arrow key handler runs");
+
+  fireClick(ctx, "print-puzzle-btn");
+  fireClick(ctx, "print-answers-btn");
+  ok(true, "print paths fire");
+}
+
 /* ---------- run ---------- */
 
 // fresh DOM between tools: each test builds its own document tree
@@ -1018,6 +1484,13 @@ testWordFill();
 testCrossword();
 testNumberFill();
 testSudoku();
+testKiller();
+testCrossMath();
+testFutoshiki();
+testHidato();
+testSkyscrapers();
+testSlitherlink();
+testCalcudoku();
 testWordSearch();
 testWordScramble();
 testBingo();

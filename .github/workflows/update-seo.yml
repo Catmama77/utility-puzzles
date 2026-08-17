@@ -31,6 +31,9 @@ jobs:
       - name: Regenerate sitemap and feed
         run: node build-seo.js
 
+      - name: Verify sitemap covers every published page
+        run: node build-seo.js --check
+
       - name: Commit changes if any
         run: |
           git config user.name "github-actions[bot]"

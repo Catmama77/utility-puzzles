@@ -27,12 +27,13 @@ const path = require("path");
 const { execFileSync } = require("child_process");
 
 const DOMAIN = "https://www.helpuhelpurself.com";
-const SITE_NAME = "UtilityPuzzles";
+const SITE_NAME = "Brainy Puzzles";
 const TOOL_ORDER = [
   "word-fill", "crossword", "number-fill", "sudoku", "bingo",
   "word-search", "word-scramble", "wordoku", "number-search",
   "word-wheel", "word-ladders", "code-breaker", "matching", "maze", "kakuro",
-  "cryptogram", "nonogram",
+  "killer-sudoku", "cross-math", "cryptogram", "nonogram",
+  "futoshiki", "skyscrapers", "calcudoku", "hidato", "slitherlink",
 ];
 const LEGAL_PAGES = ["about.html", "contact.html", "privacy.html", "terms.html"];
 
@@ -65,6 +66,14 @@ function collectPages() {
     const file = path.join(dir, "index.html");
     if (fs.existsSync(file)) {
       pages.push({ path: `/${dir}/`, file, priority: "0.9" });
+      // secondary pages inside the tool folder (e.g. rules.html)
+      const extras = fs
+        .readdirSync(dir)
+        .filter((f) => f.endsWith(".html") && f !== "index.html")
+        .sort();
+      for (const e of extras) {
+        pages.push({ path: `/${dir}/${e}`, file: path.join(dir, e), priority: "0.8" });
+      }
     }
   }
 
@@ -95,6 +104,76 @@ function collectPages() {
   }
 
   return pages;
+}
+
+/* Cross-check the sitemap against what is actually on disk, so a page that
+   gets added without a TOOL_ORDER entry (or any other drift) fails the build
+   loudly instead of silently shipping a stale sitemap. Returns a list of
+   problems (empty = everything covered). */
+function verifyCoverage(pages) {
+  const problems = [];
+  const urls = new Set(pages.map((p) => DOMAIN + p.path));
+
+  // Tools: any top-level directory with index.html + js/app.js is a published
+  // tool page. Each one must be in TOOL_ORDER (else build-seo.js drops it from
+  // the sitemap) and present in the generated URL list.
+  const toolDirs = fs
+    .readdirSync(".")
+    .filter((d) => {
+      try {
+        return (
+          fs.statSync(path.join(d, "index.html")).isFile() &&
+          fs.statSync(path.join(d, "js", "app.js")).isFile()
+        );
+      } catch (_) {
+        return false;
+      }
+    })
+    .sort();
+  for (const d of toolDirs) {
+    if (!TOOL_ORDER.includes(d)) {
+      problems.push("tool page exists but is missing from TOOL_ORDER: " + d + "/");
+    }
+    if (!urls.has(DOMAIN + "/" + d + "/")) {
+      problems.push("tool page missing from sitemap: " + DOMAIN + "/" + d + "/");
+    }
+    // any subpage in a tool folder (rules.html etc.) must be in the sitemap
+    const extras = fs
+      .readdirSync(d)
+      .filter((f) => f.endsWith(".html") && f !== "index.html");
+    for (const e of extras) {
+      if (!urls.has(DOMAIN + "/" + d + "/" + e)) {
+        problems.push("tool subpage missing from sitemap: " + DOMAIN + "/" + d + "/" + e);
+      }
+    }
+  }
+  // Every TOOL_ORDER entry must also have a real page on disk — a stale entry
+  // otherwise makes the sitemap silently drop a tool.
+  for (const d of TOOL_ORDER) {
+    if (!fs.existsSync(path.join(d, "index.html"))) {
+      problems.push("TOOL_ORDER entry has no page on disk: " + d + "/");
+    }
+  }
+
+  // Articles are auto-discovered, but confirm each one landed in the sitemap.
+  const articles = fs
+    .readdirSync("articles")
+    .filter((f) => f.endsWith(".html") && f !== "index.html");
+  for (const a of articles) {
+    if (!urls.has(DOMAIN + "/articles/" + a)) {
+      problems.push("article missing from sitemap: " + DOMAIN + "/articles/" + a);
+    }
+  }
+
+  // Legal pages and the home page.
+  for (const p of LEGAL_PAGES) {
+    if (fs.existsSync(p) && !urls.has(DOMAIN + "/" + p)) {
+      problems.push("page missing from sitemap: " + DOMAIN + "/" + p);
+    }
+  }
+  if (!urls.has(DOMAIN + "/")) problems.push("home page missing from sitemap");
+
+  return problems;
 }
 
 function xmlEscape(s) {
@@ -134,7 +213,7 @@ function readHead(file) {
   const html = fs.readFileSync(file, "utf8");
   let title = "";
   const t = html.match(/<title>(.*?)<\/title>/s);
-  if (t) title = t[1].replace(/\s*—\s*UtilityPuzzles\s*$/, "").trim();
+  if (t) title = t[1].replace(/\s*—\s*Brainy Puzzles\s*$/, "").trim();
   let desc = "";
   const d = html.match(/<meta name="description" content="([^"]*)"/);
   if (d) desc = d[1];
@@ -183,6 +262,21 @@ function buildFeed(pages) {
 
 function main() {
   const pages = collectPages();
+
+  if (process.argv.includes("--check")) {
+    // Validate only — used by CI to fail the build on sitemap drift.
+    const problems = verifyCoverage(pages);
+    if (problems.length) {
+      console.error("build-seo.js --check FAILED:");
+      for (const p of problems) console.error("  - " + p);
+      process.exit(1);
+    }
+    console.log(
+      `build-seo.js --check: sitemap covers all ${pages.length} published pages.`
+    );
+    return;
+  }
+
   fs.writeFileSync("sitemap.xml", buildSitemap(pages));
   fs.writeFileSync("feed.xml", buildFeed(pages));
   const articleCount = pages.filter((p) => p.isArticle).length;

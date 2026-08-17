@@ -1,21 +1,31 @@
 /* ============================================================
    Google AdSense setup (centralized).
    -----------------------------------------
+   HOW THE LOADER WORKS:
+   Every page's <head> already includes the AdSense loader
+   directly (the standard snippet, with the publisher ID baked
+   into the src). injectLoader() below is only a fallback for a
+   page that is ever missing that script tag — it is a no-op on
+   all current pages because loaderInjected() finds the existing
+   tag, so the loader is never injected twice.
+   IMPORTANT: keep ADSENSE_CONFIG.client in sync with the
+   publisher ID in the pages' loader tags.
+
    TWO WAYS TO GO LIVE:
 
    Option A — Auto ads (recommended, simplest):
      1. In AdSense → Ads → Auto ads, enable auto ads.
-     2. Paste your publisher ID into ADSENSE_CONFIG.client
-        below and set manualSlots: false. The loader script
-        injects itself on every page and AdSense places ads
-        automatically. Nothing else to do.
+     2. Leave manualSlots: false. Google places ads on every
+        page automatically; the .ad-slot placeholder boxes stay
+        hidden (see css/style.css). Nothing else to do.
 
    Option B — Manual ad units:
-     1. Create ad units in AdSense (responsive).
-     2. Paste your publisher ID into ADSENSE_CONFIG.client
-        and set manualSlots: true.
-     3. Replace each data-ad-slot="0000000000" placeholder
-        in the HTML pages with your real ad unit IDs.
+     1. Create responsive ad units in AdSense.
+     2. Replace each data-ad-slot="0000000000" placeholder in
+        the HTML pages with your real ad unit IDs.
+     3. Set manualSlots: true below. ads.js then turns each
+        placeholder into an <ins class="adsbygoogle"> unit and
+        pushes it to the loader.
 
    You can start with auto ads now and switch to manual units
    later without touching the pages.
