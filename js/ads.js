@@ -51,6 +51,7 @@
       var slot = slots[i];
       if (slot.dataset.filled) continue;
       slot.dataset.filled = "1";
+      slot.classList.add("filled");
       var adSlotId = slot.dataset.adSlot || "0000000000";
       var ins = document.createElement("ins");
       ins.className = "adsbygoogle";

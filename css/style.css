@@ -679,7 +679,16 @@ p {
 
 /* ---------- Ads ---------- */
 
+/* Placeholder ad boxes are hidden until real ad units are configured
+   (see js/ads.js — manualSlots: true + real slot IDs). With auto ads
+   enabled in AdSense, Google places ads automatically and these boxes
+   are not needed. Keeping them invisible keeps the site clean for
+   AdSense review and for visitors. */
 .ad-slot {
+  display: none;
+}
+
+.ad-slot.filled {
   margin: 22px 0;
   min-height: 90px;
   display: flex;
