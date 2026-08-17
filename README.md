@@ -89,7 +89,7 @@ cryptogram/           Cryptogram tool
   js/app.js           Page UI (auto-fill decoding + check)
   js/kakuro.js        Cross-sum generator (run sums, unique fill)
   js/app.js           Page UI (digit entry + check, arrow nav)
-articles/             SEO content hub + 13 original guides (each links to the tools)
+articles/             SEO content hub + 14 original guides (each links to the tools)
 about.html / contact.html / privacy.html / terms.html   Required AdSense pages
 favicon.svg, robots.txt, sitemap.xml, feed.xml
 build-seo.js      Auto-generates sitemap.xml + feed.xml from the file tree (run `node build-seo.js`)
@@ -222,7 +222,7 @@ GitHub Pages allows one custom domain per repo. If you want  `wordfill.example.c
 
 - [ ] Site live on your own domain with HTTPS
 - [ ] Privacy Policy, About, Contact and Terms pages (done — edit to match your details)
-- [ ] Original content on every page (tools + instructions + 13 articles in `/articles/`)
+- [ ] Original content on every page (tools + instructions + 14 articles in `/articles/`)
 - [ ] Working navigation and mobile-friendly layout
 - [ ] Sitemap submitted in Search Console, pages indexed
 
