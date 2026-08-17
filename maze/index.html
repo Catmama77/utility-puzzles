@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maze Generator — Free Printable Mazes for Kids &amp; Adults</title>
+  <meta name="description" content="Free maze generator. Create printable mazes in 8×8, 12×12 and 16×16 sizes — perfect mazes with exactly one solution path. Print or download as PDF, with an optional solution overlay.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="canonical" href="https://www.helpuhelpurself.com/maze/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="UtilityPuzzles">
+  <meta property="og:title" content="Maze Generator — Free Printable Mazes for Kids &amp; Adults">
+  <meta property="og:description" content="Free maze generator. Create printable mazes in 8×8, 12×12 and 16×16 sizes — perfect mazes with exactly one solution path. Print or download as PDF, with an optional solution overlay.">
+  <meta property="og:url" content="https://www.helpuhelpurself.com/maze/">
+  <meta name="twitter:card" content="summary">
+  <!-- AdSense: see /js/ads.js — set your publisher ID there, then remove this comment -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Maze Generator",
+    "url": "https://www.helpuhelpurself.com/maze/",
+    "description": "Free printable maze generator producing perfect mazes in three sizes, with an optional solution overlay.",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "publisher": { "@type": "Organization", "name": "UtilityPuzzles" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do you solve a maze?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Start at the S and trace a path to the E without crossing any walls. If you hit a dead end, back up to the last junction and try another branch. Every maze here is a perfect maze: there is exactly one correct path."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the maze generator free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Every generator on this site is completely free and unlimited. There is no account, no sign-up and no watermark, and you can generate as many mazes as you like."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I print the maze with the solution?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Click Show Solution to preview the path on screen, or Print Answers to print the maze with the solution path marked."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What size maze should I choose?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "8 × 8 is a quick warm-up perfect for young kids, 12 × 12 is the everyday size, and 16 × 16 makes a longer challenge for older solvers."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a href="/" class="brand">Utility<span>Puzzles</span></a>
+      <nav class="site-nav">
+        <div class="nav-group">
+          <a href="/word-fill/" class="nav-parent">Puzzles <span class="nav-caret">▾</span></a>
+          <div class="nav-dropdown">
+            <a href="/word-fill/">Word Fill-In</a>
+            <a href="/crossword/">Crossword</a>
+            <a href="/number-fill/">Number Fill-In</a>
+            <a href="/sudoku/">Sudoku</a>
+            <a href="/wordoku/">Wordoku</a>
+            <a href="/bingo/">Bingo</a>
+            <a href="/word-search/">Word Search</a>
+            <a href="/word-scramble/">Word Scramble</a>
+            <a href="/number-search/">Number Search</a>
+            <a href="/word-wheel/">Word Wheel</a>
+            <a href="/word-ladders/">Word Ladders</a>
+            <a href="/code-breaker/">Code Breaker</a>
+            <a href="/matching/">Matching &amp; Flashcards</a>
+            <a href="/maze/">Maze</a>
+            <a href="/kakuro/">Kakuro</a>
+          </div>
+        </div>
+        <a href="/articles/">Articles</a>
+        <a href="/about.html">About</a>
+        <a href="/privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Maze Generator</h1>
+    <p class="lead">Create printable mazes in seconds. Every maze is a perfect maze — exactly one path from the start (S) to the end (E), no loops and no shortcuts, so solvers can always reach the exit by careful tracing. Choose 8 × 8, 12 × 12 or 16 × 16 grids, print them or download as PDF, with a solution overlay whenever you need to check.</p>
+
+    <div class="controls">
+      <div class="field">
+        <label for="size">Maze size</label>
+        <select id="size"></select>
+      </div>
+      <div class="field">
+        <label for="count">Mazes per page</label>
+        <select id="count"></select>
+      </div>
+      <button type="button" id="new-btn" class="button">New Maze</button>
+      <button type="button" id="answers-btn" class="button secondary">Show Solution</button>
+      <button type="button" id="print-puzzle-btn" class="button secondary">Print / PDF</button>
+      <button type="button" id="print-answers-btn" class="button secondary">Print Answers</button>
+    </div>
+
+    <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
+
+    <div class="puzzle-wrap" id="puzzle-wrap">
+      <div class="sheets maze-sheets" id="sheets"></div>
+    </div>
+
+    <p id="status" style="color:#6b7280; font-size:14px; margin-top:12px;"></p>
+
+    <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
+
+    <section class="card">
+      <h2>How to use the maze maker</h2>
+      <p>Pick a size and a fresh maze appears instantly. Every maze is generated by a classic recursive-backtracker algorithm, so no two mazes are ever the same — and no two mazes on a page share the same layout.</p>
+      <ul>
+        <li><strong>Solving:</strong> start at the S, trace a path to the E without crossing walls, and back up to the last junction whenever you hit a dead end.</li>
+        <li><strong>Sizes:</strong> 8 × 8 for a quick warm-up or young kids, 12 × 12 as the everyday size, and 16 × 16 for a longer challenge.</li>
+        <li><strong>Solution:</strong> click “Show Solution” to preview the exact path, or “Print Answers” to print the maze with the route marked.</li>
+        <li><strong>Printing:</strong> “Print / PDF” prints the blank maze — up to 2 on one 8½ × 11 sheet. In the print dialog choose “Save as PDF” to download a file.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>The rules of maze solving</h2>
+      <ol>
+        <li>Start at the cell marked S and finish at the cell marked E.</li>
+        <li>You may move up, down, left or right — never diagonally and never through a wall.</li>
+        <li>Every maze has exactly one correct path; any other route ends in a dead end.</li>
+        <li>If you reach a dead end, retrace your steps to the last junction and try a different branch.</li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>Frequently asked questions</h2>
+      <h3>How do you solve a maze?</h3>
+      <p>Start at the S and trace a path to the E without crossing any walls. If you hit a dead end, back up to the last junction and try another branch. Every maze here is a perfect maze: there is exactly one correct path.</p>
+      <h3>Is the maze generator free?</h3>
+      <p>Yes. Every generator on this site is completely free and unlimited. There is no account, no sign-up and no watermark, and you can generate as many mazes as you like.</p>
+      <h3>Can I print the maze with the solution?</h3>
+      <p>Yes. Click “Show Solution” to preview the path on screen, or “Print Answers” to print the maze with the solution path marked.</p>
+      <h3>What size maze should I choose?</h3>
+      <p>8 × 8 is a quick warm-up perfect for young kids, 12 × 12 is the everyday size, and 16 × 16 makes a longer challenge for older solvers.</p>
+    </section>
+  </main>
+
+  <footer class="page-foot">
+    <a href="/">Home</a> · <a href="/word-fill/">Word Fill-In</a> · <a href="/crossword/">Crossword</a> · <a href="/number-fill/">Number Fill-In</a> · <a href="/sudoku/">Sudoku</a> · <a href="/wordoku/">Wordoku</a> · <a href="/bingo/">Bingo</a> · <a href="/word-search/">Word Search</a> · <a href="/word-scramble/">Word Scramble</a> · <a href="/number-search/">Number Search</a> · <a href="/word-wheel/">Word Wheel</a> · <a href="/word-ladders/">Word Ladders</a> · <a href="/code-breaker/">Code Breaker</a> · <a href="/matching/">Matching &amp; Flashcards</a> · <a href="/maze/">Maze</a> · <a href="/kakuro/">Kakuro</a> · <a href="/articles/">Articles</a> · <a href="/about.html">About</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a>
+  </footer>
+
+  <script src="/js/ads.js"></script>
+  <script src="js/maze.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

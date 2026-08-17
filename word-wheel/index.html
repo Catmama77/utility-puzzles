@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Wheel Maker — Free Printable Word Wheel Puzzles</title>
+  <meta name="description" content="Free word wheel puzzle maker. Create printable Boggle-style letter wheels from themed word lists — make as many words as you can, each using the center letter. Print or download as PDF, with the word list as an answer option.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="canonical" href="https://www.helpuhelpurself.com/word-wheel/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="UtilityPuzzles">
+  <meta property="og:title" content="Word Wheel Maker — Free Printable Word Wheel Puzzles">
+  <meta property="og:description" content="Free word wheel puzzle maker. Create printable Boggle-style letter wheels from themed word lists — make as many words as you can, each using the center letter. Print or download as PDF.">
+  <meta property="og:url" content="https://www.helpuhelpurself.com/word-wheel/">
+  <meta name="twitter:card" content="summary">
+  <!-- AdSense: see /js/ads.js — set your publisher ID there, then remove this comment -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Word Wheel Maker",
+    "url": "https://www.helpuhelpurself.com/word-wheel/",
+    "description": "Free printable word wheel puzzle generator — make as many themed words as you can from nine letters, each using the center letter.",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "publisher": { "@type": "Organization", "name": "UtilityPuzzles" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do you play word wheel?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Make as many words as you can from the nine letters around the wheel. Every word must use the center letter, be at least three letters long, and only use letters that appear on the wheel. Words are checked against the theme's word list."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the word wheel maker free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Every generator on this site is completely free and unlimited. There is no account, no sign-up and no watermark, and you can generate as many wheels as you like."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I print the word wheel with the answers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Show Answers lists every word that can be made from the wheel, and Print Answers prints the wheel with that word list underneath."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How many words are in each wheel?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The generator picks letter sets that make as many words as possible from the theme's word list — typically a dozen or more, from short three-letter words up to longer ones using all the letters."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a href="/" class="brand">Utility<span>Puzzles</span></a>
+      <nav class="site-nav">
+        <div class="nav-group">
+          <a href="/word-fill/" class="nav-parent">Puzzles <span class="nav-caret">▾</span></a>
+          <div class="nav-dropdown">
+            <a href="/word-fill/">Word Fill-In</a>
+            <a href="/crossword/">Crossword</a>
+            <a href="/number-fill/">Number Fill-In</a>
+            <a href="/sudoku/">Sudoku</a>
+            <a href="/wordoku/">Wordoku</a>
+            <a href="/bingo/">Bingo</a>
+            <a href="/word-search/">Word Search</a>
+            <a href="/word-scramble/">Word Scramble</a>
+            <a href="/number-search/">Number Search</a>
+            <a href="/word-wheel/">Word Wheel</a>
+            <a href="/word-ladders/">Word Ladders</a>
+            <a href="/code-breaker/">Code Breaker</a>
+            <a href="/matching/">Matching &amp; Flashcards</a>
+            <a href="/maze/">Maze</a>
+            <a href="/kakuro/">Kakuro</a>
+          </div>
+        </div>
+        <a href="/articles/">Articles</a>
+        <a href="/about.html">About</a>
+        <a href="/privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Word Wheel Maker</h1>
+    <p class="lead">How many words can you make? Each wheel shows nine letters — one in the middle — and every word you find must use that center letter. Pick a theme and a fresh wheel appears instantly, tuned so the letters make as many themed words as possible. Type words on screen to check them, or print the wheel for a pen-and-paper challenge.</p>
+
+    <div class="controls">
+      <div class="field">
+        <label for="category">Word theme</label>
+        <select id="category"></select>
+      </div>
+      <div class="field">
+        <label for="count">Wheels per page</label>
+        <select id="count"></select>
+      </div>
+      <button type="button" id="new-btn" class="button">New Wheel</button>
+      <div class="field wheel-entry">
+        <label for="word-input">Your word</label>
+        <input type="text" id="word-input" maxlength="9" placeholder="e.g. LION" class="text-input">
+      </div>
+      <button type="button" id="add-word-btn" class="button secondary">Check word</button>
+      <button type="button" id="answers-btn" class="button secondary">Show Answers</button>
+      <button type="button" id="print-puzzle-btn" class="button secondary">Print / PDF</button>
+      <button type="button" id="print-answers-btn" class="button secondary">Print Answers</button>
+    </div>
+
+    <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
+
+    <div class="puzzle-wrap" id="puzzle-wrap">
+      <div class="sheets wheel-sheets" id="sheets"></div>
+    </div>
+
+    <p id="status" style="color:#6b7280; font-size:14px; margin-top:12px;"></p>
+
+    <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
+
+    <section class="card">
+      <h2>How to use the word wheel maker</h2>
+      <p>Pick a theme and a fresh wheel appears instantly — every wheel is different, and no two wheels on a page share the same letters.</p>
+      <ul>
+        <li><strong>Playing:</strong> make words of 3+ letters from the nine letters. Every word must include the center letter, and you can use each letter only as many times as it appears on the wheel.</li>
+        <li><strong>Checking:</strong> type a word and press Enter or “Check word” — if it's on the theme's word list it's marked found and added to your found list.</li>
+        <li><strong>Fair play:</strong> the generator picks letters that maximize how many themed words are possible — usually a dozen or more, from short words up to nine-letter ones.</li>
+        <li><strong>Printing:</strong> “Print / PDF” prints the wheel with room to write words. “Print Answers” prints the wheel with the full word list underneath.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>The rules of word wheel</h2>
+      <ol>
+        <li>Words must be at least three letters long.</li>
+        <li>Every word must use the center letter at least once.</li>
+        <li>A letter can be used only as many times as it appears on the wheel.</li>
+        <li>Words are valid if they're real words from the theme's word list.</li>
+        <li>Longer words score more bragging rights — the nine-letter word using every letter is the jackpot.</li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>Frequently asked questions</h2>
+      <h3>How do you play word wheel?</h3>
+      <p>Make as many words as you can from the nine letters around the wheel. Every word must use the center letter, be at least three letters long, and only use letters that appear on the wheel. Words are checked against the theme's word list.</p>
+      <h3>Is the word wheel maker free?</h3>
+      <p>Yes. Every generator on this site is completely free and unlimited. There is no account, no sign-up and no watermark, and you can generate as many wheels as you like.</p>
+      <h3>Can I print the word wheel with the answers?</h3>
+      <p>Yes. “Show Answers” lists every word that can be made from the wheel, and “Print Answers” prints the wheel with that word list underneath.</p>
+      <h3>How many words are in each wheel?</h3>
+      <p>The generator picks letter sets that make as many words as possible from the theme's word list — typically a dozen or more, from short three-letter words up to longer ones using all the letters.</p>
+    </section>
+  </main>
+
+  <footer class="page-foot">
+    <a href="/">Home</a> · <a href="/word-fill/">Word Fill-In</a> · <a href="/crossword/">Crossword</a> · <a href="/number-fill/">Number Fill-In</a> · <a href="/sudoku/">Sudoku</a> · <a href="/wordoku/">Wordoku</a> · <a href="/bingo/">Bingo</a> · <a href="/word-search/">Word Search</a> · <a href="/word-scramble/">Word Scramble</a> · <a href="/number-search/">Number Search</a> · <a href="/word-wheel/">Word Wheel</a> · <a href="/word-ladders/">Word Ladders</a> · <a href="/code-breaker/">Code Breaker</a> · <a href="/matching/">Matching &amp; Flashcards</a> · <a href="/maze/">Maze</a> · <a href="/kakuro/">Kakuro</a> · <a href="/articles/">Articles</a> · <a href="/about.html">About</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a>
+  </footer>
+
+  <script src="/js/ads.js"></script>
+  <script src="/js/word-data.js"></script>
+  <script src="js/wheel.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

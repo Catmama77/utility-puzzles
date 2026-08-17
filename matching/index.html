@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matching Worksheet &amp; Flashcard Maker — Free Printable Vocabulary Games</title>
+  <meta name="description" content="Free matching worksheet and flashcard maker. Create printable word-to-clue matching worksheets or vocabulary flashcards from themed word lists at three sizes. Print or download as PDF, with an answers option.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="canonical" href="https://www.helpuhelpurself.com/matching/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="UtilityPuzzles">
+  <meta property="og:title" content="Matching Worksheet &amp; Flashcard Maker — Free Printable Vocabulary Games">
+  <meta property="og:description" content="Free matching worksheet and flashcard maker. Create printable word-to-clue matching worksheets or vocabulary flashcards from themed word lists. Print or download as PDF, with answers.">
+  <meta property="og:url" content="https://www.helpuhelpurself.com/matching/">
+  <meta name="twitter:card" content="summary">
+  <!-- AdSense: see /js/ads.js — set your publisher ID there, then remove this comment -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Matching Worksheet and Flashcard Maker",
+    "url": "https://www.helpuhelpurself.com/matching/",
+    "description": "Free printable matching worksheets and vocabulary flashcards generated from themed word lists, with an answers option.",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "publisher": { "@type": "Organization", "name": "UtilityPuzzles" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do you solve a matching worksheet?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Each word in the numbered column matches exactly one clue in the lettered column. Draw a line from each word to its clue, or click a word and then a clue on screen — correct pairs are marked."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the matching worksheet maker free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Every generator on this site is completely free and unlimited. There is no account, no sign-up and no watermark, and you can generate as many worksheets as you like."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I print flashcards?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Switch the mode to Flashcards and print — each card shows a word on top and its clue underneath, ready to cut out. Choose 8, 12 or 16 cards per worksheet."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I print the matching worksheet with answers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Click Show Answers to mark every correct pair on screen, or Print Answers to print the worksheet with the pairs already matched."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a href="/" class="brand">Utility<span>Puzzles</span></a>
+      <nav class="site-nav">
+        <div class="nav-group">
+          <a href="/word-fill/" class="nav-parent">Puzzles <span class="nav-caret">▾</span></a>
+          <div class="nav-dropdown">
+            <a href="/word-fill/">Word Fill-In</a>
+            <a href="/crossword/">Crossword</a>
+            <a href="/number-fill/">Number Fill-In</a>
+            <a href="/sudoku/">Sudoku</a>
+            <a href="/wordoku/">Wordoku</a>
+            <a href="/bingo/">Bingo</a>
+            <a href="/word-search/">Word Search</a>
+            <a href="/word-scramble/">Word Scramble</a>
+            <a href="/number-search/">Number Search</a>
+            <a href="/word-wheel/">Word Wheel</a>
+            <a href="/word-ladders/">Word Ladders</a>
+            <a href="/code-breaker/">Code Breaker</a>
+            <a href="/matching/">Matching &amp; Flashcards</a>
+            <a href="/maze/">Maze</a>
+            <a href="/kakuro/">Kakuro</a>
+          </div>
+        </div>
+        <a href="/articles/">Articles</a>
+        <a href="/about.html">About</a>
+        <a href="/privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Matching Worksheet &amp; Flashcard Maker</h1>
+    <p class="lead">Create printable vocabulary practice in seconds. Generate a matching worksheet — words on one side, shuffled clues on the other — or switch to flashcards with the word and its clue on each card. Choose a theme and a size (8, 12 or 16 pairs), solve on screen or print, with an answers option whenever you need it.</p>
+
+    <div class="controls">
+      <div class="field">
+        <label for="category">Word theme</label>
+        <select id="category"></select>
+      </div>
+      <div class="field">
+        <label for="mode">Worksheet type</label>
+        <select id="mode"></select>
+      </div>
+      <div class="field">
+        <label for="difficulty">Size</label>
+        <select id="difficulty"></select>
+      </div>
+      <div class="field">
+        <label for="count">Worksheets per page</label>
+        <select id="count"></select>
+      </div>
+      <button type="button" id="new-btn" class="button">New Worksheet</button>
+      <button type="button" id="answers-btn" class="button secondary">Show Answers</button>
+      <button type="button" id="print-puzzle-btn" class="button secondary">Print / PDF</button>
+      <button type="button" id="print-answers-btn" class="button secondary">Print Answers</button>
+    </div>
+
+    <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
+
+    <div class="puzzle-wrap" id="puzzle-wrap">
+      <div class="sheets match-sheets" id="sheets"></div>
+    </div>
+
+    <p id="status" style="color:#6b7280; font-size:14px; margin-top:12px;"></p>
+
+    <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
+
+    <section class="card">
+      <h2>How to use the matching maker</h2>
+      <p>Pick a theme, a worksheet type and a size, and a fresh worksheet appears instantly — every one is different, and no two worksheets on a page repeat the same word list.</p>
+      <ul>
+        <li><strong>Matching worksheet:</strong> words are numbered 1, 2, 3… on the left; the clues are lettered A, B, C… in a shuffled order on the right. Draw lines (or click a word then its clue on screen) to pair them.</li>
+        <li><strong>Flashcards:</strong> each card shows a word with its clue underneath — print, cut out, and use them for self-testing or group games.</li>
+        <li><strong>Sizes:</strong> Easy gives 8 pairs, Medium 12 and Hard 16 — useful for differentiating in class.</li>
+        <li><strong>Printing:</strong> “Print / PDF” prints the blank worksheet — up to 2 per sheet. “Print Answers” prints it with every pair already matched.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>The rules of matching</h2>
+      <ol>
+        <li>Every numbered word matches exactly one lettered clue, and every clue matches exactly one word.</li>
+        <li>Draw a line from each word to its clue — or, on screen, click a word and then its matching clue.</li>
+        <li>There are no unused clues and no unused words: the numbers and letters always line up.</li>
+        <li>When every pair is matched, check the answers to confirm you were right.</li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>Frequently asked questions</h2>
+      <h3>How do you solve a matching worksheet?</h3>
+      <p>Each word in the numbered column matches exactly one clue in the lettered column. Draw a line from each word to its clue, or click a word and then a clue on screen — correct pairs are marked.</p>
+      <h3>Is the matching worksheet maker free?</h3>
+      <p>Yes. Every generator on this site is completely free and unlimited. There is no account, no sign-up and no watermark, and you can generate as many worksheets as you like.</p>
+      <h3>Can I print flashcards?</h3>
+      <p>Yes. Switch the mode to Flashcards and print — each card shows a word on top and its clue underneath, ready to cut out. Choose 8, 12 or 16 cards per worksheet.</p>
+      <h3>How do I print the matching worksheet with answers?</h3>
+      <p>Click “Show Answers” to mark every correct pair on screen, or “Print Answers” to print the worksheet with the pairs already matched.</p>
+    </section>
+  </main>
+
+  <footer class="page-foot">
+    <a href="/">Home</a> · <a href="/word-fill/">Word Fill-In</a> · <a href="/crossword/">Crossword</a> · <a href="/number-fill/">Number Fill-In</a> · <a href="/sudoku/">Sudoku</a> · <a href="/wordoku/">Wordoku</a> · <a href="/bingo/">Bingo</a> · <a href="/word-search/">Word Search</a> · <a href="/word-scramble/">Word Scramble</a> · <a href="/number-search/">Number Search</a> · <a href="/word-wheel/">Word Wheel</a> · <a href="/word-ladders/">Word Ladders</a> · <a href="/code-breaker/">Code Breaker</a> · <a href="/matching/">Matching &amp; Flashcards</a> · <a href="/maze/">Maze</a> · <a href="/kakuro/">Kakuro</a> · <a href="/articles/">Articles</a> · <a href="/about.html">About</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a>
+  </footer>
+
+  <script src="/js/ads.js"></script>
+  <script src="/js/word-data.js"></script>
+  <script src="js/matching.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

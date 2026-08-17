@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Breaker Maker — Free Printable Secret Message Puzzles</title>
+  <meta name="description" content="Free code breaker (secret message) puzzle maker. Create printable Caesar-cipher word puzzles from themed word lists, with optional clues, at three difficulty levels. Print or download as PDF, with answers.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="canonical" href="https://www.helpuhelpurself.com/code-breaker/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="UtilityPuzzles">
+  <meta property="og:title" content="Code Breaker Maker — Free Printable Secret Message Puzzles">
+  <meta property="og:description" content="Free code breaker (secret message) puzzle maker. Create printable Caesar-cipher word puzzles from themed word lists, with optional clues. Print or download as PDF, with answers.">
+  <meta property="og:url" content="https://www.helpuhelpurself.com/code-breaker/">
+  <meta name="twitter:card" content="summary">
+  <!-- AdSense: see /js/ads.js — set your publisher ID there, then remove this comment -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Code Breaker Maker",
+    "url": "https://www.helpuhelpurself.com/code-breaker/",
+    "description": "Free printable code breaker puzzles — decode Caesar-cipher words from themed word lists, with optional clues.",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "publisher": { "@type": "Organization", "name": "UtilityPuzzles" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do you solve a code breaker puzzle?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Every coded word was made by shifting the alphabet by a fixed number of letters (a Caesar cipher). Try the same shift on every word, or use the clues to guess a word and work the shift out from there. Type your answer under each code and click Check."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the code breaker maker free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Every generator on this site is completely free and unlimited. There is no account, no sign-up and no watermark, and you can generate as many puzzles as you like."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does the clues option do?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Turning clues on adds a one-line hint under every coded word, turning the puzzle into a vocabulary exercise — great for classrooms. Turn them off for a pure decoding challenge."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I print a code breaker puzzle?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Click Print / PDF to print the puzzle with blank answer lines, or Print Answers for the completed sheet. In the print dialog choose Save as PDF to download a file."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a href="/" class="brand">Utility<span>Puzzles</span></a>
+      <nav class="site-nav">
+        <div class="nav-group">
+          <a href="/word-fill/" class="nav-parent">Puzzles <span class="nav-caret">▾</span></a>
+          <div class="nav-dropdown">
+            <a href="/word-fill/">Word Fill-In</a>
+            <a href="/crossword/">Crossword</a>
+            <a href="/number-fill/">Number Fill-In</a>
+            <a href="/sudoku/">Sudoku</a>
+            <a href="/wordoku/">Wordoku</a>
+            <a href="/bingo/">Bingo</a>
+            <a href="/word-search/">Word Search</a>
+            <a href="/word-scramble/">Word Scramble</a>
+            <a href="/number-search/">Number Search</a>
+            <a href="/word-wheel/">Word Wheel</a>
+            <a href="/word-ladders/">Word Ladders</a>
+            <a href="/code-breaker/">Code Breaker</a>
+            <a href="/matching/">Matching &amp; Flashcards</a>
+            <a href="/maze/">Maze</a>
+            <a href="/kakuro/">Kakuro</a>
+          </div>
+        </div>
+        <a href="/articles/">Articles</a>
+        <a href="/about.html">About</a>
+        <a href="/privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Code Breaker Maker</h1>
+    <p class="lead">Crack the code! Every puzzle is a set of themed words written in a secret Caesar cipher — the alphabet has been shifted by a fixed number of letters. Decode them all to win. Choose a theme and difficulty, add optional clues for a vocabulary twist, solve on screen or print. Perfect for spy-themed lessons and rainy-day activities.</p>
+
+    <div class="controls">
+      <div class="field">
+        <label for="category">Word theme</label>
+        <select id="category"></select>
+      </div>
+      <div class="field">
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty"></select>
+      </div>
+      <div class="field">
+        <label for="clues">Clues</label>
+        <select id="clues">
+          <option value="1">Show clues</option>
+          <option value="0">No clues</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="count">Sheets per page</label>
+        <select id="count"></select>
+      </div>
+      <button type="button" id="new-btn" class="button">New Code</button>
+      <button type="button" id="check-btn" class="button secondary">Check</button>
+      <button type="button" id="answers-btn" class="button secondary">Show Answers</button>
+      <button type="button" id="print-puzzle-btn" class="button secondary">Print / PDF</button>
+      <button type="button" id="print-answers-btn" class="button secondary">Print Answers</button>
+    </div>
+
+    <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
+
+    <div class="puzzle-wrap" id="puzzle-wrap">
+      <div class="sheets code-sheets" id="sheets"></div>
+    </div>
+
+    <p id="status" style="color:#6b7280; font-size:14px; margin-top:12px;"></p>
+
+    <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
+
+    <section class="card">
+      <h2>How to use the code breaker maker</h2>
+      <p>Choose a theme, difficulty and clue option, and a fresh code sheet appears instantly — every sheet is different, and no two sheets on a page repeat the same words.</p>
+      <ul>
+        <li><strong>How it works:</strong> every word is written with the alphabet shifted by the same number of letters (a Caesar cipher). Decode one word and you've nearly cracked the whole sheet.</li>
+        <li><strong>Strategy:</strong> with clues on, guess a word from its hint and work out the shift. With clues off, look for short coded words and common patterns to get started.</li>
+        <li><strong>Check:</strong> type your answers under each code and click Check — wrong answers are highlighted until you fix them.</li>
+        <li><strong>Printing:</strong> “Print / PDF” prints the puzzle with blank answer lines — up to 2 sheets per page. “Print Answers” prints the completed sheet.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>The rules of code breaking</h2>
+      <ol>
+        <li>Every coded word is a real word from the theme, written with the alphabet shifted by one fixed number of letters.</li>
+        <li>The same shift is used for every word on the sheet — decode one word and the rest follow.</li>
+        <li>Each word decodes to exactly one answer; every letter position keeps its length.</li>
+        <li>Type or write each decoded word in full, then check your answers.</li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>Frequently asked questions</h2>
+      <h3>How do you solve a code breaker puzzle?</h3>
+      <p>Every coded word was made by shifting the alphabet by a fixed number of letters (a Caesar cipher). Try the same shift on every word, or use the clues to guess a word and work the shift out from there. Type your answer under each code and click Check.</p>
+      <h3>Is the code breaker maker free?</h3>
+      <p>Yes. Every generator on this site is completely free and unlimited. There is no account, no sign-up and no watermark, and you can generate as many puzzles as you like.</p>
+      <h3>What does the clues option do?</h3>
+      <p>Turning clues on adds a one-line hint under every coded word, turning the puzzle into a vocabulary exercise — great for classrooms. Turn them off for a pure decoding challenge.</p>
+      <h3>How do I print a code breaker puzzle?</h3>
+      <p>Click “Print / PDF” to print the puzzle with blank answer lines, or “Print Answers” for the completed sheet. In the print dialog choose “Save as PDF” to download a file.</p>
+    </section>
+  </main>
+
+  <footer class="page-foot">
+    <a href="/">Home</a> · <a href="/word-fill/">Word Fill-In</a> · <a href="/crossword/">Crossword</a> · <a href="/number-fill/">Number Fill-In</a> · <a href="/sudoku/">Sudoku</a> · <a href="/wordoku/">Wordoku</a> · <a href="/bingo/">Bingo</a> · <a href="/word-search/">Word Search</a> · <a href="/word-scramble/">Word Scramble</a> · <a href="/number-search/">Number Search</a> · <a href="/word-wheel/">Word Wheel</a> · <a href="/word-ladders/">Word Ladders</a> · <a href="/code-breaker/">Code Breaker</a> · <a href="/matching/">Matching &amp; Flashcards</a> · <a href="/maze/">Maze</a> · <a href="/kakuro/">Kakuro</a> · <a href="/articles/">Articles</a> · <a href="/about.html">About</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a>
+  </footer>
+
+  <script src="/js/ads.js"></script>
+  <script src="/js/word-data.js"></script>
+  <script src="js/cipher.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

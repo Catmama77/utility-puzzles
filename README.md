@@ -4,25 +4,32 @@ A static site (no backend, no database) with free printable puzzle generators,
 built to be monetized with Google AdSense. Every puzzle is generated in the
 visitor's browser and can be printed or saved as PDF, with an answer key.
 
-**Current tools:**
+**Current tools (15):**
 - Word Fill-In (word fit) puzzles — 6 categories × 3 difficulty levels, printable with answers.
 - Crossword maker — automatic grids with hand-written clues, across/down lists, answers option.
 - Number Fill-In — number fit puzzles with fresh random numbers, 5 themes × 3 difficulty levels.
 - Sudoku — 4×4 / 6×6 / 9×9 grids × 3 difficulty levels, on-screen solving, answers option.
+- Wordoku — letter sudoku with themed letters, same sizes and levels as sudoku, up to 8 per sheet.
 - Bingo cards — classic number bingo or themed word bingo, 3×3 / 4×4 / 5×5, up to 100 unique cards, caller's call sheet.
-- Word search — themed word hunts in 8×8 / 10×10 / 12×12 grids, three difficulty levels, click-to-find on screen, printable with answers.
-- Word scramble — unscramble-the-word worksheets at three difficulty levels, optional clues from the word database, printable with answers.
+- Word search — themed word hunts in 8×8 / 10×10 / 12×12 grids, click-to-find on screen, printable with answers.
+- Word scramble — unscramble-the-word worksheets, optional clues from the word database, printable with answers.
+- Number search — hunt hidden numbers in a digit grid, 3 sizes × 3 difficulty levels, click-to-find on screen.
+- Word wheel — Boggle-style: make themed words from nine letters, each using the center letter.
+- Word ladders — change one letter at a time from start word to end word, three difficulty levels.
+- Code breaker — decode themed words written in a Caesar cipher, optional clues.
+- Matching & flashcards — word-to-clue matching worksheets or cut-out vocabulary flashcards.
+- Maze — perfect mazes (exactly one solution path) in three sizes, print blank or with solution.
+- Kakuro — cross-sum number logic puzzles in three sizes and three difficulty levels.
 
 **Print-friendly bulk mode:** every generator has a "per page" selector. Print
-up to **8 sudoku** (1/2/4/6/8 per sheet), up to **2 word fill-ins / crosswords /
-number fill-ins / word searches / word scrambles** side by side, or **1–4 bingo
-cards** per 8½ × 11 page (up to 100 cards per batch) — perfect for handing out
-to a whole class. "Print Answers" prints the completed grids in the same
-layout.
+up to **8 sudoku / wordoku** per sheet, up to **2 of the other puzzle types**
+side by side, or **1–4 bingo cards** per 8½ × 11 page (up to 100 cards per
+batch) — perfect for handing out to a whole class. "Print Answers" prints the
+completed grids in the same layout.
 
 **Uniqueness guarantee:** every puzzle in a batch is guaranteed distinct — no
 matter how many puzzles you put on a page, each one is different (verified by
-the test suites across all five generators).
+the test suites across all fifteen generators).
 
 ## Project layout
 
@@ -54,6 +61,30 @@ word-search/          Word search tool
 word-scramble/        Word scramble tool
   js/scramble.js      Word scramble generator (anagrams, optional clues)
   js/app.js           Page UI (on-screen solving + check)
+wordoku/              Wordoku tool (reuses the sudoku engine + word-data)
+  js/wordoku.js       Letter-sudoku generator
+  js/app.js           Page UI
+maze/                 Maze tool
+  js/maze.js          Perfect-maze generator (recursive backtracker + solver)
+  js/app.js           Page UI
+matching/             Matching / flashcards tool
+  js/matching.js      Worksheet generator (word + clue pairs)
+  js/app.js           Page UI (click-to-pair solving)
+word-ladders/         Word ladder tool
+  js/ladders.js       Ladder generator (BFS over the merged word bank)
+  js/app.js           Page UI (rung entry + check)
+code-breaker/         Code breaker tool
+  js/cipher.js        Caesar-cipher generator (themed words, optional clues)
+  js/app.js           Page UI (decode + check)
+word-wheel/           Word wheel tool
+  js/wheel.js         Letter-wheel generator (maximizes buildable words)
+  js/app.js           Page UI (word entry + checking)
+number-search/        Number search tool
+  js/nsearch.js       Number-find generator (digit grids)
+  js/app.js           Page UI (click-to-find solving)
+kakuro/               Kakuro tool
+  js/kakuro.js        Cross-sum generator (run sums, unique fill)
+  js/app.js           Page UI (digit entry + check, arrow nav)
 articles/             SEO content hub + 10 original guides (each links to the tools)
 about.html / contact.html / privacy.html / terms.html   Required AdSense pages
 favicon.svg, robots.txt, sitemap.xml
@@ -64,6 +95,14 @@ test-sudoku.js        Node sanity test for the sudoku generator
 test-bingo.js         Node sanity test for the bingo generator
 test-search.js        Node sanity test for the word search generator
 test-scramble.js      Node sanity test for the word scramble generator
+test-wordoku.js       Node sanity test for the wordoku generator
+test-maze.js          Node sanity test for the maze generator
+test-matching.js      Node sanity test for the matching generator
+test-ladders.js       Node sanity test for the word ladder generator
+test-cipher.js        Node sanity test for the code breaker generator
+test-wheel.js         Node sanity test for the word wheel generator
+test-nsearch.js       Node sanity test for the number search generator
+test-kakuro.js        Node sanity test for the kakuro generator
 ```
 
 ## Try it locally
@@ -72,11 +111,15 @@ test-scramble.js      Node sanity test for the word scramble generator
 python3 -m http.server 8000      # then open http://localhost:8000
 ```
 
-All seven generators are tested with `node test-generator.js`, `node test-crossword.js`,
-`node test-numbers.js`, `node test-sudoku.js`, `node test-bingo.js`, `node test-search.js`
-and `node test-scramble.js` (verifying slot integrity, numbering, clues/themes, layout,
-sudoku uniqueness, bingo column ranges and card variety, word-search placement, and
-scramble anagram integrity).
+All fifteen generators are tested with `node test-generator.js`, `node test-crossword.js`,
+`node test-numbers.js`, `node test-sudoku.js`, `node test-bingo.js`, `node test-search.js`,
+`node test-scramble.js`, `node test-wordoku.js`, `node test-maze.js`, `node test-matching.js`,
+`node test-ladders.js`, `node test-cipher.js`, `node test-wheel.js`, `node test-nsearch.js`
+and `node test-kakuro.js` (verifying slot integrity, numbering, clues/themes, layout,
+sudoku uniqueness, bingo column ranges and card variety, word-search placement, scramble
+anagram integrity, wordoku letter grids, maze solvability, matching pair integrity, ladder
+connectivity, cipher round-trips, wheel word counts, number-search placement, and kakuro
+run sums).
 
 ## Deploy to GitHub Pages
 
@@ -121,7 +164,7 @@ and GitHub will redirect the apex to `www` automatically):
 
 If you switch primary domains, update the `CNAME` file, `sitemap.xml` and
 `robots.txt` to match.
-6. Submit `https://your-domain/sitemap.xml` in Google Search Console and request indexing of `/`, `/word-fill/`, `/crossword/`, `/number-fill/`, `/sudoku/`, `/bingo/`, `/word-search/` and `/word-scramble/`.
+6. Submit `https://your-domain/sitemap.xml` in Google Search Console and request indexing of `/` and all 15 tool pages (`/word-fill/`, `/crossword/`, `/number-fill/`, `/sudoku/`, `/wordoku/`, `/bingo/`, `/word-search/`, `/word-scramble/`, `/number-search/`, `/word-wheel/`, `/word-ladders/`, `/code-breaker/`, `/matching/`, `/maze/`, `/kakuro/`).
 
 ### Putting each tool on its own subdomain (the 3-subdomain plan)
 

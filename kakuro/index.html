@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kakuro Maker — Free Printable Kakuro Puzzles</title>
+  <meta name="description" content="Free kakuro puzzle generator. Create printable cross-sum puzzles in 8×8, 10×10 and 12×12 grids at three difficulty levels. Fill each white run of cells with digits 1–9 so it adds up to the clue — no repeats within a run. Print or download as PDF, with answers.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="canonical" href="https://www.helpuhelpurself.com/kakuro/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="UtilityPuzzles">
+  <meta property="og:title" content="Kakuro Maker — Free Printable Kakuro Puzzles">
+  <meta property="og:description" content="Free kakuro puzzle generator. Create printable cross-sum puzzles in 8×8, 10×10 and 12×12 grids at three difficulty levels. Print or download as PDF, with answers.">
+  <meta property="og:url" content="https://www.helpuhelpurself.com/kakuro/">
+  <meta name="twitter:card" content="summary">
+  <!-- AdSense: see /js/ads.js — set your publisher ID there, then remove this comment -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Kakuro Maker",
+    "url": "https://www.helpuhelpurself.com/kakuro/",
+    "description": "Free printable kakuro (cross-sum) puzzle generator in three grid sizes and three difficulty levels, with an on-screen solver and answers.",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Web",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "publisher": { "@type": "Organization", "name": "UtilityPuzzles" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do you play kakuro?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Fill every white cell with a digit from 1 to 9. Each run of white cells — horizontal or vertical — must add up to the number in the black cell at the start of the run, and no digit can repeat within a run."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the kakuro maker free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Every generator on this site is completely free and unlimited. There is no account, no sign-up and no watermark, and you can generate as many puzzles as you like."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What do the clue numbers mean?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In each black cell, the small number in the top-right corner is the sum for the run of white cells to its right; the number in the bottom-left corner is the sum for the run of white cells below it."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I print a kakuro puzzle?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Click Print / PDF to print the blank puzzle, or Print Answers for the completed grid. In the print dialog choose Save as PDF to download a file. You can print up to 2 puzzles per sheet."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="inner">
+      <a href="/" class="brand">Utility<span>Puzzles</span></a>
+      <nav class="site-nav">
+        <div class="nav-group">
+          <a href="/word-fill/" class="nav-parent">Puzzles <span class="nav-caret">▾</span></a>
+          <div class="nav-dropdown">
+            <a href="/word-fill/">Word Fill-In</a>
+            <a href="/crossword/">Crossword</a>
+            <a href="/number-fill/">Number Fill-In</a>
+            <a href="/sudoku/">Sudoku</a>
+            <a href="/wordoku/">Wordoku</a>
+            <a href="/bingo/">Bingo</a>
+            <a href="/word-search/">Word Search</a>
+            <a href="/word-scramble/">Word Scramble</a>
+            <a href="/number-search/">Number Search</a>
+            <a href="/word-wheel/">Word Wheel</a>
+            <a href="/word-ladders/">Word Ladders</a>
+            <a href="/code-breaker/">Code Breaker</a>
+            <a href="/matching/">Matching &amp; Flashcards</a>
+            <a href="/maze/">Maze</a>
+            <a href="/kakuro/">Kakuro</a>
+          </div>
+        </div>
+        <a href="/articles/">Articles</a>
+        <a href="/about.html">About</a>
+        <a href="/privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>Kakuro Maker</h1>
+    <p class="lead">Kakuro is the number-logic cousin of sudoku — sometimes called cross-sums. Fill each run of white cells with digits from 1 to 9 so the run adds up to the clue in its black cell, with no digit repeated inside a run. Choose 8 × 8, 10 × 10 or 12 × 12 grids at three difficulty levels, solve on screen, and print or download as PDF with an answers option.</p>
+
+    <div class="controls">
+      <div class="field">
+        <label for="size">Grid size</label>
+        <select id="size"></select>
+      </div>
+      <div class="field">
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty"></select>
+      </div>
+      <div class="field">
+        <label for="count">Puzzles per page</label>
+        <select id="count"></select>
+      </div>
+      <button type="button" id="new-btn" class="button">New Puzzle</button>
+      <button type="button" id="check-btn" class="button secondary">Check</button>
+      <button type="button" id="answers-btn" class="button secondary">Show Answers</button>
+      <button type="button" id="print-puzzle-btn" class="button secondary">Print / PDF</button>
+      <button type="button" id="print-answers-btn" class="button secondary">Print Answers</button>
+    </div>
+
+    <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
+
+    <div class="puzzle-wrap" id="puzzle-wrap">
+      <div class="sheets kakuro-sheets" id="sheets"></div>
+    </div>
+
+    <p id="status" style="color:#6b7280; font-size:14px; margin-top:12px;"></p>
+
+    <div class="ad-slot" data-ad-slot="0000000000">Advertisement</div>
+
+    <section class="card">
+      <h2>How to use the kakuro maker</h2>
+      <p>Choose a grid size and difficulty, and a fresh puzzle appears instantly — every puzzle is different, and no two puzzles on a page share the same layout.</p>
+      <ul>
+        <li><strong>Reading the clues:</strong> in each black cell the top-right number is the sum of the white cells to its right; the bottom-left number is the sum of the white cells below it.</li>
+        <li><strong>Solving:</strong> start with the shortest runs — a run of two cells with a clue of 3 must be 1 and 2, so any cell they share with a crossing run is instantly narrowed down.</li>
+        <li><strong>Solve on screen:</strong> click a white cell and type a digit, or use the arrow keys to move between cells. Check highlights anything wrong.</li>
+        <li><strong>Printing:</strong> “Print / PDF” prints the blank puzzle — up to 2 per sheet. “Print Answers” prints the completed grid.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>The rules of kakuro</h2>
+      <ol>
+        <li>Fill every white cell with a digit from 1 to 9.</li>
+        <li>Each horizontal run must add up to the clue in the black cell at its left.</li>
+        <li>Each vertical run must add up to the clue in the black cell above it.</li>
+        <li>No digit may repeat within a single run — but digits may repeat across different runs.</li>
+        <li>There is exactly one solution, reachable by logic and simple arithmetic.</li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>Frequently asked questions</h2>
+      <h3>How do you play kakuro?</h3>
+      <p>Fill every white cell with a digit from 1 to 9. Each run of white cells — horizontal or vertical — must add up to the number in the black cell at the start of the run, and no digit can repeat within a run.</p>
+      <h3>Is the kakuro maker free?</h3>
+      <p>Yes. Every generator on this site is completely free and unlimited. There is no account, no sign-up and no watermark, and you can generate as many puzzles as you like.</p>
+      <h3>What do the clue numbers mean?</h3>
+      <p>In each black cell, the small number in the top-right corner is the sum for the run of white cells to its right; the number in the bottom-left corner is the sum for the run of white cells below it.</p>
+      <h3>How do I print a kakuro puzzle?</h3>
+      <p>Click “Print / PDF” to print the blank puzzle, or “Print Answers” for the completed grid. In the print dialog choose “Save as PDF” to download a file. You can print up to 2 puzzles per sheet.</p>
+    </section>
+  </main>
+
+  <footer class="page-foot">
+    <a href="/">Home</a> · <a href="/word-fill/">Word Fill-In</a> · <a href="/crossword/">Crossword</a> · <a href="/number-fill/">Number Fill-In</a> · <a href="/sudoku/">Sudoku</a> · <a href="/wordoku/">Wordoku</a> · <a href="/bingo/">Bingo</a> · <a href="/word-search/">Word Search</a> · <a href="/word-scramble/">Word Scramble</a> · <a href="/number-search/">Number Search</a> · <a href="/word-wheel/">Word Wheel</a> · <a href="/word-ladders/">Word Ladders</a> · <a href="/code-breaker/">Code Breaker</a> · <a href="/matching/">Matching &amp; Flashcards</a> · <a href="/maze/">Maze</a> · <a href="/kakuro/">Kakuro</a> · <a href="/articles/">Articles</a> · <a href="/about.html">About</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a>
+  </footer>
+
+  <script src="/js/ads.js"></script>
+  <script src="js/kakuro.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
