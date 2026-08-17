@@ -23,6 +23,15 @@
     });
     sizeSel.value = "12x12";
 
+    var diffSel = $("difficulty");
+    Object.keys(MazeGen.DIFFICULTY).forEach(function (d) {
+      var opt = document.createElement("option");
+      opt.value = d;
+      opt.textContent = MazeGen.DIFFICULTY[d].label;
+      diffSel.appendChild(opt);
+    });
+    diffSel.value = "medium";
+
     var countSel = $("count");
     [1, 2].forEach(function (n) {
       var opt = document.createElement("option");
@@ -73,7 +82,13 @@
 
   function renderMeta(m, titleEl, metaEl) {
     titleEl.textContent = m.title;
-    metaEl.textContent = "Find the path from S (start) to E (end) — there is exactly one route.";
+    metaEl.textContent =
+      "Find the path from S (start) to E (end) — there is exactly one route" +
+      ((MazeGen.DIFFICULTY[m.difficulty] || {}).label === "Easy"
+        ? ", and it stays fairly direct."
+        : (MazeGen.DIFFICULTY[m.difficulty] || {}).label === "Hard"
+          ? ", but it winds through most of the maze."
+          : ".");
   }
 
   function render(mazes) {
@@ -117,8 +132,9 @@
 
   function newMaze() {
     var size = $("size").value;
+    var diff = $("difficulty").value;
     var count = parseInt($("count").value, 10) || 1;
-    render(MazeGen.makeBatch(count, size));
+    render(MazeGen.makeBatch(count, size, diff));
   }
 
   function toggleAnswers() {

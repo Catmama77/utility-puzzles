@@ -1,10 +1,12 @@
 /* ============================================================
    Word wheel generator (Boggle-style).
    Pure logic, no DOM. Picks 9 letters (one mandatory center) and
-   lists every bank word of 3+ letters that can be built from them
-   and must use the center letter.
+   lists every bank word that can be built from them and must use
+   the center letter. Difficulty sets the minimum word length:
+     easy = 3+ letters, medium = 4+, hard = 5+.
 
    API:
+     WheelGen.DIFFICULTY       — { easy, medium, hard } (minLen)
      WheelGen.makeWheel(category, difficulty)
        -> {
             letters: [9 letters], center (index), centerLetter,
@@ -16,6 +18,12 @@
 
 (function (global) {
   "use strict";
+
+  var DIFFICULTY = {
+    easy:   { label: "Easy",   minLen: 3 },
+    medium: { label: "Medium", minLen: 4 },
+    hard:   { label: "Hard",   minLen: 5 }
+  };
 
   function shuffle(arr) {
     for (var i = arr.length - 1; i > 0; i--) {
@@ -46,25 +54,28 @@
   // Try candidate center letters; for each, greedily pick the 8 other
   // letters that appear in the most candidate words, and count how many
   // words result. Return the wheel with the most words.
-  function bestWheel(category) {
+  function bestWheel(category, minLen) {
     var data = (global.WORD_DATA && global.WORD_DATA[category]) || {};
     var bank = Object.keys(data);
 
+    // focus the search on letters that actually appear in words of the
+    // required minimum length (especially important on Hard)
     var candidateLetters = {};
     bank.forEach(function (w) {
+      if (w.length < minLen) return;
       for (var i = 0; i < w.length; i++) candidateLetters[w[i]] = true;
     });
     var letterList = Object.keys(candidateLetters);
 
     var best = null;
-    var tries = Math.min(40, letterList.length);
+    var tries = Math.min(60, Math.max(10, letterList.length));
     for (var t = 0; t < tries; t++) {
       var centerLetter = letterList[Math.floor(Math.random() * letterList.length)];
 
       // words that use the center letter and can still be built from 9
-      // unique letters (so word length 3..9, all letters distinct)
+      // unique letters (so word length minLen..9, all letters distinct)
       var candidates = bank.filter(function (w) {
-        return w.length >= 3 && w.length <= 9 &&
+        return w.length >= minLen && w.length <= 9 &&
           w.indexOf(centerLetter) !== -1 &&
           new Set(w.split("")).size === w.length;
       });
@@ -105,10 +116,12 @@
   }
 
   function makeWheel(category, difficulty) {
+    var D = DIFFICULTY[difficulty] || DIFFICULTY.medium;
+    var minLen = D.minLen;
     var data = (global.WORD_DATA && global.WORD_DATA[category]) || {};
     var bank = Object.keys(data);
 
-    var b = bestWheel(category);
+    var b = bestWheel(category, minLen);
     var letters = (b && b.letters) || [];
     if (!letters.length) {
       letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
@@ -120,12 +133,14 @@
     var centerLetter = letters[center];
 
     var words = bank.filter(function (w) {
-      return w.length >= 3 && w.indexOf(centerLetter) !== -1 && buildable(w, letters);
+      return w.length >= minLen && w.length <= 9 &&
+        w.indexOf(centerLetter) !== -1 && buildable(w, letters);
     });
     words.sort(function (a, b) { return b.length - a.length || (a < b ? -1 : 1); });
 
     var title = "Word Wheel — " +
-      ((global.CATEGORY_LABELS && global.CATEGORY_LABELS[category]) || category);
+      ((global.CATEGORY_LABELS && global.CATEGORY_LABELS[category]) || category) +
+      " · " + D.label;
 
     return {
       letters: letters,
@@ -164,6 +179,7 @@
   }
 
   global.WheelGen = {
+    DIFFICULTY: DIFFICULTY,
     makeWheel: makeWheel,
     makeBatch: makeBatch
   };

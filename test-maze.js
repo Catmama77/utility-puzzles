@@ -87,22 +87,49 @@ function validate(m, sizeKey, label) {
   }
 }
 
+const DIFFS = ["easy", "medium", "hard"];
 let generated = 0;
+
+// structural validation across every size x difficulty
 for (const sz of Object.keys(MazeGen.SIZES)) {
-  for (let i = 0; i < 30; i++) {
-    const m = MazeGen.makeMaze(sz);
-    generated++;
-    validate(m, sz, sz + " #" + i);
+  for (const diff of DIFFS) {
+    for (let i = 0; i < 12; i++) {
+      const m = MazeGen.makeMaze(sz, diff);
+      generated++;
+      validate(m, sz, sz + "/" + diff + " #" + i);
+    }
   }
 }
 
-// batch uniqueness
+// difficulty ordering: the solution path should be shorter (share of
+// cells) on Easy than on Hard, at every size
+for (const sz of Object.keys(MazeGen.SIZES)) {
+  const means = {};
+  for (const diff of DIFFS) {
+    let total = 0;
+    for (let i = 0; i < 30; i++) {
+      const m = MazeGen.makeMaze(sz, diff);
+      total += m.solution.length / (m.rows * m.cols);
+    }
+    means[diff] = total / 30;
+  }
+  console.log(`  ${sz.padEnd(6)} easy ${means.easy.toFixed(2)}  medium ${means.medium.toFixed(2)}  hard ${means.hard.toFixed(2)}`);
+  if (!(means.easy < means.medium && means.medium < means.hard)) {
+    fail(sz + " difficulty ordering wrong: " + JSON.stringify(means));
+  }
+  if (means.easy > 0.5) fail(sz + " easy mean too high (" + means.easy.toFixed(2) + " > 0.5)");
+  if (means.hard < 0.6) fail(sz + " hard mean too low (" + means.hard.toFixed(2) + " < 0.6)");
+}
+
+// batch uniqueness per difficulty
 let batchChecks = 0;
 for (const sz of Object.keys(MazeGen.SIZES)) {
-  const batch = MazeGen.makeBatch(2, sz);
-  batchChecks += 2;
-  const sig = (m) => JSON.stringify(m.walls);
-  if (sig(batch[0]) === sig(batch[1])) fail(sz + " batch had identical mazes");
+  for (const diff of DIFFS) {
+    const batch = MazeGen.makeBatch(2, sz, diff);
+    batchChecks += 2;
+    const sig = (m) => JSON.stringify(m.walls);
+    if (sig(batch[0]) === sig(batch[1])) fail(sz + "/" + diff + " batch had identical mazes");
+  }
 }
 
 console.log("Generated " + generated + " mazes");

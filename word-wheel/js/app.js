@@ -24,6 +24,15 @@
     });
     catSel.value = "animals";
 
+    var diffSel = $("difficulty");
+    Object.keys(WheelGen.DIFFICULTY).forEach(function (d) {
+      var opt = document.createElement("option");
+      opt.value = d;
+      opt.textContent = WheelGen.DIFFICULTY[d].label;
+      diffSel.appendChild(opt);
+    });
+    diffSel.value = "medium";
+
     var countSel = $("count");
     [1, 2].forEach(function (n) {
       var opt = document.createElement("option");
@@ -57,7 +66,8 @@
     titleEl.textContent = w.title;
     metaEl.textContent =
       "Make as many " + w.category + " words as you can — every word must use the middle letter, " +
-      w.centerLetter + ".";
+      w.centerLetter + ", and be at least " +
+      (WheelGen.DIFFICULTY[w.difficulty] || {}).minLen + " letters long.";
   }
 
   function render(wheels) {
@@ -97,16 +107,19 @@
     });
 
     $("answers-btn").textContent = "Show Answers";
+    var minLen = (WheelGen.DIFFICULTY[wheels[0].difficulty] || {}).minLen;
     $("status").textContent =
-      n + (n === 1 ? " wheel" : " wheels") + " generated — make words of 3+ letters, each using the center letter.";
+      n + (n === 1 ? " wheel" : " wheels") + " generated — make words of " + minLen +
+      "+ letters, each using the center letter.";
   }
 
   function setAnswersBtn(label) { $("answers-btn").textContent = label; }
 
   function newWheel() {
     var cat = $("category").value;
+    var diff = $("difficulty").value;
     var count = parseInt($("count").value, 10) || 1;
-    render(WheelGen.makeBatch(count, cat, "medium"));
+    render(WheelGen.makeBatch(count, cat, diff));
   }
 
   /* ---------- on-screen word entry ---------- */

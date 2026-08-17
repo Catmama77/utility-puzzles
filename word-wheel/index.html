@@ -104,12 +104,16 @@
 
   <main>
     <h1>Word Wheel Maker</h1>
-    <p class="lead">How many words can you make? Each wheel shows nine letters — one in the middle — and every word you find must use that center letter. Pick a theme and a fresh wheel appears instantly, tuned so the letters make as many themed words as possible. Type words on screen to check them, or print the wheel for a pen-and-paper challenge.</p>
+    <p class="lead">How many words can you make? Each wheel shows nine letters — one in the middle — and every word you find must use that center letter. Pick a theme and a difficulty (Easy finds 3-letter words and up, Medium starts at 4 letters, Hard at 5), and a fresh wheel appears instantly, tuned so the letters make as many themed words as possible. Type words on screen to check them, or print the wheel for a pen-and-paper challenge.</p>
 
     <div class="controls">
       <div class="field">
         <label for="category">Word theme</label>
         <select id="category"></select>
+      </div>
+      <div class="field">
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty"></select>
       </div>
       <div class="field">
         <label for="count">Wheels per page</label>
@@ -138,19 +142,20 @@
 
     <section class="card">
       <h2>How to use the word wheel maker</h2>
-      <p>Pick a theme and a fresh wheel appears instantly — every wheel is different, and no two wheels on a page share the same letters.</p>
+      <p>Pick a theme and difficulty, and a fresh wheel appears instantly — every wheel is different, and no two wheels on a page share the same letters.</p>
       <ul>
-        <li><strong>Playing:</strong> make words of 3+ letters from the nine letters. Every word must include the center letter, and you can use each letter only as many times as it appears on the wheel.</li>
+        <li><strong>Difficulties:</strong> Easy counts words of 3+ letters (the classic game), Medium starts at 4 letters, and Hard only counts words of 5+ letters — shorter words are still on the wheel, they just don't score on the harder levels.</li>
+        <li><strong>Playing:</strong> make words of the difficulty's minimum length from the nine letters. Every word must include the center letter, and you can use each letter only as many times as it appears on the wheel.</li>
         <li><strong>Checking:</strong> type a word and press Enter or “Check word” — if it's on the theme's word list it's marked found and added to your found list.</li>
-        <li><strong>Fair play:</strong> the generator picks letters that maximize how many themed words are possible — usually a dozen or more, from short words up to nine-letter ones.</li>
-        <li><strong>Printing:</strong> “Print / PDF” prints the wheel with room to write words. “Print Answers” prints the wheel with the full word list underneath.</li>
+        <li><strong>Fair play:</strong> the generator picks letters that maximize how many qualifying words are possible — usually a dozen or more, from the shortest allowed words up to nine-letter ones.</li>
+        <li><strong>Printing:</strong> “Print / PDF” prints the wheel with room to write words — up to 2 per sheet. “Print Answers” prints the wheel with the full word list underneath.</li>
       </ul>
     </section>
 
     <section class="card">
       <h2>The rules of word wheel</h2>
       <ol>
-        <li>Words must be at least three letters long.</li>
+        <li>Words must be at least the difficulty's minimum length — 3 letters on Easy, 4 on Medium, 5 on Hard.</li>
         <li>Every word must use the center letter at least once.</li>
         <li>A letter can be used only as many times as it appears on the wheel.</li>
         <li>Words are valid if they're real words from the theme's word list.</li>

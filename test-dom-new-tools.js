@@ -278,7 +278,7 @@ function testMaze() {
   resetDom();
   console.log("Maze:");
   const { ctx } = setup(
-    ["size", "count", "sheets", "new-btn", "answers-btn", "print-puzzle-btn", "print-answers-btn", "status"],
+    ["size", "difficulty", "count", "sheets", "new-btn", "answers-btn", "print-puzzle-btn", "print-answers-btn", "status"],
     ["maze/js/maze.js", "maze/js/app.js"]
   );
 
@@ -296,6 +296,14 @@ function testMaze() {
   ok(q(ctx, "#sheets .puzzle-grid.show-answers").length === 2, "both grids marked show-answers");
   fireClick(ctx, "answers-btn");
   ok(q(ctx, "#sheets .sol").length === 0, "solution hidden again");
+
+  // difficulty switch: Easy mazes have a short direct route
+  vm.runInContext("document.getElementById('difficulty').value = 'easy'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(/Easy/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "easy maze title shows difficulty");
+  vm.runInContext("document.getElementById('difficulty').value = 'hard'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(/Hard/.test(elText(ctx, "document.querySelector('#sheets .print-title')")), "hard maze title shows difficulty");
 
   fireClick(ctx, "print-puzzle-btn");
   fireClick(ctx, "print-answers-btn");
@@ -430,7 +438,7 @@ function testWordWheel() {
   resetDom();
   console.log("Word wheel:");
   const { ctx } = setup(
-    ["category", "count", "sheets", "new-btn", "word-input", "add-word-btn", "answers-btn", "print-puzzle-btn", "print-answers-btn", "status"],
+    ["category", "difficulty", "count", "sheets", "new-btn", "word-input", "add-word-btn", "answers-btn", "print-puzzle-btn", "print-answers-btn", "status"],
     WORD_DATA.concat(["word-wheel/js/wheel.js", "word-wheel/js/app.js"])
   );
 
@@ -443,7 +451,8 @@ function testWordWheel() {
     "var keys = Object.keys(WORD_DATA['animals']);" +
     "for (var w = 0; w < keys.length; w++) {" +
     "  var word = keys[w];" +
-    "  if (word.length < 3 || word.indexOf(center) === -1) continue;" +
+    "  if (word.length < 4 || word.indexOf(center) === -1) continue;" + // medium = 4+ letters
+
     "  var ok = true;" +
     "  for (var j = 0; j < word.length && ok; j++) {" +
     "    var need = 0; for (var k = 0; k < word.length; k++) if (word[k] === word[j]) need++;" +
@@ -463,6 +472,12 @@ function testWordWheel() {
   vm.runInContext("document.getElementById('word-input').value = 'ZZZZZZ'", ctx);
   fireClick(ctx, "add-word-btn");
   ok(/isn't on this wheel/.test(elText(ctx, "document.getElementById('status')")), "bogus word rejected");
+
+  // difficulty switch: Hard counts only 5+ letter words
+  vm.runInContext("document.getElementById('difficulty').value = 'hard'", ctx);
+  fireClick(ctx, "new-btn");
+  ok(/5\+ letters/.test(elText(ctx, "document.getElementById('status')")), "hard status says 5+ letters");
+  ok(q(ctx, "#sheets .wheel-tile").length === 9, "hard wheel still renders 9 tiles");
 
   // answers lists words
   fireClick(ctx, "answers-btn");

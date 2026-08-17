@@ -7,7 +7,9 @@
 
    API:
      MazeGen.SIZES              — { "8x8", "12x12", "16x16" }
-     MazeGen.makeMaze(sizeKey)
+     MazeGen.DIFFICULTY         — { easy, medium, hard } (solution
+                                   path length as a share of cells)
+     MazeGen.makeMaze(sizeKey, difficultyKey)
        -> {
             rows, cols,
             walls: rows x cols, each { n, e, s, w } booleans,
@@ -15,7 +17,7 @@
             solution: [{ r, c }, ...],
             title
           }
-     MazeGen.makeBatch(count, sizeKey)
+     MazeGen.makeBatch(count, sizeKey, difficultyKey)
    ============================================================ */
 
 (function (global) {
@@ -25,6 +27,15 @@
     "8x8":   { rows: 8,  cols: 8,  label: "8 × 8" },
     "12x12": { rows: 12, cols: 12, label: "12 × 12" },
     "16x16": { rows: 16, cols: 16, label: "16 × 16" }
+  };
+
+  // Difficulty = how winding the solution path is, measured as the
+  // share of all cells the path visits. Easy mazes have a short,
+  // direct route; hard mazes wind through most of the grid.
+  var DIFFICULTY = {
+    easy:   { label: "Easy",   target: 0.38 },
+    medium: { label: "Medium", target: 0.55 },
+    hard:   { label: "Hard",   target: 0.72 }
   };
 
   function shuffle(arr) {
@@ -47,11 +58,44 @@
     return walls;
   }
 
-  function makeMaze(sizeKey) {
+  function makeMaze(sizeKey, difficultyKey) {
     var S = SIZES[sizeKey] || SIZES["12x12"];
+    var D = DIFFICULTY[difficultyKey] || DIFFICULTY.medium;
     var rows = S.rows;
     var cols = S.cols;
 
+    // generate a few candidate mazes and keep the one whose solution
+    // path length lands closest to the difficulty target
+    var best = null;
+    var bestScore = Infinity;
+    var tries = 24;
+    for (var t = 0; t < tries; t++) {
+      var cand = buildMaze(rows, cols);
+      var ratio = cand.solution.length / (rows * cols);
+      var score = Math.abs(ratio - D.target);
+      if (score < bestScore) {
+        bestScore = score;
+        best = cand;
+      }
+    }
+    var m = best || buildMaze(rows, cols);
+
+    var title = "Maze — " + S.label + " · " + D.label;
+
+    return {
+      rows: rows,
+      cols: cols,
+      walls: m.walls,
+      start: m.start,
+      end: m.end,
+      solution: m.solution,
+      title: title,
+      sizeKey: sizeKey,
+      difficulty: difficultyKey
+    };
+  }
+
+  function buildMaze(rows, cols) {
     var walls = newWalls(rows, cols);
     var visited = [];
     for (var r = 0; r < rows; r++) visited.push(new Array(cols).fill(false));
@@ -119,17 +163,13 @@
       node = prev[node.r + "," + node.c];
     }
 
-    var title = "Maze — " + S.label;
-
     return {
       rows: rows,
       cols: cols,
       walls: walls,
       start: start,
       end: end,
-      solution: solution,
-      title: title,
-      sizeKey: sizeKey
+      solution: solution
     };
   }
 
@@ -144,14 +184,14 @@
     return parts.join("|");
   }
 
-  function makeBatch(count, sizeKey) {
+  function makeBatch(count, sizeKey, difficultyKey) {
     var out = [];
     var seen = {};
-    var maxAttempts = 60;
+    var maxAttempts = 40;
     for (var i = 0; i < count; i++) {
       var m = null;
       for (var a = 0; a < maxAttempts; a++) {
-        var cand = makeMaze(sizeKey);
+        var cand = makeMaze(sizeKey, difficultyKey);
         var sig = signature(cand);
         if (!seen[sig]) {
           m = cand;
@@ -159,7 +199,7 @@
           break;
         }
       }
-      if (!m) m = makeMaze(sizeKey);
+      if (!m) m = makeMaze(sizeKey, difficultyKey);
       out.push(m);
     }
     return out;
@@ -167,6 +207,7 @@
 
   global.MazeGen = {
     SIZES: SIZES,
+    DIFFICULTY: DIFFICULTY,
     makeMaze: makeMaze,
     makeBatch: makeBatch
   };
