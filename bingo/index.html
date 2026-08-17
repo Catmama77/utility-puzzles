@@ -89,7 +89,7 @@
 
   <main>
     <h1>Bingo Card Generator</h1>
-    <p class="lead">Create printable bingo cards in seconds. Play classic number bingo with B-I-N-G-O columns, or themed word bingo using animal, food, sports and other word lists. Pick a grid size and how many cards you need, then print them — or download as PDF — with a caller's call sheet included.</p>
+    <p class="lead">Create printable bingo cards in seconds. Play classic number bingo with B-I-N-G-O columns, or themed word bingo using animal, food, sports and other word lists. Choose how many cards you need and how many fit per page — generate 1 to 100 cards, every one different — then print them, or download as PDF, with a caller's call sheet included.</p>
 
     <div class="controls">
       <div class="field">
@@ -105,8 +105,12 @@
         <select id="size"></select>
       </div>
       <div class="field">
-        <label for="count">Cards</label>
+        <label for="count">Number of cards</label>
         <select id="count"></select>
+      </div>
+      <div class="field">
+        <label for="per-page">Cards per page</label>
+        <select id="per-page"></select>
       </div>
       <div class="field">
         <label for="free-center">Free center</label>
@@ -142,6 +146,8 @@
       <ul>
         <li><strong>Grid sizes:</strong> 3 × 3 for a fast game or young kids, 4 × 4 as a middle step, and the classic 5 × 5 with a free center square.</li>
         <li><strong>Word bingo:</strong> Choose from the same categories as our other puzzles — Animals, Food &amp; Drink, Sports, Countries, Jobs and Nature. Great for vocabulary, sight words and spelling practice.</li>
+        <li><strong>Cards per page:</strong> Print 1, 2, 3 or 4 cards on each 8½ × 11 sheet. Bigger batches (up to 100 cards) automatically flow onto extra pages, 1–4 cards per page as you choose.</li>
+        <li><strong>Every card is different:</strong> the generator checks each new card against the rest of the batch and re-rolls until no two cards match — generate as many variations as you need.</li>
         <li><strong>Call sheet:</strong> The caller's list is shown under the cards and prints on its own page. Click items on screen to tick them off as you draw.</li>
         <li><strong>Printing:</strong> Click “Print Cards / PDF” for the cards, or “Print Call Sheet” for the caller's list. In the print dialog choose “Save as PDF” to download a file.</li>
       </ul>

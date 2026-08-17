@@ -90,6 +90,21 @@ for (const sz of Object.keys(BingoGen.SIZES)) {
     }
   }
 
+  // large batches: every card in the batch must be distinct
+  for (const count of [24, 60, 100]) {
+    const label = "large/" + sz + "/" + count;
+    const batch = BingoGen.makeCards("numbers", sz, "animals", count, true);
+    generated += count;
+    const sigs = new Set(batch.cards.map((c) => c.cells.map((x) => x.v).join("|")));
+    if (sigs.size !== count) fail(label + " duplicate cards in batch (" + sigs.size + " unique of " + count + ")");
+    if (batch.cards.length !== count) fail(label + " wrong card count");
+  }
+  // large word batches stay distinct too
+  const wbatch = BingoGen.makeCards("words", "5x5", "animals", 60, true);
+  generated += 60;
+  const wsigs = new Set(wbatch.cards.map((c) => c.cells.map((x) => x.v).join("|")));
+  if (wsigs.size !== 60) fail("large words 60: " + wsigs.size + " unique of 60");
+
   // call sheet: numbers cover every value in the ranges
   const sheet = BingoGen.makeCards("numbers", sz, "animals", 1, true).callSheet;
   if (sheet.columns.length !== S.cols.length) fail(sz + " call sheet column count");

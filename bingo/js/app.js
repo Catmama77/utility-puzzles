@@ -40,13 +40,22 @@
     sizeSel.value = "5x5";
 
     var countSel = $("count");
-    [1, 2, 4, 6].forEach(function (n) {
+    [1, 2, 4, 6, 8, 12, 16, 24, 32, 48, 60, 80, 100].forEach(function (n) {
       var opt = document.createElement("option");
       opt.value = n;
       opt.textContent = n === 1 ? "1 card" : n + " cards";
       countSel.appendChild(opt);
     });
-    countSel.value = "4";
+    countSel.value = "8";
+
+    var perSel = $("per-page");
+    [1, 2, 3, 4].forEach(function (n) {
+      var opt = document.createElement("option");
+      opt.value = n;
+      opt.textContent = n + " per page";
+      perSel.appendChild(opt);
+    });
+    perSel.value = "4";
   }
 
   function syncControls() {
@@ -65,7 +74,8 @@
   function renderCards(batch) {
     var area = $("cards");
     area.innerHTML = "";
-    area.className = "bingo-cards cards-" + batch.cards.length;
+    area.className = "bingo-cards page-" + batch.perPage;
+    area.style.setProperty("--per-page", batch.perPage);
 
     batch.cards.forEach(function (card, ci) {
       var wrap = document.createElement("div");
@@ -142,11 +152,15 @@
     $("print-title").textContent =
       "Bingo Cards — " + base + " · " + size.label +
       (batch.freeCenter ? " · Free center" : "");
-    $("print-meta").textContent = batch.cards.length + " cards · " + size.label + " grid";
+    var pages = Math.ceil(batch.cards.length / batch.perPage);
+    $("print-meta").textContent =
+      batch.cards.length + " cards · " + size.label + " grid · " +
+      batch.perPage + " per page · " + pages + (pages === 1 ? " page" : " pages");
     $("status").textContent =
       (batch.mode === "words" ? "Word bingo" : "Number bingo") + " · " +
       size.label + " · " + batch.cards.length + " cards · " +
-      (batch.freeCenter ? "free center" : "no free space");
+      batch.perPage + " per page · " + pages + (pages === 1 ? " page" : " pages") +
+      " · " + (batch.freeCenter ? "free center" : "no free space");
   }
 
   /* ---------- actions ---------- */
@@ -155,9 +169,11 @@
     var mode = $("mode").value;
     var cat = $("category").value;
     var size = $("size").value;
-    var count = parseInt($("count").value, 10) || 4;
+    var count = parseInt($("count").value, 10) || 8;
     var free = $("free-center").checked;
-    render(BingoGen.makeCards(mode, size, cat, count, free));
+    var batch = BingoGen.makeCards(mode, size, cat, count, free);
+    batch.perPage = parseInt($("per-page").value, 10) || 4;
+    render(batch);
   }
 
   function doPrint(kind) {

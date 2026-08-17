@@ -9,12 +9,12 @@ visitor's browser and can be printed or saved as PDF, with an answer key.
 - Crossword maker — automatic grids with hand-written clues, across/down lists, answers option.
 - Number Fill-In — number fit puzzles with fresh random numbers, 5 themes × 3 difficulty levels.
 - Sudoku — 4×4 / 6×6 / 9×9 grids × 3 difficulty levels, on-screen solving, answers option.
-- Bingo cards — classic number bingo or themed word bingo, 3×3 / 4×4 / 5×5, up to 6 cards per page, caller's call sheet.
+- Bingo cards — classic number bingo or themed word bingo, 3×3 / 4×4 / 5×5, up to 100 unique cards, caller's call sheet.
 
-**Print-friendly bulk mode:** every generator (except bingo) has a "Puzzles per
-page" selector. Print up to **8 sudoku** (1/2/4/6/8 per sheet) or up to **2 word
-fill-ins / crosswords / number fill-ins** on a single 8½ × 11 page, each with its
-own compact title, word list and clues — perfect for handing out to a whole
+**Print-friendly bulk mode:** every generator has a "per page" selector. Print
+up to **8 sudoku** (1/2/4/6/8 per sheet), up to **2 word fill-ins / crosswords /
+number fill-ins** side by side, or **1–4 bingo cards** per 8½ × 11 page (up to
+100 cards per batch, every card unique) — perfect for handing out to a whole
 class. "Print Answers" prints the completed grids in the same layout.
 
 ## Project layout

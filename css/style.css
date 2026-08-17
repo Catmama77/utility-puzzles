@@ -745,29 +745,33 @@ p {
     justify-content: stretch;
   }
 
-  .bingo-cards.cards-1 {
+  /* 1 card per page — large, centered */
+  .bingo-cards.page-1 {
     grid-template-columns: 1fr;
   }
 
-  .bingo-cards.cards-1 .bingo-card {
-    width: 60%;
+  .bingo-cards.page-1 .bingo-card {
+    width: 55%;
     margin: 0 auto;
   }
 
-  .bingo-cards.cards-2 {
+  /* 2 cards per page */
+  .bingo-cards.page-2 {
     grid-template-columns: 1fr 1fr;
   }
 
-  .bingo-cards.cards-4 {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .bingo-cards.cards-6 {
+  /* 3 cards per page */
+  .bingo-cards.page-3 {
     grid-template-columns: 1fr 1fr 1fr;
   }
 
+  /* 4 cards per page */
+  .bingo-cards.page-4 {
+    grid-template-columns: 1fr 1fr;
+  }
+
   .bingo-card {
-    width: auto;
+    width: 100%;
     border: 2px solid #000;
     border-radius: 0;
     page-break-inside: avoid;
@@ -785,6 +789,62 @@ p {
 
   .bingo-grid .cell.word {
     font-size: 8px;
+  }
+
+  /* Compact 3- and 4-per-page layouts */
+  .bingo-cards.page-3 .card-label,
+  .bingo-cards.page-4 .card-label {
+    font-size: 9px;
+    margin-bottom: 2px;
+  }
+
+  .bingo-cards.page-3 .bingo-header span,
+  .bingo-cards.page-4 .bingo-header span {
+    font-size: 11px;
+  }
+
+  .bingo-cards.page-3 .bingo-header span.wide,
+  .bingo-cards.page-4 .bingo-header span.wide {
+    font-size: 9px;
+  }
+
+  .bingo-cards.page-3 .bingo-grid .cell {
+    font-size: 11px;
+  }
+
+  .bingo-cards.page-3 .bingo-grid .cell.word {
+    font-size: 6px;
+  }
+
+  .bingo-cards.page-4 .bingo-grid .cell {
+    font-size: 10px;
+  }
+
+  .bingo-cards.page-4 .bingo-grid .cell.word {
+    font-size: 5.5px;
+  }
+
+  /* Multi-page batches: start a fresh page after every Nth card */
+  .bingo-cards.page-2 .bingo-card:nth-child(2n) {
+    page-break-after: always;
+  }
+
+  .bingo-cards.page-3 .bingo-card:nth-child(3n) {
+    page-break-after: always;
+  }
+
+  .bingo-cards.page-4 .bingo-card:nth-child(4n) {
+    page-break-after: always;
+  }
+
+  .bingo-cards.page-2 .bingo-card:last-child,
+  .bingo-cards.page-3 .bingo-card:last-child,
+  .bingo-cards.page-4 .bingo-card:last-child {
+    page-break-after: auto;
+  }
+
+  .print-heading {
+    break-after: avoid;
   }
 
   .call-sheet {

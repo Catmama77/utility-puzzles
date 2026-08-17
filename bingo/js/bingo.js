@@ -99,6 +99,14 @@
     return { title: "Call Sheet — Numbers 1–" + last, columns: columns };
   }
 
+  // Signature of a card's cells, used to keep cards within a batch
+  // distinct ("as many variations as possible").
+  function cardSignature(card) {
+    var parts = [];
+    for (var i = 0; i < card.cells.length; i++) parts.push(card.cells[i].v);
+    return parts.join("|");
+  }
+
   function makeCards(mode, sizeKey, category, count, freeCenter) {
     var S = SIZES[sizeKey] || SIZES["5x5"];
     var size = S.size;
@@ -112,8 +120,21 @@
     }
 
     var cards = [];
+    var seen = {};
+    var maxAttempts = 120;
     for (var i = 0; i < count; i++) {
-      cards.push(mode === "words" ? makeWordCard(size, S, words, free) : makeNumberCard(size, S, free));
+      var card = null;
+      var attempts = 0;
+      // Try until this card's layout is distinct from every card already in
+      // the batch. Number cards almost never collide; word cards (smaller
+      // pools, reused words) may, so we retry a bounded number of times.
+      while (attempts < maxAttempts) {
+        card = mode === "words" ? makeWordCard(size, S, words, free) : makeNumberCard(size, S, free);
+        attempts++;
+        if (!seen[cardSignature(card)]) break;
+      }
+      seen[cardSignature(card)] = true;
+      cards.push(card);
     }
 
     return {
