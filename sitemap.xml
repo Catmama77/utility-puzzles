@@ -30,6 +30,14 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.helpuhelpurself.com/articles/how-to-play-sudoku.html</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.helpuhelpurself.com/articles/rules-of-fill-in-puzzles.html</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.helpuhelpurself.com/articles/what-is-a-fill-in-puzzle.html</loc>
     <priority>0.6</priority>
   </url>
