@@ -33,6 +33,46 @@
 
   /* ---------- rendering ---------- */
 
+  /* Arrow keys move focus between adjacent cells, skipping the
+     given (pre-filled) cells. Coordinates come from each input's
+     data-nav ("r,c"). */
+  function addArrowNav(gridEl, inputs, size) {
+    var map = {};
+    inputs.forEach(function (inp) {
+      var p = inp.dataset.nav.split(",");
+      map[p[0] + "," + p[1]] = inp;
+    });
+    function move(from, dr, dc) {
+      var p = from.dataset.nav.split(",");
+      var r = +p[0] + dr;
+      var c = +p[1] + dc;
+      while (r >= 0 && r < size && c >= 0 && c < size) {
+        var target = map[r + "," + c];
+        if (target) {
+          target.focus();
+          if (target.select) target.select();
+          return;
+        }
+        r += dr;
+        c += dc;
+      }
+    }
+    inputs.forEach(function (inp) {
+      inp.addEventListener("keydown", function (e) {
+        var key = e.key;
+        var dr = 0;
+        var dc = 0;
+        if (key === "ArrowUp") dr = -1;
+        else if (key === "ArrowDown") dr = 1;
+        else if (key === "ArrowLeft") dc = -1;
+        else if (key === "ArrowRight") dc = 1;
+        else return;
+        if (e.preventDefault) e.preventDefault();
+        move(this, dr, dc);
+      });
+    });
+  }
+
   function renderGrid(p) {
     var gridEl = $("puzzle-grid");
     gridEl.innerHTML = "";
@@ -40,6 +80,7 @@
     gridEl.classList.add("sudoku");
 
     var digitRe = new RegExp("[^1-" + p.size + "]", "g");
+    var inputs = [];
 
     for (var r = 0; r < p.size; r++) {
       for (var c = 0; c < p.size; c++) {
@@ -62,16 +103,19 @@
           input.maxLength = 1;
           input.className = "sudoku-input";
           input.dataset.pos = idx;
+          input.dataset.nav = r + "," + c;
           input.setAttribute("aria-label", "Row " + (r + 1) + ", column " + (c + 1));
           input.addEventListener("input", function () {
             this.value = this.value.replace(digitRe, "").slice(0, 1);
             this.parentNode.classList.remove("wrong");
           });
+          inputs.push(input);
           div.appendChild(input);
         }
         gridEl.appendChild(div);
       }
     }
+    addArrowNav(gridEl, inputs, p.size);
 
     gridEl.classList.remove("show-answers");
     $("answers-btn").textContent = "Show Answers";

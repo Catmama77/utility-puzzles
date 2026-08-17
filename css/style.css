@@ -425,7 +425,8 @@ p {
   padding: 0;
 }
 
-.cell-input:focus {
+.cell-input:focus,
+.sudoku-input:focus {
   outline: 2px solid var(--accent);
   border-radius: 2px;
 }

@@ -33,10 +33,52 @@
 
   /* ---------- rendering ---------- */
 
+  /* Arrow keys move focus between adjacent cells, skipping black
+     cells. Cell coordinates come from each input's data-pos
+     ("r,c" for this tool). */
+  function addArrowNav(gridEl, inputs, rows, cols) {
+    var map = {};
+    inputs.forEach(function (inp) {
+      var p = (inp.dataset.nav || inp.dataset.pos).split(",");
+      map[p[0] + "," + p[1]] = inp;
+    });
+    function move(from, dr, dc) {
+      var p = (from.dataset.nav || from.dataset.pos).split(",");
+      var r = +p[0] + dr;
+      var c = +p[1] + dc;
+      while (r >= 0 && r < rows && c >= 0 && c < cols) {
+        var target = map[r + "," + c];
+        if (target) {
+          target.focus();
+          if (target.select) target.select();
+          return;
+        }
+        r += dr;
+        c += dc;
+      }
+    }
+    inputs.forEach(function (inp) {
+      inp.addEventListener("keydown", function (e) {
+        var key = e.key;
+        var dr = 0;
+        var dc = 0;
+        if (key === "ArrowUp") dr = -1;
+        else if (key === "ArrowDown") dr = 1;
+        else if (key === "ArrowLeft") dc = -1;
+        else if (key === "ArrowRight") dc = 1;
+        else return;
+        if (e.preventDefault) e.preventDefault();
+        move(this, dr, dc);
+      });
+    });
+  }
+
   function renderGrid(puzzle) {
     var gridEl = $("puzzle-grid");
     gridEl.innerHTML = "";
     gridEl.style.gridTemplateColumns = "repeat(" + puzzle.cols + ", max-content)";
+
+    var inputs = [];
 
     for (var r = 0; r < puzzle.rows; r++) {
       for (var c = 0; c < puzzle.cols; c++) {
@@ -67,11 +109,13 @@
             this.value = this.value.replace(/[^A-Za-z]/g, "").toUpperCase().slice(0, 1);
             this.parentNode.classList.remove("wrong");
           });
+          inputs.push(input);
           div.appendChild(input);
         }
         gridEl.appendChild(div);
       }
     }
+    addArrowNav(gridEl, inputs, puzzle.rows, puzzle.cols);
   }
 
   function renderClues(listEl, clues) {
