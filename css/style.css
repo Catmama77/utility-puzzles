@@ -790,6 +790,10 @@ p {
     display: none;
   }
 
+  body.print-cards .call-sheet {
+    display: none !important;
+  }
+
   body.print-call .bingo-cards {
     display: none !important;
   }
