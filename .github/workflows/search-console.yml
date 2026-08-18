@@ -34,7 +34,7 @@ jobs:
           SEARCH_CONSOLE_SA_JSON: ${{ secrets.SEARCH_CONSOLE_SA_JSON }}
         run: |
           if [ -z "$SEARCH_CONSOLE_SA_JSON" ]; then
-            echo "SEARCH_CONSOLE_SA_JSON not set — skipping Search Console notifications"
+            echo "::warning::SEARCH_CONSOLE_SA_JSON is empty in the runner — skipping Search Console notifications"
             exit 0
           fi
           node search-console.js sitemap-submit
