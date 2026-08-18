@@ -188,6 +188,8 @@ automatically on every push.
 3. In Search Console → Settings → Users and permissions, add the service
    account email as a user (Full or Restricted).
 4. Add the JSON as a GitHub secret named `SEARCH_CONSOLE_SA_JSON`.
+   (Tip: from a Codespace, `gh secret set SEARCH_CONSOLE_SA_JSON < key.json
+   --repo Catmama77/utility-puzzles` reads the file directly — no pasting.)
 
 The `.github/workflows/search-console.yml` workflow then submits the sitemap
 and inspects changed pages on every push — it stays inactive until the secret
