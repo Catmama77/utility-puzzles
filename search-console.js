@@ -203,8 +203,15 @@ async function sitemapList(token, siteUrl) {
     return;
   }
   console.log("Sitemaps for " + siteUrl + ":");
+  const lines = [];
   for (const s of items) {
-    console.log("  " + s.path + " | submitted: " + (s.lastSubmitted || "n/a") + " | errors: " + (s.errors || 0));
+    const line = "  " + s.path + " | submitted: " + (s.lastSubmitted || "n/a") + " | errors: " + (s.errors || 0);
+    console.log(line);
+    lines.push(line.trim());
+  }
+  // Surface the status as an annotation so it shows in the run summary/API.
+  if (process.env.GITHUB_ACTIONS === "true") {
+    console.log("::notice::Sitemap status: " + lines.join(" ; "));
   }
 }
 
