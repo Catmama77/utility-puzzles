@@ -179,7 +179,11 @@ async function apiCall(token, method, url, body) {
 /* ---------- commands ---------- */
 
 async function sitemapSubmit(token, siteUrl) {
-  const u = SITEMAPS_BASE + "/sites/" + encodeURIComponent(siteUrl) + "/sitemaps/" + encodeURIComponent("sitemap.xml");
+  // feedpath is the full sitemap URL (docs: "The URL of the sitemap to
+  // add. For example: http://www.example.com/sitemap.xml"). A relative
+  // "sitemap.xml" returns 400 "Could not process sitemap".
+  const sitemapUrl = siteUrl.replace(/\/$/, "") + "/sitemap.xml";
+  const u = SITEMAPS_BASE + "/sites/" + encodeURIComponent(siteUrl) + "/sitemaps/" + encodeURIComponent(sitemapUrl);
   const { status, data } = await apiCall(token, "PUT", u);
   if (status >= 200 && status < 300) {
     console.log("Sitemap submitted for " + siteUrl + " (HTTP " + status + ").");
