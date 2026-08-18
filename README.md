@@ -194,6 +194,10 @@ and inspects changed pages on every push — it stays inactive until the secret
 is set. If the Search Console property is not `https://www.helpuhelpurself.com/`,
 pass `--site <property>` (e.g. `sc-domain:helpuhelpurself.com`).
 
+The workflow is active on this repo: `SEARCH_CONSOLE_SA_JSON` is configured as
+an Actions secret, so every push to `main` submits the sitemap and inspects any
+changed HTML pages.
+
 ## Try it locally
 
 ```bash
