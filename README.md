@@ -198,6 +198,14 @@ The workflow is active on this repo: `SEARCH_CONSOLE_SA_JSON` is configured as
 an Actions secret, so every push to `main` submits the sitemap and inspects any
 changed HTML pages.
 
+Troubleshooting: GitHub Actions only allows the `secrets` context inside `env:`
+and `run:` blocks — using it in an `if:` condition makes the workflow fail to
+parse (instant failure with zero jobs). That is why the guard lives in the
+shell (`if [ -z "$SEARCH_CONSOLE_SA_JSON" ]`) rather than in `if:`.
+
+If the run step fails in ~0s, the secret value is not valid JSON — re-add the
+secret with the complete contents of the service-account key file.
+
 ## Try it locally
 
 ```bash
