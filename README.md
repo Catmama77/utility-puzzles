@@ -193,7 +193,9 @@ automatically on every push.
    Choose **Actions** when it asks where to store the secret.) Also make
    sure the Search Console API is enabled for the Google Cloud project
    (APIs & Services → Library → Search Console API → Enable) — the
-   workflow fails with HTTP 403 SERVICE_DISABLED until it is.
+   workflow fails with HTTP 403 SERVICE_DISABLED until it is. Verify the
+   service account has access to the property (Search Console → Settings
+   → Users and permissions → add the service account email).
 
 The `.github/workflows/search-console.yml` workflow then submits the sitemap
 and inspects changed pages on every push — it stays inactive until the secret
