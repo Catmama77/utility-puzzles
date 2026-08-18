@@ -292,7 +292,13 @@ function gitChangedHtmlUrls(base) {
   } else {
     throw new Error("Unknown command: " + command);
   }
-})().catch((e) => {
+})().then(() => {
+  // Emit a notice so the run summary confirms what actually happened
+  // (real API calls vs. skip) without needing the raw log.
+  if (process.env.GITHUB_ACTIONS === "true") {
+    console.log("::notice::search-console.js finished OK (exit 0)");
+  }
+}).catch((e) => {
   console.error("Error: " + e.message);
   // Emit a GitHub Actions workflow command too, so the failure reason
   // becomes a check-run annotation (visible in the API and the UI summary)
