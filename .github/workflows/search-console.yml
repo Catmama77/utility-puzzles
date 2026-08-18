@@ -15,7 +15,6 @@ on:
 jobs:
   notify:
     runs-on: ubuntu-latest
-    if: ${{ secrets.SEARCH_CONSOLE_SA_JSON != '' }}
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
@@ -31,5 +30,9 @@ jobs:
         env:
           SEARCH_CONSOLE_SA_JSON: ${{ secrets.SEARCH_CONSOLE_SA_JSON }}
         run: |
+          if [ -z "$SEARCH_CONSOLE_SA_JSON" ]; then
+            echo "SEARCH_CONSOLE_SA_JSON not set — skipping Search Console notifications"
+            exit 0
+          fi
           node search-console.js sitemap-submit
           node search-console.js inspect-new --base "${{ github.event.before }}"
