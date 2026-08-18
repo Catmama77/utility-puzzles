@@ -7,6 +7,9 @@ name: Search Console notifications
 #
 # Note: Google's Indexing API only supports JobPosting/BroadcastEvent pages,
 # so this uses the legitimate equivalent — sitemap submission + inspection.
+#
+# Failures in the run step surface as check-run annotations (via ::error::
+# in search-console.js), so the reason is visible in the API and UI summary.
 
 on:
   push:
