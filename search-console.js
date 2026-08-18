@@ -290,5 +290,11 @@ function gitChangedHtmlUrls(base) {
   }
 })().catch((e) => {
   console.error("Error: " + e.message);
+  // Emit a GitHub Actions workflow command too, so the failure reason
+  // becomes a check-run annotation (visible in the API and the UI summary)
+  // rather than only in the raw step log.
+  if (process.env.GITHUB_ACTIONS === "true") {
+    console.log("::error::" + e.message.replace(/\n/g, "%0A"));
+  }
   process.exit(1);
 });
