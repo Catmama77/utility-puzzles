@@ -85,12 +85,16 @@ function loadCredentials() {
       const raw = process.env.SEARCH_CONSOLE_SA_JSON;
       const pos = /position (\d+)/.exec(e.message);
       const at = pos ? Number(pos[1]) : -1;
+      // A real service-account key is ~2000+ chars; a short value means the
+      // wrong thing was pasted. Show the start of the value (safe: it is not
+      // the secret — it failed to parse) to identify what was pasted instead.
+      const preview = JSON.stringify(raw.slice(0, 40));
       const hint = /Unexpected end of JSON input/.test(e.message)
         ? "value is truncated — it stops before the JSON is complete (length " + raw.length + "). Paste the ENTIRE contents of the key file."
         : at < 0
-        ? "unknown parse error"
+        ? "unrecognized parse error (" + e.message + "). value starts with " + preview + ". A service-account key is ~2000+ chars — a " + raw.length + "-char value is not the full key file."
         : at === 0
-        ? "value does not start with { — check for stray text before the JSON"
+        ? "value does not start with { — it starts with " + preview + ". check for stray text before the JSON"
         : at >= raw.length - 1
         ? "value does not end with } — check for truncated or trailing text"
         : "parse stops partway through (len " + raw.length + ") — check for a partial paste or line breaks inside the JSON";
