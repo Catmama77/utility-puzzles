@@ -195,7 +195,9 @@ automatically on every push.
    (APIs & Services → Library → Search Console API → Enable) — the
    workflow fails with HTTP 403 SERVICE_DISABLED until it is. Verify the
    service account has access to the property (Search Console → Settings
-   → Users and permissions → add the service account email).
+   → Users and permissions → add the service account email) — without it
+   the workflow fails with HTTP 403 "User does not have sufficient
+   permission for site".
 
 The `.github/workflows/search-console.yml` workflow then submits the sitemap
 and inspects changed pages on every push — it stays inactive until the secret
