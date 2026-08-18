@@ -76,11 +76,40 @@ function b64u(buf) {
 
 function loadCredentials() {
   if (process.env.SEARCH_CONSOLE_SA_JSON) {
+    let parsed;
     try {
-      return JSON.parse(process.env.SEARCH_CONSOLE_SA_JSON);
+      parsed = JSON.parse(process.env.SEARCH_CONSOLE_SA_JSON);
     } catch (e) {
-      throw new Error("SEARCH_CONSOLE_SA_JSON is not valid JSON: " + e.message);
+      // Don't print the secret, but DO print the parse position + a hint:
+      // it tells us whether the value is a partial paste or has stray text.
+      const raw = process.env.SEARCH_CONSOLE_SA_JSON;
+      const pos = /position (\d+)/.exec(e.message);
+      const at = pos ? Number(pos[1]) : -1;
+      const hint = /Unexpected end of JSON input/.test(e.message)
+        ? "value is truncated — it stops before the JSON is complete (length " + raw.length + "). Paste the ENTIRE contents of the key file."
+        : at < 0
+        ? "unknown parse error"
+        : at === 0
+        ? "value does not start with { — check for stray text before the JSON"
+        : at >= raw.length - 1
+        ? "value does not end with } — check for truncated or trailing text"
+        : "parse stops partway through (len " + raw.length + ") — check for a partial paste or line breaks inside the JSON";
+      throw new Error(
+        "SEARCH_CONSOLE_SA_JSON is not valid JSON (parse error at position " + at + ", value length " + raw.length + "). " + hint
+      );
     }
+    const required = ["type", "project_id", "private_key", "client_email"];
+    const missing = required.filter((k) => !parsed[k]);
+    if (missing.length) {
+      throw new Error("SEARCH_CONSOLE_SA_JSON is missing field(s): " + missing.join(", "));
+    }
+    if (parsed.type !== "service_account") {
+      throw new Error("SEARCH_CONSOLE_SA_JSON type is \"" + parsed.type + "\" — expected \"service_account\" (is this the right key file?)");
+    }
+    if (typeof parsed.private_key !== "string" || !parsed.private_key.includes("PRIVATE KEY")) {
+      throw new Error("SEARCH_CONSOLE_SA_JSON private_key does not look like a PEM key");
+    }
+    return parsed;
   }
   if (credsPath) {
     try {
