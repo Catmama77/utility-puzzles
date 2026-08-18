@@ -1,0 +1,35 @@
+name: Search Console notifications
+
+# After every push to main, re-submit the sitemap (notifies Google of all
+# URLs) and inspect every HTML page that changed in the push via the Search
+# Console URL Inspection API. Inert until the SEARCH_CONSOLE_SA_JSON secret
+# is configured (see search-console.js header for the one-time setup).
+#
+# Note: Google's Indexing API only supports JobPosting/BroadcastEvent pages,
+# so this uses the legitimate equivalent — sitemap submission + inspection.
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: ${{ secrets.SEARCH_CONSOLE_SA_JSON != '' }}
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # need the base commit to diff changed pages
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Submit sitemap and inspect changed pages
+        env:
+          SEARCH_CONSOLE_SA_JSON: ${{ secrets.SEARCH_CONSOLE_SA_JSON }}
+        run: |
+          node search-console.js sitemap-submit
+          node search-console.js inspect-new --base "${{ github.event.before }}"

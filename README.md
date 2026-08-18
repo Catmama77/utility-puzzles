@@ -164,6 +164,36 @@ first in the feed).
 The feed is linked from every page's footer and from the `<head>` of the
 homepage and `/articles/`.
 
+## Automating Search Console notifications
+
+`search-console.js` (dependency-free, Node 18+) submits the sitemap and
+inspects pages via the Search Console API after every deploy:
+
+- `node search-console.js sitemap-submit` — re-submits `sitemap.xml`, telling
+  Google about every URL at once.
+- `node search-console.js inspect <url> ...` — checks each URL's crawl/index
+  state (verdict, coverage, indexing, robots, last crawl).
+- `node search-console.js inspect-new --base <git-ref>` — inspects every HTML
+  page that changed since a git ref (used by CI with `github.event.before`).
+
+Google's Indexing API only supports JobPosting/BroadcastEvent pages, and there
+is no API that clicks "Request Indexing" in the UI — sitemap submission plus
+URL inspection is the legitimate equivalent, and the workflow runs it
+automatically on every push.
+
+**One-time setup (about 10 minutes):**
+
+1. In Google Cloud Console, enable the **Search Console API** for a project.
+2. Create a **service account**, download its JSON key.
+3. In Search Console → Settings → Users and permissions, add the service
+   account email as a user (Full or Restricted).
+4. Add the JSON as a GitHub secret named `SEARCH_CONSOLE_SA_JSON`.
+
+The `.github/workflows/search-console.yml` workflow then submits the sitemap
+and inspects changed pages on every push — it stays inactive until the secret
+is set. If the Search Console property is not `https://www.helpuhelpurself.com/`,
+pass `--site <property>` (e.g. `sc-domain:helpuhelpurself.com`).
+
 ## Try it locally
 
 ```bash
@@ -270,7 +300,7 @@ won't override a page that already has it.
 
 - [ ] Site live on your own domain with HTTPS
 - [ ] Privacy Policy, About, Contact and Terms pages (done — edit to match your details)
-- [ ] Original content on every page (tools + instructions + 22 articles in `/articles/`)
+- [ ] Original content on every page (tools + instructions + 27 articles in `/articles/`)
 - [ ] Working navigation and mobile-friendly layout
 - [ ] Sitemap submitted in Search Console, pages indexed
 
